@@ -1,9 +1,9 @@
-package com.isnsest.denizen.properties;
+package com.isnsest.denizen.Denizen.properties;
 
 import com.denizenscript.denizen.objects.PlayerTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptRegistry;
-import com.isnsest.denizen.containers.DialogScriptContainer;
+import com.isnsest.denizen.Denizen.containers.DialogScriptContainer;
 
 public class PlayerExtensions {
 

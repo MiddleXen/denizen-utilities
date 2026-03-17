@@ -2,17 +2,17 @@ package com.isnsest.denizen;
 
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectFetcher;
-import com.isnsest.denizen.containers.DialogScriptContainer;
-import com.isnsest.denizen.events.PlayerConnectionConfigureEvent;
-import com.isnsest.denizen.objects.ConnectionTag;
+import com.isnsest.denizen.Denizen.containers.DialogScriptContainer;
+import com.isnsest.denizen.Denizen.events.PlayerConnectionConfigureEvent;
+import com.isnsest.denizen.Denizen.objects.ConnectionTag;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.denizenscript.denizen.nms.NMSHandler;
 import com.denizenscript.denizen.nms.NMSVersion;
 import com.denizenscript.denizencore.scripts.ScriptRegistry;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import com.isnsest.denizen.properties.BiomeExtensions;
-import com.isnsest.denizen.properties.PlayerExtensions;
+import com.isnsest.denizen.Denizen.properties.BiomeExtensions;
+import com.isnsest.denizen.Denizen.properties.PlayerExtensions;
 
 public class DenizenUtilities extends JavaPlugin {
 

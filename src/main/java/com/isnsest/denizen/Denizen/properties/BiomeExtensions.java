@@ -1,10 +1,10 @@
-package com.isnsest.denizen.properties;
+package com.isnsest.denizen.Denizen.properties;
 
 import com.denizenscript.denizen.nms.NMSHandler;
 import com.denizenscript.denizen.nms.NMSVersion;
 import com.denizenscript.denizen.nms.v1_21.impl.BiomeNMSImpl;
 import com.denizenscript.denizencore.objects.core.ColorTag;
-import com.isnsest.denizen.helpers.BiomeHelper;
+import com.isnsest.denizen.Denizen.helpers.BiomeHelper;
 
 import static com.denizenscript.denizen.objects.BiomeTag.tagProcessor;
 

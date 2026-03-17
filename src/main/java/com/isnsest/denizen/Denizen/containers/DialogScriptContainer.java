@@ -83,7 +83,7 @@ public class DialogScriptContainer extends ScriptContainer {
     //         # Button layout option (only for 'list')
     //         button width: 100
     //
-    //         # Exit button (ONLY for 'multi')
+    //         # Exit button (list or multi)
     //         exit button:
     //             label: Exit
     //

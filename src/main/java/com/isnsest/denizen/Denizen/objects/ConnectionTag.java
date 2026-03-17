@@ -1,4 +1,4 @@
-package com.isnsest.denizen.objects;
+package com.isnsest.denizen.Denizen.objects;
 
 import com.denizenscript.denizen.paper.PaperModule;
 import com.denizenscript.denizen.tags.BukkitTagContext;
@@ -12,8 +12,8 @@ import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import com.isnsest.denizen.containers.DialogScriptContainer;
-import com.isnsest.denizen.events.PlayerConnectionConfigureEvent;
+import com.isnsest.denizen.Denizen.containers.DialogScriptContainer;
+import com.isnsest.denizen.Denizen.events.PlayerConnectionConfigureEvent;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
 import io.papermc.paper.dialog.Dialog;
 import net.md_5.bungee.api.ChatColor;
@@ -56,11 +56,8 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         return null;
     }
 
-    public static boolean matches(String arg) {
-        if (arg.startsWith("connection@")) {
-            return true;
-        }
-        return true;
+    public static boolean matches(String input) {
+        return input != null && input.startsWith("connection@");
     }
 
     @Override

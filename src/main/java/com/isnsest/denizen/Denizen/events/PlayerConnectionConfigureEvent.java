@@ -1,10 +1,10 @@
-package com.isnsest.denizen.events;
+package com.isnsest.denizen.Denizen.events;
 
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.isnsest.denizen.DenizenUtilities;
-import com.isnsest.denizen.objects.ConnectionTag;
+import com.isnsest.denizen.Denizen.objects.ConnectionTag;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
 import io.papermc.paper.event.connection.configuration.AsyncPlayerConnectionConfigureEvent;
 import net.kyori.adventure.audience.Audience;
