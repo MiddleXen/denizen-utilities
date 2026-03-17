@@ -1,4 +1,4 @@
-package com.isnsest.denizen.containers;
+package com.isnsest.denizen.Denizen.containers;
 
 import com.denizenscript.denizen.objects.ItemTag;
 import com.denizenscript.denizen.paper.PaperModule;
@@ -17,7 +17,7 @@ import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.text.StringHolder;
-import com.isnsest.denizen.objects.ConnectionTag;
+import com.isnsest.denizen.Denizen.objects.ConnectionTag;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.data.dialog.ActionButton;
@@ -377,11 +377,15 @@ public class DialogScriptContainer extends ScriptContainer {
                 }
                 RegistrySet<@NotNull Dialog> registrySet = RegistrySet.valueSet(RegistryKey.DIALOG, dialogs);
                 DialogListType.Builder dialogList = DialogType.dialogList(registrySet);
+                ActionButton exitButton = createActionButton("base.exit button", context);
                 if (columns != null) {
                     dialogList.columns(columns);
                 }
                 if (buttonWidth != null) {
                     dialogList.buttonWidth(buttonWidth);
+                }
+                if (exitButton != null) {
+                    dialogList.exitAction(exitButton);
                 }
                 return Dialog.create(builder -> builder.empty()
                         .base(dialogBase)
