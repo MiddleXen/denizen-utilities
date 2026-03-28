@@ -28,7 +28,10 @@ public class DenizenUtilities extends JavaPlugin {
         ScriptEvent.registerScriptEvent(PlayerConnectionConfigureEvent.class);
         //
 
+
+        // Objects
         ObjectFetcher.registerWithObjectFetcher(ConnectionTag.class, ConnectionTag.tagProcessor);
+        //
 
         PlayerExtensions.register();
         BiomeExtensions.register();

@@ -15,7 +15,7 @@ public class PlayerExtensions {
         // @Plugin Paper
         // @group paper
         // @description
-        // ...
+        // Opens a dialog UI for the player using the specified dialog script.
         // -->
         PlayerTag.registerOnlineOnlyMechanism("show_dialog", ElementTag.class, (object, mechanism, input) -> {
             DialogScriptContainer container = ScriptRegistry.getScriptContainer(input.asString());
@@ -33,7 +33,7 @@ public class PlayerExtensions {
         // @Plugin Paper
         // @group paper
         // @description
-        // ...
+        // Closes the player's current dialog UI.
         // -->
         PlayerTag.registerOnlineOnlyMechanism("close_dialog", (object, mechanism) -> {
             object.getPlayerEntity().closeDialog();
