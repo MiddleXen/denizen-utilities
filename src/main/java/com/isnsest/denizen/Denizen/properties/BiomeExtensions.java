@@ -16,6 +16,7 @@ public class BiomeExtensions {
             // <--[tag]
             // @attribute <BiomeTag.sky_color>
             // @returns ColorTag
+            // @plugin denizen-utilities
             // @mechanism BiomeTag.sky_color
             // @description
             // Returns the biome's sky color.
@@ -31,6 +32,7 @@ public class BiomeExtensions {
             // <--[tag]
             // @attribute <BiomeTag.sky_light_color>
             // @returns ColorTag
+            // @plugin denizen-utilities
             // @mechanism BiomeTag.sky_light_color
             // @description
             // Returns the biome's skylight color.
@@ -46,6 +48,7 @@ public class BiomeExtensions {
             // <--[mechanism]
             // @object BiomeTag
             // @name sky_color
+            // @plugin denizen-utilities
             // @input ColorTag
             // @description
             // Sets the biome's sky color.
@@ -64,6 +67,7 @@ public class BiomeExtensions {
             // <--[mechanism]
             // @object BiomeTag
             // @name sky_light_color
+            // @plugin denizen-utilities
             // @input ColorTag
             // @description
             // Sets the biome's skylight color.

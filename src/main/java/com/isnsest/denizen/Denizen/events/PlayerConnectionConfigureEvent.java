@@ -26,7 +26,7 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
     // @Events
     // player connection configure
     //
-    // @Group Player
+    // @Group Paper
     //
     // @Triggers when a player's connection is being configured (Paper specific).
     //
@@ -35,6 +35,8 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
     //
     // @Determine
     // "WAIT" to delay the configuration process for up to 1 minute.
+    //
+    // @Plugin denizen-utilities, Paper
     //
     // -->
 

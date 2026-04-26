@@ -105,6 +105,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // <--[tag]
         // @attribute <ConnectionTag.uuid>
         // @returns ElementTag
+        // @plugin denizen-utilities, Paper
         // @description
         // Returns the UUID of the player profile associated with this connection.
         // -->
@@ -119,6 +120,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // <--[tag]
         // @attribute <ConnectionTag.name>
         // @returns ElementTag
+        // @plugin denizen-utilities, Paper
         // @description
         // Returns the name of the player profile associated with this connection.
         // -->
@@ -129,6 +131,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // <--[mechanism]
         // @object ConnectionTag
         // @name disconnect
+        // @plugin denizen-utilities, Paper
         // @input ElementTag
         // @description
         // Disconnects the connection with a specified reason. Supports Paper-formatted text (MiniMessage/Legacy).
@@ -140,6 +143,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // <--[mechanism]
         // @object ConnectionTag
         // @name connect
+        // @plugin denizen-utilities, Paper
         // @input None
         // @description
         // Confirms the connection and allows the player to continue the login process.
@@ -156,6 +160,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // <--[mechanism]
         // @object ConnectionTag
         // @name close_dialog
+        // @plugin denizen-utilities, Paper
         // @input None
         // @description
         // Closes any currently open dialog for this connection.
@@ -167,6 +172,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // <--[mechanism]
         // @object ConnectionTag
         // @name show_dialog
+        // @plugin denizen-utilities, Paper
         // @input ElementTag
         // @description
         // Shows a specific dialog to the connection using the name of a Dialog script container.
