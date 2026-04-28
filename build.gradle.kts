@@ -10,11 +10,11 @@ plugins {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(21)
+    options.release.set(25)
 }
 
 repositories {
@@ -26,6 +26,12 @@ repositories {
     maven {
         url = uri("https://maven.citizensnpcs.co/repo")
     }
+    maven {
+        url = uri("https://repo.codemc.org/repository/maven-public/")
+    }
+    maven {
+        url = uri("https://nexus.scarsz.me/content/groups/public/")
+    }
 }
 
 dependencies {
@@ -33,11 +39,14 @@ dependencies {
     compileOnly("org.spigotmc:spigot:1.21.11-R0.2-SNAPSHOT:remapped-mojang")
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     compileOnly("com.denizenscript:denizen:1.3.1-SNAPSHOT")
+    compileOnly("net.skinsrestorer:skinsrestorer-api:15.11.0")
+    compileOnly("io.github.toxicity188:bettermodel-bukkit-api:3.0.1")
+    compileOnly("com.discordsrv:discordsrv:1.28.0")
 }
 
 val buildNumber: String = System.getenv("BUILD_NUMBER") ?: project.property("BUILD_NUMBER") as String
 val buildDate: String = SimpleDateFormat("ddMMyyyy").format(Date())
-val pluginVersion = "1.1"
+val pluginVersion = "2.0"
 
 group = "isnsest"
 version = pluginVersion
