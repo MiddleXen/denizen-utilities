@@ -1,10 +1,10 @@
-package com.isnsest.denizen.Denizen.properties;
+package com.isnsest.denizenutilities.extensions.properties;
 
 import com.denizenscript.denizen.objects.PlayerTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptRegistry;
-import com.isnsest.denizen.Denizen.containers.DialogScriptContainer;
-import com.isnsest.denizen.DenizenUtilities;
+import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
+import com.isnsest.denizenutilities.DenizenUtilities;
 
 public class PlayerExtensions {
 
@@ -35,7 +35,7 @@ public class PlayerExtensions {
             // @description
             // Closes the player's current dialog UI.
             // -->
-            PlayerTag.registerOnlineOnlyMechanism("close_dialog", (object, mechanism) -> {
+            PlayerTag.registerOnlineOnlyMechanism("close_dialog", (object, _) -> {
                 object.getPlayerEntity().closeDialog();
             });
         }

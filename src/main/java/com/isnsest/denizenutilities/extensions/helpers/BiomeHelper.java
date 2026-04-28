@@ -1,4 +1,4 @@
-package com.isnsest.denizen.Denizen.helpers;
+package com.isnsest.denizenutilities.extensions.helpers;
 
 import com.denizenscript.denizen.nms.v1_21.impl.BiomeNMSImpl;
 import net.minecraft.world.attribute.EnvironmentAttributes;

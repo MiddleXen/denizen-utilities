@@ -1,10 +1,10 @@
-package com.isnsest.denizen.Denizen.properties;
+package com.isnsest.denizenutilities.extensions.properties;
 
 import com.denizenscript.denizen.nms.NMSHandler;
 import com.denizenscript.denizen.nms.NMSVersion;
 import com.denizenscript.denizen.nms.v1_21.impl.BiomeNMSImpl;
 import com.denizenscript.denizencore.objects.core.ColorTag;
-import com.isnsest.denizen.Denizen.helpers.BiomeHelper;
+import com.isnsest.denizenutilities.extensions.helpers.BiomeHelper;
 
 import static com.denizenscript.denizen.objects.BiomeTag.tagProcessor;
 
@@ -24,7 +24,7 @@ public class BiomeExtensions {
             // # Sends the player a message in their current biome's sky color.
             // - narrate "You are currently seeing sky that looks like <&color[<player.location.biome.sky_color>]>this!"
             // -->
-            tagProcessor.registerTag(ColorTag.class, "sky_color", (attribute, object) -> {
+            tagProcessor.registerTag(ColorTag.class, "sky_color", (_, object) -> {
                 BiomeNMSImpl biome = (BiomeNMSImpl) object.getBiome();
                 return ColorTag.fromRGB(BiomeHelper.getSkyColor(biome));
             });
@@ -40,7 +40,7 @@ public class BiomeExtensions {
             // # Sends the player a message in their current biome's skylight color.
             // - narrate "You are currently seeing skylight that looks like <&color[<player.location.biome.sky_light_color>]>this!"
             // -->
-            tagProcessor.registerTag(ColorTag.class, "sky_light_color", (attribute, object) -> {
+            tagProcessor.registerTag(ColorTag.class, "sky_light_color", (_, object) -> {
                 BiomeNMSImpl biome = (BiomeNMSImpl) object.getBiome();
                 return ColorTag.fromRGB(BiomeHelper.getSkyLightColor(biome));
             });
@@ -59,7 +59,7 @@ public class BiomeExtensions {
             // on server start:
             // - adjust <biome[plains]> sky_color:red
             // -->
-            tagProcessor.registerMechanism("sky_color", false, ColorTag.class, (object, mechanism, input) -> {
+            tagProcessor.registerMechanism("sky_color", false, ColorTag.class, (object, _, input) -> {
                 BiomeNMSImpl biome = (BiomeNMSImpl) object.getBiome();
                 BiomeHelper.setSkyColor(biome, input.asRGB());
             });
@@ -78,7 +78,7 @@ public class BiomeExtensions {
             // on server start:
             // - adjust <biome[plains]> sky_light_color:red
             // -->
-            tagProcessor.registerMechanism("sky_light_color", false, ColorTag.class, (object, mechanism, input) -> {
+            tagProcessor.registerMechanism("sky_light_color", false, ColorTag.class, (object, _, input) -> {
                 BiomeNMSImpl biome = (BiomeNMSImpl) object.getBiome();
                 BiomeHelper.setSkyLightColor(biome, input.asRGB());
             });

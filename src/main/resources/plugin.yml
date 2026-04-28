@@ -1,7 +1,8 @@
 name: denizen-utilities
 author: isnsest
 version: ${version}
-main: com.isnsest.denizen.DenizenUtilities
+main: com.isnsest.denizenutilities.DenizenUtilities
 description: Extending Denizen for greater capabilities
 depend: [Denizen]
+softdepend: [SkinsRestorer, BetterModel, DiscordSRV]
 api-version: '1.21'

@@ -1,4 +1,4 @@
-package com.isnsest.denizen.Denizen.objects;
+package com.isnsest.denizenutilities.extensions.objects;
 
 import com.denizenscript.denizen.paper.PaperModule;
 import com.denizenscript.denizen.tags.BukkitTagContext;
@@ -12,8 +12,8 @@ import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import com.isnsest.denizen.Denizen.containers.DialogScriptContainer;
-import com.isnsest.denizen.Denizen.events.PlayerConnectionConfigureEvent;
+import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
+import com.isnsest.denizenutilities.extensions.events.PlayerConnectionConfigureEvent;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
 import io.papermc.paper.dialog.Dialog;
 import net.md_5.bungee.api.ChatColor;
@@ -109,13 +109,13 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // @description
         // Returns the UUID of the player profile associated with this connection.
         // -->
-        tagProcessor.registerStaticTag(ElementTag.class, "uuid", ((attribute, object) -> {
+        tagProcessor.registerStaticTag(ElementTag.class, "uuid", (_, object) -> {
             UUID uuid = object.connection.getProfile().getId();
             if (uuid != null) {
                 return new ElementTag(uuid.toString());
             }
             return null;
-        }));
+        });
 
         // <--[tag]
         // @attribute <ConnectionTag.name>
@@ -124,9 +124,9 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // @description
         // Returns the name of the player profile associated with this connection.
         // -->
-        tagProcessor.registerStaticTag(ElementTag.class, "name", ((attribute, object) -> {
+        tagProcessor.registerStaticTag(ElementTag.class, "name", (_, object) -> {
             return new ElementTag(object.connection.getProfile().getName());
-        }));
+        });
 
         // <--[mechanism]
         // @object ConnectionTag
@@ -149,7 +149,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // Confirms the connection and allows the player to continue the login process.
         // Use this to finish the configuration stage once your requirements are met.
         // -->
-        tagProcessor.registerMechanism("connect", false, (object, mechanism) -> {
+        tagProcessor.registerMechanism("connect", false, (object, _) -> {
             UUID uuid = object.connection.getProfile().getId();
             Map<UUID, CompletableFuture<Boolean>> list = PlayerConnectionConfigureEvent.instance.awaitingResponse;
             if (list.containsKey(uuid)) {
@@ -165,7 +165,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // @description
         // Closes any currently open dialog for this connection.
         // -->
-        tagProcessor.registerMechanism("close_dialog", false, (object, mechanism) -> {
+        tagProcessor.registerMechanism("close_dialog", false, (object, _) -> {
             object.connection.getAudience().closeDialog();
         });
 
@@ -177,7 +177,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // @description
         // Shows a specific dialog to the connection using the name of a Dialog script container.
         // -->
-        tagProcessor.registerMechanism("show_dialog", false, ElementTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("show_dialog", false, ElementTag.class, (object, _, input) -> {
             TagContext context = new BukkitTagContext(null, null, null);
             DialogScriptContainer container = ScriptRegistry.getScriptContainer(input.toString());
             Dialog dialog = container.getDialogFrom(context);

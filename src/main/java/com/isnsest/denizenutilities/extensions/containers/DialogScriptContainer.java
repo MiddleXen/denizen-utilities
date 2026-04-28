@@ -1,4 +1,4 @@
-package com.isnsest.denizen.Denizen.containers;
+package com.isnsest.denizenutilities.extensions.containers;
 
 import com.denizenscript.denizen.objects.ItemTag;
 import com.denizenscript.denizen.paper.PaperModule;
@@ -17,7 +17,7 @@ import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.text.StringHolder;
-import com.isnsest.denizen.Denizen.objects.ConnectionTag;
+import com.isnsest.denizenutilities.extensions.objects.ConnectionTag;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.data.dialog.ActionButton;
