@@ -46,7 +46,6 @@ import java.util.UUID;
 // @name BMBoneTag
 // @prefix bmbone
 // @base ElementTag
-// @implements Adjustable
 // @format
 // The identity format for BMBoneTag is the UUID of the entity, the active model tracker name, and the bone name, separated by slashes.
 // For example: 'bmbone@01234567-89ab-cdef-0123-456789abcdef/my_model/head'.
@@ -345,6 +344,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @object BMBoneTag
         // @name dismount_all
         // @plugin denizen-utilities, BetterModel
+        // @input None
         // @description
         // Dismounts all entities from this bone.
         // -->

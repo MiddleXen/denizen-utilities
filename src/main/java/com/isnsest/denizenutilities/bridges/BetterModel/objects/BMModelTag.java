@@ -38,7 +38,6 @@ import java.util.function.UnaryOperator;
 // @name BMModelTag
 // @prefix bmmodel
 // @base ElementTag
-// @implements Adjustable
 // @ExampleTagBase player.model[steve]
 // @format
 // The identity format for a BMModelTag is the UUID of the entity and the model name, separated by a slash.
@@ -142,7 +141,7 @@ public class BMModelTag implements ObjectTag, Adjustable {
             }).orElse(null);
         });
 
-        tagProcessor.registerTag(ElementTag.class, "name", (attribute, object) -> new ElementTag(object.tracker.name()));
+        tagProcessor.registerTag(ElementTag.class, "name", (_, object) -> new ElementTag(object.tracker.name()));
 
         // <--[tag]
         // @attribute <BMModelTag.bone[<bone_name>]>
@@ -151,19 +150,19 @@ public class BMModelTag implements ObjectTag, Adjustable {
         // @description
         // Returns a specific bone from this model.
         // -->
-        tagProcessor.registerTag(BMBoneTag.class, ElementTag.class, "bone", (attribute, object, input) -> {
+        tagProcessor.registerTag(BMBoneTag.class, ElementTag.class, "bone", (_, object, input) -> {
             RenderedBone bone = object.tracker.bone(input.toString());
             return bone == null ? null : new BMBoneTag(object.tracker, bone);
         });
 
         // <--[tag]
         // @attribute <BMModelTag.bones>
-        // @returns ListTag(BMBoneTag)
+        // @returns MapTag
         // @plugin denizen-utilities, BetterModel
         // @description
         // Returns a list of all bones in this model tracker.
         // -->
-        tagProcessor.registerTag(MapTag.class, "bones", (attribute, object) -> {
+        tagProcessor.registerTag(MapTag.class, "bones", (_, object) -> {
             MapTag mapTag = new MapTag();
             for (RenderedBone bone : object.getTracker().bones()) {
                 mapTag.putObject(bone.name().name(), new BMBoneTag(object.getTracker(), bone));
@@ -225,7 +224,7 @@ public class BMModelTag implements ObjectTag, Adjustable {
         // @description
         // Globally sets the glow color for ALL bones in the model.
         // -->
-        tagProcessor.registerMechanism("glow_color", false, ColorTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("glow_color", false, ColorTag.class, (object, _, input) -> {
             int color = (input.red << 16) | (input.green << 8) | (input.blue);
             object.tracker.update(TrackerUpdateAction.glowColor(color));
         });
@@ -238,7 +237,7 @@ public class BMModelTag implements ObjectTag, Adjustable {
         // @description
         // Globally sets the tint color for ALL bones in the model.
         // -->
-        tagProcessor.registerMechanism("tint", false, ColorTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("tint", false, ColorTag.class, (object, _, input) -> {
             int color = (input.red << 16) | (input.green << 8) | (input.blue);
             object.tracker.update(TrackerUpdateAction.tint(color));
         });
@@ -258,15 +257,15 @@ public class BMModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMBoneTag
+        // @object BMModelTag
         // @name rotation
         // @plugin denizen-utilities, BetterModel
         // @input QuaternionTag
         // @description
         // Sets a custom rotation modifier for all bones.
         // -->
-        tagProcessor.registerMechanism("rotation", false, QuaternionTag.class, (object, mechanism, input) -> {
-            object.tracker.getPipeline().addLocalRotModifier(BonePredicate.TRUE, currentRotation ->
+        tagProcessor.registerMechanism("rotation", false, QuaternionTag.class, (object, _, input) -> {
+            object.tracker.getPipeline().addLocalRotModifier(BonePredicate.TRUE, _ ->
                     new Quaternionf(input.x, input.y, input.z, input.w).conjugate()
             );
         });
@@ -279,7 +278,7 @@ public class BMModelTag implements ObjectTag, Adjustable {
         // @description
         // Globally overrides the item displayed on ALL bones in the model.
         // -->
-        tagProcessor.registerMechanism("item", false, ItemTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("item", false, ItemTag.class, (object, _, input) -> {
             updateBones(object, t -> TransformedItemStack.of(t.position(), t.offset(), t.scale(), BukkitAdapter.adapt(input.getItemStack())));
         });
 
@@ -291,7 +290,7 @@ public class BMModelTag implements ObjectTag, Adjustable {
         // @description
         // Globally overrides the scale for ALL bones in the model.
         // -->
-        tagProcessor.registerMechanism("scale", false, LocationTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("scale", false, LocationTag.class, (object, _, input) -> {
             updateBones(object, t -> TransformedItemStack.of(t.position(), t.offset(), input.toVector().toVector3f(), t.itemStack()));
         });
 

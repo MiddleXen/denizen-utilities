@@ -34,12 +34,8 @@ public class DiscordSRVBridge {
         // @description
         // Returns the Discord ID associated with the Minecraft player's account via DiscordSRV.
         // Returns null if the player has not linked their Discord account.
-        //
-        // @Usage
-        // Use to get the current player's Discord ID.
-        // - narrate "Your Discord ID is <player.discord_id>"
         // -->
-        PlayerTag.tagProcessor.registerTag(ElementTag.class, "discord_id", (attribute, object) -> {
+        PlayerTag.tagProcessor.registerTag(ElementTag.class, "discord_id", (_, object) -> {
             String id = DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(object.getUUID());
             return id == null ? null : new ElementTag(id);
         });
