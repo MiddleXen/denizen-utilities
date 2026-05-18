@@ -1,1 +1,5 @@
-rootProject.name = "denizen-reflect"
+rootProject.name = "denizen-utilities"
+
+include("core")
+include("v1_21")
+include("v26_1")

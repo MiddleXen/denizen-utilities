@@ -3,35 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Denizen Utilities Documentation</title>
+    <title>Denizen Utilities | Documentation</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg-main: #000000;
-            --bg-sidebar: #0a0a0c;
-            --bg-card: #0d0d12;
-            --bg-hover: #16161d;
-            --border-color: #22222a;
-            --border-hover: #333340;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-tertiary: #64748b;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --accent-green: #10b981;
-            --accent-orange: #f59e0b;
-            --accent-pink: #ec4899;
-            --sidebar-width: 260px;
+            --bg-page: #09090b;
+            --bg-sidebar: #09090b;
+            --bg-card: #121214;
+            --bg-code: #000000;
+            --border: #27272a;
+            --border-bright: #3f3f46;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #52525b;
+
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+
+            /* Badges colors */
+            --c-req-bg: rgba(239, 68, 68, 0.1); --c-req-text: #f87171;
+            --c-opt-bg: rgba(161, 161, 170, 0.1); --c-opt-text: #a1a1aa;
+            --c-root-bg: rgba(168, 85, 247, 0.1); --c-root-text: #c084fc;
+            --c-det-bg: rgba(245, 158, 11, 0.1); --c-det-text: #fbbf24;
+            --c-tag-bg: rgba(59, 130, 246, 0.1); --c-tag-text: #60a5fa;
+            --c-mech-bg: rgba(16, 185, 129, 0.1); --c-mech-text: #34d399;
+
+            --sidebar-width: 280px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background-color: var(--bg-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-page);
             color: var(--text-primary);
             display: flex;
             min-height: 100vh;
@@ -40,169 +47,132 @@
             overflow-y: scroll;
         }
 
+        /* Sidebar Navigation */
         aside {
             width: var(--sidebar-width);
             height: 100vh;
             position: fixed;
             background: var(--bg-sidebar);
-            border-right: 1px solid var(--border-color);
-            padding: 2rem 1.5rem;
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
-            z-index: 50;
+            z-index: 100;
         }
 
         .logo {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #fff;
-            margin-bottom: 2.5rem;
-            display: flex; align-items: center; gap: 10px;
+            font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
+            margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; color: #fff;
         }
-        .logo i { color: var(--accent-blue); font-size: 1.1rem; }
+        .logo i { color: var(--accent); }
 
-        .nav-section { margin-bottom: 2rem; }
-        .nav-title {
+        .nav-group { margin-bottom: 1.5rem; }
+        .nav-label {
             font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-            color: var(--text-tertiary); letter-spacing: 0.1em;
-            margin-bottom: 0.75rem; padding-left: 0.75rem;
+            color: var(--text-muted); letter-spacing: 0.05em;
+            margin-bottom: 0.75rem; padding-left: 0.5rem;
         }
-        .nav-link {
-            display: block; padding: 0.5rem 0.75rem;
+
+        .nav-item {
+            display: flex; align-items: center; padding: 0.5rem 0.75rem;
             color: var(--text-secondary); text-decoration: none;
-            font-size: 0.85rem; font-weight: 500; border-radius: 6px;
+            font-size: 0.85rem; font-weight: 500; border-radius: 8px;
             transition: all 0.2s; cursor: pointer; margin-bottom: 2px;
         }
-        .nav-link:hover { color: #fff; background: var(--bg-hover); }
-        .nav-link.active { color: var(--accent-blue); background: rgba(59, 130, 246, 0.1); }
+        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .nav-item.active { color: var(--accent); background: var(--accent-glow); font-weight: 600; }
 
-        .nav-folder { margin-bottom: 0.5rem; }
-        .nav-folder-title {
-            font-size: 0.85rem; font-weight: 600; color: #fff;
-            padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 8px;
-        }
-        .nav-folder-title i { color: var(--text-tertiary); font-size: 0.8rem; }
-        .nav-folder-content {
-            margin-left: 1.1rem; padding-left: 0.5rem;
-            border-left: 1px solid var(--border-hover); margin-top: 0.25rem;
-        }
-        .nav-folder-content .nav-link { font-size: 0.8rem; padding: 0.4rem 0.75rem; }
-
-        /* Main Bridge accordion */
-        .bridge-accordion { margin-bottom: 0.25rem; }
-        .bridge-header {
+        /* Folders (Accordions) */
+        .folder-btn {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0.5rem 0.75rem; cursor: pointer;
-            color: var(--text-secondary); font-size: 0.85rem; font-weight: 600;
-            border-radius: 6px; transition: all 0.2s; user-select: none;
+            width: 100%; border: none; background: none; color: var(--text-secondary);
+            padding: 0.5rem 0.75rem; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            border-radius: 8px; transition: all 0.2s;
         }
-        .bridge-header:hover { color: #fff; background: var(--bg-hover); }
-        .bridge-header-left { display: flex; align-items: center; gap: 8px; }
-        .bridge-arrow {
-            font-size: 0.65rem; color: var(--text-tertiary);
-            transition: transform 0.25s ease;
+        .folder-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .folder-content {
+            margin-left: 1.25rem; border-left: 1px solid var(--border);
+            padding-left: 0.5rem; display: none; margin-top: 2px; margin-bottom: 4px;
         }
-        .bridge-body {
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.3s ease;
+        .folder-content.open { display: block; }
+        .sub-folder-btn {
+            font-size: 0.8rem; padding: 0.4rem 0.75rem; color: var(--text-secondary);
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; background: none; border: none; cursor: pointer; font-weight: 600;
         }
-        .bridge-body.open { max-height: 1000px; }
-        .bridge-body-inner {
-            margin-left: 1.1rem; padding-left: 0.5rem;
-            border-left: 1px solid var(--border-hover);
-            padding-top: 0.25rem; padding-bottom: 0.25rem;
+        .sub-folder-btn:hover { color: #fff; }
+        .sub-folder-content {
+            margin-left: 0.5rem; border-left: 1px solid var(--border);
+            padding-left: 0.5rem; display: none; margin-top: 2px;
         }
-        .bridge-body-inner > .nav-link { font-size: 0.8rem; padding: 0.35rem 0.75rem; }
-        .bridge-arrow.rotated { transform: rotate(90deg); }
+        .sub-folder-content.open { display: block; }
+        .sub-folder-content .nav-item { font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; padding: 0.35rem 0.75rem; }
 
-        /* Nested Accordions (Sub-menus) */
-        .sub-accordion { margin-bottom: 2px; }
-        .sub-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0.35rem 0.75rem; cursor: pointer;
-            color: var(--text-secondary); font-size: 0.8rem; font-weight: 600;
-            border-radius: 6px; transition: all 0.2s; user-select: none;
-        }
-        .sub-header:hover { color: #fff; background: var(--bg-hover); }
-        .sub-body {
-            overflow: hidden; max-height: 0; transition: max-height 0.3s ease;
-        }
-        .sub-body.open { max-height: 600px; }
-        .sub-body-inner {
-            margin-left: 0.5rem; padding-left: 0.5rem;
-            border-left: 1px solid var(--border-color);
-            margin-top: 0.15rem; margin-bottom: 0.25rem;
-        }
-        .sub-body-inner .nav-link { font-size: 0.75rem; padding: 0.3rem 0.75rem; font-family: 'JetBrains Mono', monospace; }
+        .chevron { font-size: 0.65rem; transition: transform 0.2s; color: var(--text-muted); }
+        .rotated { transform: rotate(90deg); }
 
+        /* Main Content Area */
         main {
-            margin-left: var(--sidebar-width);
-            width: calc(100% - var(--sidebar-width));
-            padding: 4rem 5%;
-            display: flex;
-            justify-content: center;
+            margin-left: var(--sidebar-width); flex: 1;
+            padding: 4rem 5%; display: flex; justify-content: center;
         }
         .container { width: 100%; max-width: 900px; position: relative; }
 
-        .tab-content {
-            display: none;
-            opacity: 0;
-            transform: translateY(15px);
-            animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .tab-content.active { display: block; }
-        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        .tab-panel { display: none; animation: fadeIn 0.3s ease forwards; opacity: 0; transform: translateY(10px); }
+        .tab-panel.active { display: block; }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
-        .page-eyebrow { font-size: 0.85rem; color: var(--accent-blue); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; display: block; }
-        .page-eyebrow i { font-size: 0.75rem; margin: 0 4px; color: var(--text-tertiary); }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .breadcrumb span { color: var(--accent); }
+        .breadcrumb i { font-size: 0.7rem; }
+
         h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; line-height: 1.1; }
         .subtitle { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 3rem; }
-        h2 { font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); color: #fff; }
+        h2 { font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); color: #fff; }
         h3 { font-size: 1.1rem; font-weight: 600; margin: 2rem 0 1rem; color: #fff; }
         p { color: var(--text-secondary); margin-bottom: 1.5rem; }
 
-        .prop-list { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 2rem; }
-        .prop-item { display: flex; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); gap: 1.5rem; }
-        .prop-item:last-child { border-bottom: none; }
-        .prop-header { flex: 0 0 220px; }
-        .prop-name { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 700; color: #fff; display: block; margin-bottom: 0.4rem; }
-        .prop-desc { flex: 1; color: var(--text-secondary); font-size: 0.9rem; }
+        /* Specifications Table (Replaced .prop-list) */
+        .spec-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 2rem; overflow: hidden; }
+        .spec-row { display: flex; border-bottom: 1px solid var(--border); }
+        .spec-row:last-child { border-bottom: none; }
+        .spec-key { flex: 0 0 240px; padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.015); border-right: 1px solid var(--border); }
+        .spec-val { flex: 1; padding: 1.25rem 1.5rem; color: var(--text-secondary); font-size: 0.9rem; }
+        .name-label { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.85rem; color: #fff; display: block; margin-bottom: 0.4rem; }
 
-        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; font-weight: 600; }
-        .b-req { background: rgba(239,68,68,0.1); color: #ef4444; }
-        .b-opt { background: rgba(148,163,184,0.1); color: var(--text-secondary); }
-        .b-root { background: rgba(139,92,246,0.1); color: var(--accent-purple); }
-        .b-det { background: rgba(245,158,11,0.1); color: #f59e0b; }
-        .b-tag { background: rgba(59,130,246,0.12); color: var(--accent-blue); }
-        .b-mech { background: rgba(16,185,129,0.12); color: var(--accent-green); }
-        .b-event { background: rgba(236,72,153,0.12); color: var(--accent-pink); }
-        .b-cmd { background: rgba(245,158,11,0.12); color: var(--accent-orange); }
+        /* Badges */
+        .badge { display: inline-flex; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+        .b-req { background: var(--c-req-bg); color: var(--c-req-text); }
+        .b-opt { background: var(--c-opt-bg); color: var(--c-opt-text); }
+        .b-root { background: var(--c-root-bg); color: var(--c-root-text); }
+        .b-det { background: var(--c-det-bg); color: var(--c-det-text); }
+        .b-tag { background: var(--c-tag-bg); color: var(--c-tag-text); }
+        .b-mech { background: var(--c-mech-bg); color: var(--c-mech-text); }
 
+        /* Code Blocks */
         code { font-family: 'JetBrains Mono', monospace; background: rgba(255,255,255,0.08); padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.85em; color: #e2e8f0; }
-        .code-window { background: #09090b; border: 1px solid var(--border-color); border-radius: 12px; margin: 1.5rem 0; }
-        .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); background: rgba(255,255,255,0.02); }
-        .code-title { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-tertiary); }
-        pre { padding: 1.5rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #cbd5e1; }
+        .code-block { background: #000; border: 1px solid var(--border); border-radius: 12px; margin: 1.5rem 0; position: relative; }
+        .code-header { padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0; }
+        .code-title { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); }
+        pre { padding: 1.5rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; }
         .s-k { color: #f472b6; } .s-v { color: #38bdf8; } .s-s { color: #a7f3d0; } .s-c { color: #64748b; font-style: italic; }
 
-        .btn-copy { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
-        .btn-copy:hover { color: #fff; background: var(--bg-hover); }
+        .btn-copy { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
+        .btn-copy:hover { color: #fff; border-color: var(--border-bright); }
 
-        .example-preview { margin-top: 2rem; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: var(--bg-card); }
+        .example-preview { margin-top: 2rem; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg-card); }
         .example-preview img { display: block; width: 100%; height: auto; }
 
-        .sig-block { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 0.75rem; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #94a3b8; }
-        .sig-highlight { color: #38bdf8; }
+        .signature { background: var(--bg-code); border: 1px solid var(--border-bright); padding: 1.25rem; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; margin-bottom: 1.5rem; color: #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .sig-cmd { color: #38bdf8; font-weight: 700; }
         .sig-return { color: #a7f3d0; }
+        .sig-opt { color: #64748b; font-style: italic; }
 
-        .info-box { background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 1rem 1.25rem; margin: 1.5rem 0; font-size: 0.88rem; color: var(--text-secondary); }
-        .info-box strong { color: var(--accent-blue); }
-        .feature-list { list-style: none; padding-left: 0; margin-top: 1rem; }
-        .feature-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--text-secondary); }
-        .feature-list li::before { content: "•"; color: var(--accent-blue); position: absolute; left: 0; font-weight: bold; font-size: 1.2rem; line-height: 1; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-bright); }
     </style>
 </head>
 <body>
@@ -210,185 +180,125 @@
 <aside>
     <div class="logo"><i class="fas fa-toolbox"></i> DENIZEN-UTILITIES</div>
 
-    <div class="nav-section">
-        <div class="nav-title">General</div>
-        <a class="nav-link" data-tab="tab-config">Configuration</a>
+    <div class="nav-group">
+        <div class="nav-label">General</div>
+        <a class="nav-item" data-tab="tab-config">Configuration</a>
     </div>
 
-    <div class="nav-section">
-        <div class="nav-title">Containers</div>
-        <div class="nav-folder">
-            <div class="nav-folder-title"><i class="fas fa-layer-group"></i> Dialog</div>
-            <div class="nav-folder-content">
-                <a class="nav-link active" data-tab="tab-intro">Overview & Core</a>
-                <a class="nav-link" data-tab="tab-type-multi">Layout: Multi</a>
-                <a class="nav-link" data-tab="tab-type-list">Layout: List</a>
-                <a class="nav-link" data-tab="tab-type-confirm">Layout: Confirm</a>
-                <a class="nav-link" data-tab="tab-type-notice">Layout: Notice</a>
-                <a class="nav-link" data-tab="tab-inputs">Components: Inputs</a>
-                <a class="nav-link" data-tab="tab-bodies">Components: Bodies</a>
-                <a class="nav-link" data-tab="tab-actions">Buttons & Actions</a>
-                <a class="nav-link" data-tab="tab-example">Full Example</a>
-            </div>
+    <div class="nav-group">
+        <div class="nav-label">Containers</div>
+        <button class="folder-btn" onclick="toggleFolder('folder-dialog', this)">
+            <span style="display:flex;align-items:center;gap:8px"><i class="fas fa-layer-group" style="font-size:0.9rem"></i> Dialog</span>
+            <i class="fas fa-chevron-right chevron" id="icon-folder-dialog"></i>
+        </button>
+        <div class="folder-content" id="folder-dialog">
+            <a class="nav-item active" data-tab="tab-intro">Overview & Core</a>
+            <a class="nav-item" data-tab="tab-type-multi">Layout: Multi</a>
+            <a class="nav-item" data-tab="tab-type-list">Layout: List</a>
+            <a class="nav-item" data-tab="tab-type-confirm">Layout: Confirm</a>
+            <a class="nav-item" data-tab="tab-type-notice">Layout: Notice</a>
+            <a class="nav-item" data-tab="tab-inputs">Components: Inputs</a>
+            <a class="nav-item" data-tab="tab-bodies">Components: Bodies</a>
+            <a class="nav-item" data-tab="tab-actions">Buttons & Actions</a>
+            <a class="nav-item" data-tab="tab-example">Full Example</a>
         </div>
     </div>
 
-    <div class="nav-section">
-        <div class="nav-title">Events</div>
-        <a class="nav-link" data-tab="tab-event-connection">Player Connection Configure</a>
+    <div class="nav-group">
+        <div class="nav-label">Events</div>
+        <a class="nav-item" data-tab="tab-event-connection">Player Connect Configure</a>
     </div>
 
-    <div class="nav-section">
-        <div class="nav-title">Objects</div>
-        <a class="nav-link" data-tab="tab-biome">BiomeTag</a>
-        <a class="nav-link" data-tab="tab-connection">ConnectionTag</a>
-        <a class="nav-link" data-tab="tab-player">PlayerTag</a>
+    <div class="nav-group">
+        <div class="nav-label">Objects</div>
+        <a class="nav-item" data-tab="tab-biome">BiomeTag</a>
+        <a class="nav-item" data-tab="tab-connection">ConnectionTag</a>
+        <a class="nav-item" data-tab="tab-player">PlayerTag</a>
     </div>
 
-    <div class="nav-section">
-        <div class="nav-title">Bridges</div>
+    <div class="nav-group">
+        <div class="nav-label">Bridges</div>
 
-        <!-- BETTERMODEL BRIDGE -->
-        <div class="bridge-accordion">
-            <div class="bridge-header" onclick="toggleBridge('bettermodel')">
-                <span class="bridge-header-left">
-                    <i class="fas fa-cube" style="color:#38bdf8;font-size:0.85rem"></i> BetterModel
-                </span>
-                <i class="fas fa-chevron-right bridge-arrow" id="arrow-bettermodel"></i>
+        <!-- BetterModel -->
+        <button class="folder-btn" onclick="toggleFolder('folder-bm', this)">
+            <span style="display:flex;align-items:center;gap:8px"><i class="fas fa-cube" style="color:#38bdf8;font-size:0.9rem"></i> BetterModel</span>
+            <i class="fas fa-chevron-right chevron" id="icon-folder-bm"></i>
+        </button>
+        <div class="folder-content" id="folder-bm">
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-bm-cmd', this)">
+                Commands <i class="fas fa-chevron-right chevron" id="icon-sub-bm-cmd"></i>
+            </button>
+            <div class="sub-folder-content" id="sub-bm-cmd">
+                <a class="nav-item" data-tab="tab-bm-cmd-bmmodel">- bmmodel</a>
+                <a class="nav-item" data-tab="tab-bm-cmd-bmlimb">- bmlimb</a>
+                <a class="nav-item" data-tab="tab-bm-cmd-bmstate">- bmstate</a>
+                <a class="nav-item" data-tab="tab-bm-cmd-bmpart">- bmpart</a>
             </div>
-            <div class="bridge-body" id="body-bettermodel">
-                <div class="bridge-body-inner">
-                    <!-- BM Commands -->
-                    <div class="sub-accordion">
-                        <div class="sub-header" onclick="toggleSub('bm-cmd')">
-                            <span>Commands</span> <i class="fas fa-chevron-right bridge-arrow" id="arrow-bm-cmd"></i>
-                        </div>
-                        <div class="sub-body" id="sub-bm-cmd">
-                            <div class="sub-body-inner">
-                                <a class="nav-link" data-tab="tab-bm-cmd-bmmodel">- bmmodel</a>
-                                <a class="nav-link" data-tab="tab-bm-cmd-bmlimb">- bmlimb</a>
-                                <a class="nav-link" data-tab="tab-bm-cmd-bmstate">- bmstate</a>
-                                <a class="nav-link" data-tab="tab-bm-cmd-bmpart">- bmpart</a>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- BM Events -->
-                    <div class="sub-accordion">
-                        <div class="sub-header" onclick="toggleSub('bm-evt')">
-                            <span>Events</span> <i class="fas fa-chevron-right bridge-arrow" id="arrow-bm-evt"></i>
-                        </div>
-                        <div class="sub-body" id="sub-bm-evt">
-                            <div class="sub-body-inner">
-                                <a class="nav-link" data-tab="tab-bm-evt-start">bm start reload</a>
-                                <a class="nav-link" data-tab="tab-bm-evt-end">bm end reload</a>
-                            </div>
-                        </div>
-                    </div>
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-bm-evt', this)">
+                Events <i class="fas fa-chevron-right chevron" id="icon-sub-bm-evt"></i>
+            </button>
+            <div class="sub-folder-content" id="sub-bm-evt">
+                <a class="nav-item" data-tab="tab-bm-evt-start">bm start reload</a>
+                <a class="nav-item" data-tab="tab-bm-evt-end">bm end reload</a>
+            </div>
 
-                    <!-- BM Objects -->
-                    <div class="sub-accordion">
-                        <div class="sub-header" onclick="toggleSub('bm-obj')">
-                            <span>Objects</span> <i class="fas fa-chevron-right bridge-arrow" id="arrow-bm-obj"></i>
-                        </div>
-                        <div class="sub-body" id="sub-bm-obj">
-                            <div class="sub-body-inner">
-                                <a class="nav-link" data-tab="tab-bm-obj-model">BMModelTag</a>
-                                <a class="nav-link" data-tab="tab-bm-obj-bone">BMBoneTag</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-bm-obj', this)">
+                Objects <i class="fas fa-chevron-right chevron" id="icon-sub-bm-obj"></i>
+            </button>
+            <div class="sub-folder-content" id="sub-bm-obj">
+                <a class="nav-item" data-tab="tab-bm-obj-model">BMModelTag</a>
+                <a class="nav-item" data-tab="tab-bm-obj-bone">BMBoneTag</a>
             </div>
         </div>
 
-        <!-- SKINSRESTORER BRIDGE -->
-        <div class="bridge-accordion">
-            <div class="bridge-header" onclick="toggleBridge('skinsrestorer')">
-                <span class="bridge-header-left">
-                    <i class="fas fa-user-circle" style="color:#a78bfa;font-size:0.85rem"></i> SkinsRestorer
-                </span>
-                <i class="fas fa-chevron-right bridge-arrow" id="arrow-skinsrestorer"></i>
+        <!-- SkinsRestorer -->
+        <button class="folder-btn" onclick="toggleFolder('folder-sr', this)">
+            <span style="display:flex;align-items:center;gap:8px"><i class="fas fa-user-circle" style="color:#a78bfa;font-size:0.9rem"></i> SkinsRestorer</span>
+            <i class="fas fa-chevron-right chevron" id="icon-folder-sr"></i>
+        </button>
+        <div class="folder-content" id="folder-sr">
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-sr-cmd', this)">
+                Commands <i class="fas fa-chevron-right chevron" id="icon-sub-sr-cmd"></i>
+            </button>
+            <div class="sub-folder-content" id="sub-sr-cmd">
+                <a class="nav-item" data-tab="tab-sr-cmd-skin">- skin</a>
             </div>
-            <div class="bridge-body" id="body-skinsrestorer">
-                <div class="bridge-body-inner">
-                    <!-- SR Commands -->
-                    <div class="sub-accordion">
-                        <div class="sub-header" onclick="toggleSub('sr-cmd')">
-                            <span>Commands</span> <i class="fas fa-chevron-right bridge-arrow" id="arrow-sr-cmd"></i>
-                        </div>
-                        <div class="sub-body" id="sub-sr-cmd">
-                            <div class="sub-body-inner">
-                                <a class="nav-link" data-tab="tab-sr-cmd-skin">- skin</a>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- SR Events -->
-                    <div class="sub-accordion">
-                        <div class="sub-header" onclick="toggleSub('sr-evt')">
-                            <span>Events</span> <i class="fas fa-chevron-right bridge-arrow" id="arrow-sr-evt"></i>
-                        </div>
-                        <div class="sub-body" id="sub-sr-evt">
-                            <div class="sub-body-inner">
-                                <a class="nav-link" data-tab="tab-sr-evt-apply">player skin apply</a>
-                            </div>
-                        </div>
-                    </div>
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-sr-evt', this)">
+                Events <i class="fas fa-chevron-right chevron" id="icon-sub-sr-evt"></i>
+            </button>
+            <div class="sub-folder-content" id="sub-sr-evt">
+                <a class="nav-item" data-tab="tab-sr-evt-apply">player skin apply</a>
+            </div>
 
-                    <!-- SR Tags -->
-                    <div class="sub-accordion">
-                        <div class="sub-header" onclick="toggleSub('sr-tags')">
-                            <span>Tags</span> <i class="fas fa-chevron-right bridge-arrow" id="arrow-sr-tags"></i>
-                        </div>
-                        <div class="sub-body" id="sub-sr-tags">
-                            <div class="sub-body-inner">
-                                <a class="nav-link" data-tab="tab-sr-tag-player">PlayerTag</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-sr-tag', this)">
+                Tags <i class="fas fa-chevron-right chevron" id="icon-sub-sr-tag"></i>
+            </button>
+            <div class="sub-folder-content" id="sub-sr-tag">
+                <a class="nav-item" data-tab="tab-sr-tag-player">PlayerTag</a>
             </div>
         </div>
 
-        <!-- DISCORDSRV BRIDGE -->
-        <div class="bridge-accordion">
-            <div class="bridge-header" onclick="toggleBridge('discordsrv')">
-                <span class="bridge-header-left">
-                    <i class="fab fa-discord" style="color:#5865f2;font-size:0.85rem"></i> DiscordSRV
-                </span>
-                <i class="fas fa-chevron-right bridge-arrow" id="arrow-discordsrv"></i>
+        <!-- DiscordSRV -->
+        <button class="folder-btn" onclick="toggleFolder('folder-dsrv', this)">
+            <span style="display:flex;align-items:center;gap:8px"><i class="fab fa-discord" style="color:#5865f2;font-size:0.9rem"></i> DiscordSRV</span>
+            <i class="fas fa-chevron-right chevron" id="icon-folder-dsrv"></i>
+        </button>
+        <div class="folder-content" id="folder-dsrv">
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-dsrv-evt', this)">
+                Events <i class="fas fa-chevron-right chevron" id="icon-sub-dsrv-evt"></i>
+            </button>
+            <div class="sub-folder-content" id="sub-dsrv-evt">
+                <a class="nav-item" data-tab="tab-dsrv-evt-link">player links</a>
+                <a class="nav-item" data-tab="tab-dsrv-evt-unlink">player unlinks</a>
             </div>
-            <div class="bridge-body" id="body-discordsrv">
-                <div class="bridge-body-inner">
-                    <!-- DSRV Events -->
-                    <div class="sub-accordion">
-                        <div class="sub-header" onclick="toggleSub('dsrv-evt')">
-                            <span>Events</span> <i class="fas fa-chevron-right bridge-arrow" id="arrow-dsrv-evt"></i>
-                        </div>
-                        <div class="sub-body" id="sub-dsrv-evt">
-                            <div class="sub-body-inner">
-                                <a class="nav-link" data-tab="tab-dsrv-evt-link">player links discord</a>
-                                <a class="nav-link" data-tab="tab-dsrv-evt-unlink">player unlinks discord</a>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- DSRV Tags -->
-                    <div class="sub-accordion">
-                        <div class="sub-header" onclick="toggleSub('dsrv-tags')">
-                            <span>Tags</span> <i class="fas fa-chevron-right bridge-arrow" id="arrow-dsrv-tags"></i>
-                        </div>
-                        <div class="sub-body" id="sub-dsrv-tags">
-                            <div class="sub-body-inner">
-                                <a class="nav-link" data-tab="tab-dsrv-tag-player">PlayerTag</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-dsrv-tag', this)">
+                Tags <i class="fas fa-chevron-right chevron" id="icon-sub-dsrv-tag"></i>
+            </button>
+            <div class="sub-folder-content" id="sub-dsrv-tag">
+                <a class="nav-item" data-tab="tab-dsrv-tag-player">PlayerTag</a>
             </div>
         </div>
     </div>
@@ -398,23 +308,26 @@
     <div class="container">
 
         <!-- ===== CONFIGURATION ===== -->
-        <div id="tab-config" class="tab-content">
-            <span class="page-eyebrow">General <i class="fas fa-chevron-right"></i> Configuration</span>
+        <div id="tab-config" class="tab-panel">
+            <div class="breadcrumb">General <i class="fas fa-chevron-right"></i> <span>Configuration</span></div>
             <h1>Plugin Configuration</h1>
             <p class="subtitle">Global settings and fixes available in the plugin's <code>config.yml</code> file.</p>
 
             <h2>Fixes & Patches</h2>
-            <div class="prop-list">
-                <div class="prop-item">
-                    <div class="prop-header"><span class="prop-name">fixes.fakeinternaldata</span><span class="badge b-opt">Boolean</span></div>
-                    <div class="prop-desc">
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key">
+                        <span class="name-label">fixes.fakeinternaldata</span>
+                        <div class="badge b-opt">Boolean</div>
+                    </div>
+                    <div class="spec-val">
                         Enables a patch for Denizen's <code>fakeinternaldata</code> command on Minecraft 1.21 and higher.
                         This patch is provided because the Denizen developers still haven't fixed this command on newer game versions. Default is <code>true</code>.
                     </div>
                 </div>
             </div>
 
-            <div class="code-window">
+            <div class="code-block">
                 <div class="code-header"><span class="code-title">config.yml</span></div>
                 <pre><span class="s-k">fixes:</span>
   <span class="s-c"># Fix for Denizen 'fakeinternaldata' command on MC 1.21+</span>
@@ -422,13 +335,15 @@
             </div>
         </div>
 
-        <!-- ===== DIALOG, EVENTS, OBJECTS CONTENT ===== -->
-        <div id="tab-intro" class="tab-content active">
-            <span class="page-eyebrow">Containers <i class="fas fa-chevron-right"></i> Dialog</span>
+        <!-- ===== DIALOG: INTRO ===== -->
+        <div id="tab-intro" class="tab-panel active">
+            <div class="breadcrumb">Containers <i class="fas fa-chevron-right"></i> Dialog <i class="fas fa-chevron-right"></i> <span>Overview & Core</span></div>
             <h1>Overview & Core Setup</h1>
             <p class="subtitle">Dialog script containers allow you to define native Paper API UI screens rendered on the client side.</p>
+
             <h2>Anatomy of a Script</h2>
-            <div class="code-window"><div class="code-header"><span class="code-title">Structure</span></div>
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">Structure</span></div>
                 <pre><span class="s-k">my_dialog:</span>
     <span class="s-k">type:</span> <span class="s-v">dialog</span>
     <span class="s-k">base:</span>
@@ -436,132 +351,197 @@
         <span class="s-k">title:</span> <span class="s-s">&lt;gold&gt;Header Title</span>
     <span class="s-k">bodies:</span> <span class="s-v">...</span>
     <span class="s-k">inputs:</span> <span class="s-v">...</span>
-    <span class="s-k">buttons:</span> <span class="s-v">...</span></pre></div>
+    <span class="s-k">buttons:</span> <span class="s-v">...</span></pre>
+            </div>
+
             <h2>Universal Base Properties</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">type</span><span class="badge b-req">Required</span></div><div class="prop-desc">The layout engine: <code>multi</code>, <code>list</code>, <code>confirm</code>, or <code>notice</code>.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">title</span><span class="badge b-req">Required</span></div><div class="prop-desc">The main header. Supports tags and MiniMessage.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">external title</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">The window title in the client's OS frame.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">can close with escape</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">Boolean. If <code>true</code> (default), ESC closes the window.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">type</span><span class="badge b-req">Required</span></div>
+                    <div class="spec-val">The layout engine: <code>multi</code>, <code>list</code>, <code>confirm</code>, or <code>notice</code>.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">title</span><span class="badge b-req">Required</span></div>
+                    <div class="spec-val">The main header. Supports tags and MiniMessage.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">external title</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">The window title in the client's OS frame.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">can close with escape</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">Boolean. If <code>true</code> (default), ESC closes the window.</div>
+                </div>
             </div>
         </div>
 
-        <div id="tab-type-multi" class="tab-content">
-            <span class="page-eyebrow">Containers <i class="fas fa-chevron-right"></i> Dialog</span>
+        <!-- ===== DIALOG: MULTI ===== -->
+        <div id="tab-type-multi" class="tab-panel">
+            <div class="breadcrumb">Containers <i class="fas fa-chevron-right"></i> Dialog <i class="fas fa-chevron-right"></i> <span>Layout: Multi</span></div>
             <h1>Layout: Multi</h1>
             <p class="subtitle">A versatile form layout. Supports multiple inputs and custom buttons.</p>
+
             <h2>Multi-specific `base:` Properties</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">columns</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">Integer. Arrange elements into grid columns.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">exit button</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">A button definition block used as a dedicated close button.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">columns</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">Integer. Arrange elements into grid columns.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">exit button</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">A button definition block used as a dedicated close button.</div>
+                </div>
             </div>
+
             <h2>Multi-specific Root Properties</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">buttons:</span><span class="badge b-req">Required</span></div><div class="prop-desc">A map of action buttons at the bottom.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">buttons:</span><span class="badge b-req">Required</span></div>
+                    <div class="spec-val">A map of action buttons at the bottom.</div>
+                </div>
             </div>
         </div>
 
-        <div id="tab-type-list" class="tab-content">
-            <span class="page-eyebrow">Containers <i class="fas fa-chevron-right"></i> Dialog</span>
+        <!-- ===== DIALOG: LIST ===== -->
+        <div id="tab-type-list" class="tab-panel">
+            <div class="breadcrumb">Containers <i class="fas fa-chevron-right"></i> Dialog <i class="fas fa-chevron-right"></i> <span>Layout: List</span></div>
             <h1>Layout: List</h1>
             <p class="subtitle">Designed to display buttons that open other dialog scripts.</p>
+
             <h2>List-specific `base:` Properties</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">columns</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">Integer. Columns in the grid.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">button width</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">Integer. Sets a fixed pixel width for auto-generated buttons.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">exit button</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">A button definition block used as a dedicated close button.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">columns</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">Integer. Columns in the grid.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">button width</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">Integer. Sets a fixed pixel width for auto-generated buttons.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">exit button</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">A button definition block used as a dedicated close button.</div>
+                </div>
             </div>
+
             <h2>List-specific Root Properties</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">dialogs:</span><span class="badge b-req">Required</span></div><div class="prop-desc">A list of script names to display.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">dialogs:</span><span class="badge b-req">Required</span></div>
+                    <div class="spec-val">A list of script names to display.</div>
+                </div>
             </div>
         </div>
 
-        <div id="tab-type-confirm" class="tab-content">
-            <span class="page-eyebrow">Containers <i class="fas fa-chevron-right"></i> Dialog</span>
+        <!-- ===== DIALOG: CONFIRM ===== -->
+        <div id="tab-type-confirm" class="tab-panel">
+            <div class="breadcrumb">Containers <i class="fas fa-chevron-right"></i> Dialog <i class="fas fa-chevron-right"></i> <span>Layout: Confirm</span></div>
             <h1>Layout: Confirm</h1>
             <p class="subtitle">A simple confirmation box with two actions.</p>
+
             <h2>Confirm-specific Root Properties</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">yes:</span><span class="badge b-root">Root</span></div><div class="prop-desc">Affirmative ActionButton definition.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">no:</span><span class="badge b-root">Root</span></div><div class="prop-desc">Negative ActionButton definition.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">yes:</span><span class="badge b-root">Root</span></div>
+                    <div class="spec-val">Affirmative ActionButton definition.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">no:</span><span class="badge b-root">Root</span></div>
+                    <div class="spec-val">Negative ActionButton definition.</div>
+                </div>
             </div>
         </div>
 
-        <div id="tab-type-notice" class="tab-content">
-            <span class="page-eyebrow">Containers <i class="fas fa-chevron-right"></i> Dialog</span>
+        <!-- ===== DIALOG: NOTICE ===== -->
+        <div id="tab-type-notice" class="tab-panel">
+            <div class="breadcrumb">Containers <i class="fas fa-chevron-right"></i> Dialog <i class="fas fa-chevron-right"></i> <span>Layout: Notice</span></div>
             <h1>Layout: Notice</h1>
             <p class="subtitle">A simple alert box.</p>
+
             <h2>Notice-specific Root Properties</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">button:</span><span class="badge b-root">Root</span></div><div class="prop-desc">Optional ActionButton definition. If omitted, creates a default "OK" button.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">button:</span><span class="badge b-root">Root</span></div>
+                    <div class="spec-val">Optional ActionButton definition. If omitted, creates a default "OK" button.</div>
+                </div>
             </div>
         </div>
 
-        <div id="tab-inputs" class="tab-content">
-            <span class="page-eyebrow">Containers <i class="fas fa-chevron-right"></i> Dialog</span>
+        <!-- ===== DIALOG: INPUTS ===== -->
+        <div id="tab-inputs" class="tab-panel">
+            <div class="breadcrumb">Containers <i class="fas fa-chevron-right"></i> Dialog <i class="fas fa-chevron-right"></i> <span>Components: Inputs</span></div>
             <h1>Components: Inputs</h1>
             <p class="subtitle">Inputs defined under <code>inputs:</code>. Values available via <code>&lt;context.key_name&gt;</code>.</p>
+
             <h3>Text Input (type: text)</h3>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">width</span></div><div class="prop-desc">Field width.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">max length</span></div><div class="prop-desc">Limit characters.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">initial</span></div><div class="prop-desc">Default text.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">label visible</span></div><div class="prop-desc">Boolean. Show/Hide the label.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">multiline options</span></div><div class="prop-desc">Section with <code>max lines</code> and <code>height</code>.</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">width</span></div><div class="spec-val">Field width.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">max length</span></div><div class="spec-val">Limit characters.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">initial</span></div><div class="spec-val">Default text.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">label visible</span></div><div class="spec-val">Boolean. Show/Hide the label.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">multiline options</span></div><div class="spec-val">Section with <code>max lines</code> and <code>height</code>.</div></div>
             </div>
+
             <h3>Boolean Input (type: boolean)</h3>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">initial</span></div><div class="prop-desc">Default state (true/false).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">on true / on false</span></div><div class="prop-desc">Labels for ON/OFF states.</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">initial</span></div><div class="spec-val">Default state (true/false).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">on true / on false</span></div><div class="spec-val">Labels for ON/OFF states.</div></div>
             </div>
+
             <h3>Number Input (type: number)</h3>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">start / end</span><span class="badge b-req">Req</span></div><div class="prop-desc">Range bounds (Float).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">step</span></div><div class="prop-desc">Increment step.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">initial</span></div><div class="prop-desc">Starting value.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">width</span></div><div class="prop-desc">Slider width.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">label format</span></div><div class="prop-desc">Format string (e.g. <code>"Val: %s"</code>).</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">start / end</span><span class="badge b-req">Req</span></div><div class="spec-val">Range bounds (Float).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">step</span></div><div class="spec-val">Increment step.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">initial</span></div><div class="spec-val">Starting value.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">width</span></div><div class="spec-val">Slider width.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">label format</span></div><div class="spec-val">Format string (e.g. <code>"Val: %s"</code>).</div></div>
             </div>
+
             <h3>Single Choice (type: single)</h3>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">options:</span><span class="badge b-req">Req</span></div><div class="prop-desc">Map of options (<code>id</code>, <code>display</code>, <code>initial</code>).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">label visible</span></div><div class="prop-desc">Boolean.</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">options:</span><span class="badge b-req">Req</span></div><div class="spec-val">Map of options (<code>id</code>, <code>display</code>, <code>initial</code>).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">label visible</span></div><div class="spec-val">Boolean.</div></div>
             </div>
         </div>
 
-        <div id="tab-bodies" class="tab-content">
-            <span class="page-eyebrow">Containers <i class="fas fa-chevron-right"></i> Dialog</span>
+        <!-- ===== DIALOG: BODIES ===== -->
+        <div id="tab-bodies" class="tab-panel">
+            <div class="breadcrumb">Containers <i class="fas fa-chevron-right"></i> Dialog <i class="fas fa-chevron-right"></i> <span>Components: Bodies</span></div>
             <h1>Components: Bodies</h1>
             <p class="subtitle">Defined under <code>bodies:</code> root key.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">type: message</span></div><div class="prop-desc">• <code>message</code>: The text.<br>• <code>width</code>: Fixed width.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">type: item</span></div><div class="prop-desc">• <code>item</code>: ItemTag.<br>• <code>width / height</code>: Visual size.<br>• <code>show tooltip / decorations</code>: Booleans.<br>• <code>description</code>: Nested message-type body.</div></div>
+
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">type: message</span></div><div class="spec-val">• <code>message</code>: The text.<br>• <code>width</code>: Fixed width.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">type: item</span></div><div class="spec-val">• <code>item</code>: ItemTag.<br>• <code>width / height</code>: Visual size.<br>• <code>show tooltip / decorations</code>: Booleans.<br>• <code>description</code>: Nested message-type body.</div></div>
             </div>
         </div>
 
-        <div id="tab-actions" class="tab-content">
-            <span class="page-eyebrow">Containers <i class="fas fa-chevron-right"></i> Dialog</span>
+        <!-- ===== DIALOG: ACTIONS ===== -->
+        <div id="tab-actions" class="tab-panel">
+            <div class="breadcrumb">Containers <i class="fas fa-chevron-right"></i> Dialog <i class="fas fa-chevron-right"></i> <span>Buttons & Actions</span></div>
             <h1>Buttons & Actions</h1>
             <p class="subtitle">Common properties and action types.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">label</span><span class="badge b-req">Req</span></div><div class="prop-desc">Button text.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">tooltip</span></div><div class="prop-desc">Hover text.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">width</span></div><div class="prop-desc">Button width.</div></div>
+
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">label</span><span class="badge b-req">Req</span></div><div class="spec-val">Button text.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">tooltip</span></div><div class="spec-val">Hover text.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">width</span></div><div class="spec-val">Button width.</div></div>
             </div>
+
             <h2>Action Types (type:)</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">SCRIPT</span></div><div class="prop-desc"><strong>Key:</strong> <code>script:</code>. Runs Denizen commands.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">RUN_COMMAND</span></div><div class="prop-desc"><strong>Key:</strong> <code>command:</code>. Runs a player command. <b>Must include slash (/)</b>.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">OPEN_URL</span></div><div class="prop-desc"><strong>Key:</strong> <code>url:</code>. Opens a link.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">COPY_TO_CLIPBOARD</span></div><div class="prop-desc"><strong>Key:</strong> <code>text:</code>. Copies text.</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">SCRIPT</span></div><div class="spec-val"><strong>Key:</strong> <code>script:</code>. Runs Denizen commands.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">RUN_COMMAND</span></div><div class="spec-val"><strong>Key:</strong> <code>command:</code>. Runs a player command. <b>Must include slash (/)</b>.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">OPEN_URL</span></div><div class="spec-val"><strong>Key:</strong> <code>url:</code>. Opens a link.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">COPY_TO_CLIPBOARD</span></div><div class="spec-val"><strong>Key:</strong> <code>text:</code>. Copies text.</div></div>
             </div>
         </div>
 
-        <div id="tab-example" class="tab-content">
-            <span class="page-eyebrow">Containers <i class="fas fa-chevron-right"></i> Dialog</span>
+        <!-- ===== DIALOG: EXAMPLE ===== -->
+        <div id="tab-example" class="tab-panel">
+            <div class="breadcrumb">Containers <i class="fas fa-chevron-right"></i> Dialog <i class="fas fa-chevron-right"></i> <span>Full Example</span></div>
             <h1>Full Example</h1>
-            <div class="code-window">
+            <div class="code-block">
                 <div class="code-header"><span class="code-title">staff_application.dsc</span><button class="btn-copy">Copy YAML</button></div>
                 <pre><span class="s-k">st:</span>
     <span class="s-k">type:</span> <span class="s-v">dialog</span>
@@ -604,286 +584,373 @@
             <div class="example-preview"><img src="https://i.postimg.cc/d3fHjsND/image.png" alt="Preview"></div>
         </div>
 
-        <div id="tab-event-connection" class="tab-content">
-            <span class="page-eyebrow">Events</span>
+        <!-- ===== EVENTS ===== -->
+        <div id="tab-event-connection" class="tab-panel">
+            <div class="breadcrumb">Events <i class="fas fa-chevron-right"></i> <span>Player Connection Configure</span></div>
             <h1>player connection configure</h1>
             <p class="subtitle">Triggers when a player's connection is being configured (Paper specific).</p>
+
             <h2>Contexts</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;context.connection&gt;</span></div><div class="prop-desc">Returns the <code>ConnectionTag</code> associated with the joining player.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;context.connection&gt;</span></div>
+                    <div class="spec-val">Returns the <code>ConnectionTag</code> associated with the joining player.</div>
+                </div>
             </div>
+
             <h2>Determinations</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">WAIT</span><br><span class="badge b-det">Determine</span></div><div class="prop-desc">Delays the configuration process for up to 1 minute. During this time, you can show Dialogs or process backend tasks. If not finished manually via <code>connect</code> mechanism within 1 minute, the connection will be dropped.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">WAIT</span><span class="badge b-det">Determine</span></div>
+                    <div class="spec-val">Delays the configuration process for up to 1 minute. During this time, you can show Dialogs or process backend tasks. If not finished manually via <code>connect</code> mechanism within 1 minute, the connection will be dropped.</div>
+                </div>
             </div>
         </div>
 
-        <div id="tab-biome" class="tab-content">
-            <span class="page-eyebrow">Objects</span>
+        <!-- ===== OBJECTS ===== -->
+        <div id="tab-biome" class="tab-panel">
+            <div class="breadcrumb">Objects <i class="fas fa-chevron-right"></i> <span>BiomeTag</span></div>
             <h1>BiomeTag</h1>
             <p class="subtitle">Additions for interacting with Biomes.</p>
+
             <h2>Tags</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;BiomeTag.sky_color&gt;</span></div><div class="prop-desc">Returns the <code>ColorTag</code> of the biome's sky color.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;BiomeTag.sky_light_color&gt;</span></div><div class="prop-desc">Returns the <code>ColorTag</code> of the biome's skylight color.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BiomeTag.sky_color&gt;</span></div>
+                    <div class="spec-val">Returns the <code>ColorTag</code> of the biome's sky color.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BiomeTag.sky_light_color&gt;</span></div>
+                    <div class="spec-val">Returns the <code>ColorTag</code> of the biome's skylight color.</div>
+                </div>
             </div>
+
             <h2>Mechanisms</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">sky_color</span><br><span class="badge b-req">Input: ColorTag</span></div><div class="prop-desc">Sets the biome's sky color permanently.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">sky_light_color</span><br><span class="badge b-req">Input: ColorTag</span></div><div class="prop-desc">Sets the biome's skylight color permanently.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">sky_color</span><span class="badge b-req">Input: ColorTag</span></div>
+                    <div class="spec-val">Sets the biome's sky color permanently.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">sky_light_color</span><span class="badge b-req">Input: ColorTag</span></div>
+                    <div class="spec-val">Sets the biome's skylight color permanently.</div>
+                </div>
             </div>
         </div>
 
-        <div id="tab-connection" class="tab-content">
-            <span class="page-eyebrow">Objects</span>
+        <div id="tab-connection" class="tab-panel">
+            <div class="breadcrumb">Objects <i class="fas fa-chevron-right"></i> <span>ConnectionTag</span></div>
             <h1>ConnectionTag</h1>
             <p class="subtitle">Methods and properties for interacting with client connections.</p>
+
             <h2>Tags</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;ConnectionTag.uuid&gt;</span></div><div class="prop-desc">Returns the <code>ElementTag</code> containing the player profile's UUID associated with this connection.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;ConnectionTag.name&gt;</span></div><div class="prop-desc">Returns the <code>ElementTag</code> containing the player profile's name associated with this connection.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;ConnectionTag.uuid&gt;</span></div>
+                    <div class="spec-val">Returns the <code>ElementTag</code> containing the player profile's UUID associated with this connection.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;ConnectionTag.name&gt;</span></div>
+                    <div class="spec-val">Returns the <code>ElementTag</code> containing the player profile's name associated with this connection.</div>
+                </div>
             </div>
+
             <h2>Mechanisms</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">connect</span><br><span class="badge b-opt">Input: None</span></div><div class="prop-desc">Confirms the connection and allows the player to continue the login process.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">disconnect</span><br><span class="badge b-req">Input: ElementTag</span></div><div class="prop-desc">Disconnects the connection with a specified reason. Supports Paper-formatted text (MiniMessage/Legacy).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">show_dialog</span><br><span class="badge b-req">Input: ElementTag</span></div><div class="prop-desc">Shows a specific dialog to the connection using the exact name of a Dialog script container.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">close_dialog</span><br><span class="badge b-opt">Input: None</span></div><div class="prop-desc">Closes any currently open dialog for this specific connection.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">connect</span><span class="badge b-opt">Input: None</span></div>
+                    <div class="spec-val">Confirms the connection and allows the player to continue the login process.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">disconnect</span><span class="badge b-req">Input: ElementTag</span></div>
+                    <div class="spec-val">Disconnects the connection with a specified reason. Supports Paper-formatted text (MiniMessage/Legacy).</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">show_dialog</span><span class="badge b-req">Input: ElementTag</span></div>
+                    <div class="spec-val">Shows a specific dialog to the connection using the exact name of a Dialog script container.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">close_dialog</span><span class="badge b-opt">Input: None</span></div>
+                    <div class="spec-val">Closes any currently open dialog for this specific connection.</div>
+                </div>
             </div>
         </div>
 
-        <div id="tab-player" class="tab-content">
-            <span class="page-eyebrow">Objects</span>
+        <div id="tab-player" class="tab-panel">
+            <div class="breadcrumb">Objects <i class="fas fa-chevron-right"></i> <span>PlayerTag</span></div>
             <h1>PlayerTag</h1>
             <p class="subtitle">Additions for interacting with Players.</p>
+
             <h2>Mechanisms</h2>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">show_dialog</span><br><span class="badge b-req">Input: ElementTag</span></div><div class="prop-desc">Shows a specific dialog to the online player using the exact name of a Dialog script container.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">close_dialog</span><br><span class="badge b-opt">Input: None</span></div><div class="prop-desc">Closes any currently open dialog for the online player.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">show_dialog</span><span class="badge b-req">Input: ElementTag</span></div>
+                    <div class="spec-val">Shows a specific dialog to the online player using the exact name of a Dialog script container.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">close_dialog</span><span class="badge b-opt">Input: None</span></div>
+                    <div class="spec-val">Closes any currently open dialog for the online player.</div>
+                </div>
             </div>
         </div>
 
 
         <!-- ===== BETTERMODEL TABS ===== -->
 
-        <div id="tab-bm-cmd-bmmodel" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands</span>
-            <h1>- bmmodel</h1>
-            <div class="sig-block"><span class="sig-highlight">bmmodel</span> [entity:&lt;entity&gt;] [model:&lt;model&gt;] (remove)</div>
+        <div id="tab-bm-cmd-bmmodel" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands <i class="fas fa-chevron-right"></i> <span>bmmodel</span></div>
+            <h1>bmmodel</h1>
+            <div class="signature">- <span class="sig-cmd">bmmodel</span> <span class="sig-arg">entity:&lt;entity&gt;</span> <span class="sig-arg">model:&lt;model&gt;</span> <span class="sig-opt">(remove)</span></div>
             <p>Attaches a specific BetterModel to an entity or removes an existing one. An entity can have multiple models at once.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">entity:</span><span class="badge b-req">Required</span></div><div class="prop-desc">The target entity to attach or detach the model from.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">model:</span><span class="badge b-req">Required</span></div><div class="prop-desc">The model name (must exist in BetterModel's loaded models).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">remove</span><span class="badge b-opt">Switch</span></div><div class="prop-desc">If present, removes the model instead of adding it.</div></div>
+
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">entity:</span><span class="badge b-req">Required</span></div><div class="spec-val">The target entity to attach or detach the model from.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">model:</span><span class="badge b-req">Required</span></div><div class="spec-val">The model name (must exist in BetterModel's loaded models).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">remove</span><span class="badge b-opt">Switch</span></div><div class="spec-val">If present, removes the model instead of adding it.</div></div>
             </div>
-            <div class="code-window"><div class="code-header"><span class="code-title">Usage</span></div>
+
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">Usage</span></div>
                 <pre><span class="s-k">-</span> <span class="s-v">bmmodel</span> <span class="s-s">entity:&lt;context.entity&gt; model:dragon</span>
-<span class="s-k">-</span> <span class="s-v">bmmodel</span> <span class="s-s">entity:&lt;context.entity&gt; model:dragon remove</span></pre></div>
+<span class="s-k">-</span> <span class="s-v">bmmodel</span> <span class="s-s">entity:&lt;context.entity&gt; model:dragon remove</span></pre>
+            </div>
         </div>
 
-        <div id="tab-bm-cmd-bmlimb" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands</span>
-            <h1>- bmlimb</h1>
-            <div class="sig-block"><span class="sig-highlight">bmlimb</span> [target:&lt;player&gt;] [model:&lt;limb_model&gt;] [animation:&lt;animation&gt;] (loop:&lt;mode&gt;)</div>
+        <div id="tab-bm-cmd-bmlimb" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands <i class="fas fa-chevron-right"></i> <span>bmlimb</span></div>
+            <h1>bmlimb</h1>
+            <div class="signature">- <span class="sig-cmd">bmlimb</span> <span class="sig-arg">target:&lt;player&gt;</span> <span class="sig-arg">model:&lt;limb_model&gt;</span> <span class="sig-arg">animation:&lt;animation&gt;</span> <span class="sig-opt">(loop:&lt;mode&gt;)</span></div>
             <p>Plays a specific limb animation for a player or NPC. Target must be a player-type entity.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">target:</span><span class="badge b-req">Required</span></div><div class="prop-desc">The player or NPC target.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">model:</span><span class="badge b-req">Required</span></div><div class="prop-desc">The limb model name (e.g. <code>player_arm</code> from BetterModel's limbs list).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">animation:</span><span class="badge b-req">Required</span></div><div class="prop-desc">The animation name to play on the limb.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">loop:</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">Playback mode. Valid options: <code>PLAY_ONCE</code> (default), <code>LOOP</code>, or <code>HOLD</code>.</div></div>
+
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">target:</span><span class="badge b-req">Required</span></div><div class="spec-val">The player or NPC target.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">model:</span><span class="badge b-req">Required</span></div><div class="spec-val">The limb model name (e.g. <code>player_arm</code>).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">animation:</span><span class="badge b-req">Required</span></div><div class="spec-val">The animation name to play on the limb.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">loop:</span><span class="badge b-opt">Optional</span></div><div class="spec-val">Playback mode. Valid options: <code>PLAY_ONCE</code> (default), <code>LOOP</code>, or <code>HOLD</code>.</div></div>
             </div>
-            <div class="code-window"><div class="code-header"><span class="code-title">Usage</span></div>
-                <pre><span class="s-k">-</span> <span class="s-v">bmlimb</span> <span class="s-s">target:&lt;player&gt; model:player_arm animation:wave loop:PLAY_ONCE</span></pre></div>
+
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">Usage</span></div>
+                <pre><span class="s-k">-</span> <span class="s-v">bmlimb</span> <span class="s-s">target:&lt;player&gt; model:player_arm animation:wave loop:PLAY_ONCE</span></pre>
+            </div>
         </div>
 
-        <div id="tab-bm-cmd-bmstate" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands</span>
-            <h1>- bmstate</h1>
-            <div class="sig-block"><span class="sig-highlight">bmstate</span> [model:&lt;BMModelTag&gt;] [state:&lt;animation&gt;] (bones:&lt;list&gt;) (loop:&lt;mode&gt;) (speed:&lt;#.#&gt;) (remove)</div>
+        <div id="tab-bm-cmd-bmstate" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands <i class="fas fa-chevron-right"></i> <span>bmstate</span></div>
+            <h1>bmstate</h1>
+            <div class="signature">- <span class="sig-cmd">bmstate</span> <span class="sig-arg">model:&lt;BMModelTag&gt;</span> <span class="sig-arg">state:&lt;animation&gt;</span> <span class="sig-opt">(bones:&lt;list&gt;) (loop:&lt;mode&gt;) (speed:&lt;#.#&gt;) (remove)</span></div>
             <p>Starts, stops, or modifies animations on a model. Optionally targets specific bones.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">model:</span><span class="badge b-req">Required</span></div><div class="prop-desc">The <code>BMModelTag</code> instance to target.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">state:</span><span class="badge b-req">Required*</span></div><div class="prop-desc">The animation name. Required to start. Optional when stopping all animations via <code>remove</code>.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">bones:</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">List of bone names to target. Omit to affect all bones.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">loop:</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">Playback mode: <code>PLAY_ONCE</code> (default), <code>LOOP</code>, or <code>HOLD</code>.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">speed:</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">Playback speed multiplier. Default: <code>1.0</code>.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">remove</span><span class="badge b-opt">Switch</span></div><div class="prop-desc">Stops the animation. No <code>state</code> given stops all animations.</div></div>
+
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">model:</span><span class="badge b-req">Required</span></div><div class="spec-val">The <code>BMModelTag</code> instance to target.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">state:</span><span class="badge b-req">Required*</span></div><div class="spec-val">The animation name. Required to start. Optional when stopping all animations via <code>remove</code>.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">bones:</span><span class="badge b-opt">Optional</span></div><div class="spec-val">List of bone names to target. Omit to affect all bones.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">loop:</span><span class="badge b-opt">Optional</span></div><div class="spec-val">Playback mode: <code>PLAY_ONCE</code> (default), <code>LOOP</code>, or <code>HOLD</code>.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">speed:</span><span class="badge b-opt">Optional</span></div><div class="spec-val">Playback speed multiplier. Default: <code>1.0</code>.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">remove</span><span class="badge b-opt">Switch</span></div><div class="spec-val">Stops the animation. No <code>state</code> given stops all animations.</div></div>
             </div>
-            <div class="code-window"><div class="code-header"><span class="code-title">Usage</span></div>
+
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">Usage</span></div>
                 <pre><span class="s-k">-</span> <span class="s-v">bmstate</span> <span class="s-s">model:&lt;[my_model]&gt; state:walk loop:LOOP speed:1.2</span>
 <span class="s-k">-</span> <span class="s-v">bmstate</span> <span class="s-s">model:&lt;[my_model]&gt; state:nod bones:head|waist loop:PLAY_ONCE</span>
-<span class="s-k">-</span> <span class="s-v">bmstate</span> <span class="s-s">model:&lt;[my_model]&gt; state:walk remove</span></pre></div>
-        </div>
-
-        <div id="tab-bm-cmd-bmpart" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands</span>
-            <h1>- bmpart</h1>
-            <div class="sig-block"><span class="sig-highlight">bmpart</span> [model:&lt;BMModelTag&gt;] [bone:&lt;bone&gt;] [part:&lt;limb_name&gt;] [from:&lt;player&gt;]</div>
-            <p>Applies a limb texture from an online player's skin to a specific bone. Useful for player-skin-based models.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">model:</span><span class="badge b-req">Required</span></div><div class="prop-desc">The <code>BMModelTag</code> to modify.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">bone:</span><span class="badge b-req">Required</span></div><div class="prop-desc">The destination bone name in your model (e.g. <code>head</code>, <code>chest</code>, <code>right_arm</code>).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">part:</span><span class="badge b-req">Required</span></div><div class="prop-desc">Source limb name from the player skin. Valid names are defined in <code>BetterModel/players</code> templates (e.g. <code>HEAD</code>, <code>TORSO</code>).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">from:</span><span class="badge b-req">Required</span></div><div class="prop-desc">An online <code>PlayerTag</code> whose skin provides the texture source.</div></div>
+<span class="s-k">-</span> <span class="s-v">bmstate</span> <span class="s-s">model:&lt;[my_model]&gt; state:walk remove</span></pre>
             </div>
-            <div class="code-window"><div class="code-header"><span class="code-title">Usage</span></div>
-                <pre><span class="s-k">-</span> <span class="s-v">bmpart</span> <span class="s-s">model:&lt;[my_model]&gt; bone:head part:HEAD from:&lt;player&gt;</span>
-<span class="s-k">-</span> <span class="s-v">bmpart</span> <span class="s-s">model:&lt;[my_model]&gt; bone:chest part:TORSO from:&lt;player[PlayerName]&gt;</span></pre></div>
         </div>
 
-        <div id="tab-bm-evt-start" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Events</span>
+        <div id="tab-bm-cmd-bmpart" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands <i class="fas fa-chevron-right"></i> <span>bmpart</span></div>
+            <h1>bmpart</h1>
+            <div class="signature">- <span class="sig-cmd">bmpart</span> <span class="sig-arg">model:&lt;BMModelTag&gt;</span> <span class="sig-arg">bone:&lt;bone&gt;</span> <span class="sig-arg">part:&lt;limb_name&gt;</span> <span class="sig-arg">from:&lt;player&gt;</span></div>
+            <p>Applies a limb texture from an online player's skin to a specific bone. Useful for player-skin-based models.</p>
+
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">model:</span><span class="badge b-req">Required</span></div><div class="spec-val">The <code>BMModelTag</code> to modify.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">bone:</span><span class="badge b-req">Required</span></div><div class="spec-val">The destination bone name in your model.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">part:</span><span class="badge b-req">Required</span></div><div class="spec-val">Source limb name from the player skin (e.g. <code>HEAD</code>, <code>TORSO</code>).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">from:</span><span class="badge b-req">Required</span></div><div class="spec-val">An online <code>PlayerTag</code> whose skin provides the texture source.</div></div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">Usage</span></div>
+                <pre><span class="s-k">-</span> <span class="s-v">bmpart</span> <span class="s-s">model:&lt;[my_model]&gt; bone:head part:HEAD from:&lt;player&gt;</span>
+<span class="s-k">-</span> <span class="s-v">bmpart</span> <span class="s-s">model:&lt;[my_model]&gt; bone:chest part:TORSO from:&lt;player[PlayerName]&gt;</span></pre>
+            </div>
+        </div>
+
+        <div id="tab-bm-evt-start" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Events <i class="fas fa-chevron-right"></i> <span>bm start reload</span></div>
             <h1>bm start reload</h1>
-            <div class="sig-block"><span class="sig-highlight">on bm start reload:</span></div>
+            <div class="signature"><span class="sig-return">on</span> bm start reload:</div>
             <p>Triggers when the BetterModel plugin begins the reload process (before models and resource packs are regenerated).</p>
         </div>
 
-        <div id="tab-bm-evt-end" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Events</span>
+        <div id="tab-bm-evt-end" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Events <i class="fas fa-chevron-right"></i> <span>bm end reload</span></div>
             <h1>bm end reload</h1>
-            <div class="sig-block"><span class="sig-highlight">on bm end reload:</span></div>
+            <div class="signature"><span class="sig-return">on</span> bm end reload:</div>
             <p>Triggers when the BetterModel plugin finishes reloading models and generating the resource pack.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;context.result&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="prop-desc">Returns the reload result details: <code>SUCCESS</code>, <code>FAILURE</code>, or <code>RELOAD</code>.</div></div>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;context.result&gt;</span><span class="badge b-tag">ElementTag</span></div>
+                    <div class="spec-val">Returns the reload result details: <code>SUCCESS</code>, <code>FAILURE</code>, or <code>RELOAD</code>.</div>
+                </div>
             </div>
         </div>
 
-        <div id="tab-bm-obj-model" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Objects</span>
+        <div id="tab-bm-obj-model" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Objects <i class="fas fa-chevron-right"></i> <span>BMModelTag</span></div>
             <h1>BMModelTag</h1>
             <p>Prefix: <code>bmmodel@</code>. Represents an active BetterModel tracker instance attached to an entity.</p>
-            <div class="sig-block">Format: <span class="sig-highlight">bmmodel@</span>&lt;entity_uuid&gt;/<span class="sig-return">&lt;model_name&gt;</span></div>
+            <div class="signature">Format: <span class="sig-cmd">bmmodel@</span>&lt;entity_uuid&gt;/<span class="sig-return">&lt;model_name&gt;</span></div>
 
             <h3>Tags</h3>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;EntityTag.model[(&lt;name&gt;)]&gt;</span><span class="badge b-tag">BMModelTag</span></div><div class="prop-desc">Returns the BetterModel tracker with the specified name from the entity. If no name provided, gets the first active model.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;BMModelTag.name&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="prop-desc">Returns the name of the model tracker.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;BMModelTag.bone[&lt;name&gt;]&gt;</span><span class="badge b-tag">BMBoneTag</span></div><div class="prop-desc">Returns a specific bone from this model by name.</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;EntityTag.model[(&lt;name&gt;)]&gt;</span><span class="badge b-tag">BMModelTag</span></div><div class="spec-val">Returns the BetterModel tracker with the specified name from the entity.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMModelTag.name&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the name of the model tracker.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMModelTag.bone[&lt;name&gt;]&gt;</span><span class="badge b-tag">BMBoneTag</span></div><div class="spec-val">Returns a specific bone from this model by name.</div></div>
             </div>
 
             <h3>Mechanisms</h3>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">billboard</span><span class="badge b-mech">ElementTag</span></div><div class="prop-desc">Globally sets the billboard mode for <strong>all</strong> bones (<code>CENTER</code>, <code>VERTICAL</code>, <code>HORIZONTAL</code>).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">view_range</span><span class="badge b-mech">Decimal</span></div><div class="prop-desc">Globally sets the view range for all bones in the model.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">glow</span><span class="badge b-mech">Boolean</span></div><div class="prop-desc">Globally toggles glow on the entire model.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">glow_color</span><span class="badge b-mech">ColorTag</span></div><div class="prop-desc">Globally sets glow color for all bones.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">tint</span><span class="badge b-mech">ColorTag</span></div><div class="prop-desc">Globally sets tint color for all bones.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">visible</span><span class="badge b-mech">Boolean</span></div><div class="prop-desc">Globally toggles visibility of the entire model.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">item</span><span class="badge b-mech">ItemTag</span></div><div class="prop-desc">Globally overrides the item displayed on all bones.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">scale</span><span class="badge b-mech">LocationTag</span></div><div class="prop-desc">Globally overrides the scale for all bones (XYZ vector).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">rotation</span><span class="badge b-mech">QuaternionTag</span></div><div class="prop-desc">Globally sets a custom rotation modifier for all bones.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">hide_from</span><span class="badge b-mech">ListTag(PlayerTag)</span></div><div class="prop-desc">Hides the entire model from the specified list of players.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">show_to</span><span class="badge b-mech">ListTag(PlayerTag)</span></div><div class="prop-desc">Makes the model visible again to the specified list of players.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">force_update</span><span class="badge b-mech">None</span></div><div class="prop-desc">Manually forces a full synchronization update (bones, metadata, and hitboxes) for the model.</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">billboard</span><span class="badge b-mech">ElementTag</span></div><div class="spec-val">Globally sets the billboard mode for <strong>all</strong> bones.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">view_range</span><span class="badge b-mech">Decimal</span></div><div class="spec-val">Globally sets the view range for all bones.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">glow</span><span class="badge b-mech">Boolean</span></div><div class="spec-val">Globally toggles glow on the entire model.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">glow_color</span><span class="badge b-mech">ColorTag</span></div><div class="spec-val">Globally sets glow color for all bones.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">tint</span><span class="badge b-mech">ColorTag</span></div><div class="spec-val">Globally sets tint color for all bones.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">visible</span><span class="badge b-mech">Boolean</span></div><div class="spec-val">Globally toggles visibility of the entire model.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">item</span><span class="badge b-mech">ItemTag</span></div><div class="spec-val">Globally overrides the item displayed on all bones.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">scale</span><span class="badge b-mech">LocationTag</span></div><div class="spec-val">Globally overrides the scale for all bones (XYZ vector).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">rotation</span><span class="badge b-mech">QuaternionTag</span></div><div class="spec-val">Globally sets a custom rotation modifier for all bones.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">hide_from</span><span class="badge b-mech">ListTag(PlayerTag)</span></div><div class="spec-val">Hides the entire model from the specified list of players.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">show_to</span><span class="badge b-mech">ListTag(PlayerTag)</span></div><div class="spec-val">Makes the model visible again to the specified list of players.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">force_update</span><span class="badge b-mech">None</span></div><div class="spec-val">Manually forces a full synchronization update.</div></div>
             </div>
         </div>
 
-        <div id="tab-bm-obj-bone" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Objects</span>
+        <div id="tab-bm-obj-bone" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Objects <i class="fas fa-chevron-right"></i> <span>BMBoneTag</span></div>
             <h1>BMBoneTag</h1>
             <p>Prefix: <code>bmbone@</code>. Represents a specific bone within an active model.</p>
-            <div class="sig-block">Format: <span class="sig-highlight">bmbone@</span>&lt;entity_uuid&gt;/<span class="sig-return">&lt;model_name&gt;</span>/<span class="sig-return">&lt;bone_name&gt;</span></div>
+            <div class="signature">Format: <span class="sig-cmd">bmbone@</span>&lt;entity_uuid&gt;/<span class="sig-return">&lt;model_name&gt;</span>/<span class="sig-return">&lt;bone_name&gt;</span></div>
 
             <h3>Tags</h3>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;BMBoneTag.name&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="prop-desc">The name of the bone.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;BMBoneTag.location&gt;</span><span class="badge b-tag">LocationTag</span></div><div class="prop-desc">Current world location of the bone (entity + relative offset).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;BMBoneTag.euler&gt;</span><span class="badge b-tag">LocationTag</span></div><div class="prop-desc">Returns the rotation of the bone as Euler angles.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;BMBoneTag.passengers&gt;</span><span class="badge b-tag">ListTag(EntityTag)</span></div><div class="prop-desc">List of entities mounted on this bone's seat.</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMBoneTag.name&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">The name of the bone.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMBoneTag.location&gt;</span><span class="badge b-tag">LocationTag</span></div><div class="spec-val">Current world location of the bone (entity + relative offset).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMBoneTag.euler&gt;</span><span class="badge b-tag">LocationTag</span></div><div class="spec-val">Returns the rotation of the bone as Euler angles.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMBoneTag.passengers&gt;</span><span class="badge b-tag">ListTag(EntityTag)</span></div><div class="spec-val">List of entities mounted on this bone's seat.</div></div>
             </div>
 
             <h3>Mechanisms</h3>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">billboard</span><span class="badge b-mech">ElementTag</span></div><div class="prop-desc">Sets billboard mode for the bone (<code>CENTER</code>, <code>VERTICAL</code>, <code>HORIZONTAL</code>).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">view_range</span><span class="badge b-mech">Decimal</span></div><div class="prop-desc">Sets the view range for this bone.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">glow</span><span class="badge b-mech">Boolean</span></div><div class="prop-desc">Sets whether the bone should glow.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">glow_color</span><span class="badge b-mech">ColorTag</span></div><div class="prop-desc">Sets the glow color for the bone.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">tint</span><span class="badge b-mech">ColorTag</span></div><div class="prop-desc">Sets the tint color for the bone.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">visible</span><span class="badge b-mech">Boolean</span></div><div class="prop-desc">Sets whether the bone is visible.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">rotation</span><span class="badge b-mech">QuaternionTag</span></div><div class="prop-desc">Sets a custom rotation modifier for the bone.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">mount</span><span class="badge b-mech">EntityTag</span></div><div class="prop-desc">Mounts an entity onto this bone (bone must have a seat configured in Blockbench).</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">dismount</span><span class="badge b-mech">EntityTag</span></div><div class="prop-desc">Dismounts a specific entity from this bone.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">dismount_all</span><span class="badge b-mech">None</span></div><div class="prop-desc">Dismounts all entities from this bone.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">item</span><span class="badge b-mech">ItemTag</span></div><div class="prop-desc">Changes the item display of this bone.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">scale</span><span class="badge b-mech">LocationTag</span></div><div class="prop-desc">Sets the scale of the bone's item.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">translation</span><span class="badge b-mech">LocationTag</span></div><div class="prop-desc">Sets the translation of the bone's item.</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">billboard</span><span class="badge b-mech">ElementTag</span></div><div class="spec-val">Sets billboard mode for the bone.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">view_range</span><span class="badge b-mech">Decimal</span></div><div class="spec-val">Sets the view range for this bone.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">glow</span><span class="badge b-mech">Boolean</span></div><div class="spec-val">Sets whether the bone should glow.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">glow_color</span><span class="badge b-mech">ColorTag</span></div><div class="spec-val">Sets the glow color for the bone.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">tint</span><span class="badge b-mech">ColorTag</span></div><div class="spec-val">Sets the tint color for the bone.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">visible</span><span class="badge b-mech">Boolean</span></div><div class="spec-val">Sets whether the bone is visible.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">rotation</span><span class="badge b-mech">QuaternionTag</span></div><div class="spec-val">Sets a custom rotation modifier for the bone.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">mount</span><span class="badge b-mech">EntityTag</span></div><div class="spec-val">Mounts an entity onto this bone (must have a seat).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">dismount</span><span class="badge b-mech">EntityTag</span></div><div class="spec-val">Dismounts a specific entity from this bone.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">dismount_all</span><span class="badge b-mech">None</span></div><div class="spec-val">Dismounts all entities from this bone.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">item</span><span class="badge b-mech">ItemTag</span></div><div class="spec-val">Changes the item display of this bone.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">scale</span><span class="badge b-mech">LocationTag</span></div><div class="spec-val">Sets the scale of the bone's item.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">translation</span><span class="badge b-mech">LocationTag</span></div><div class="spec-val">Sets the translation of the bone's item.</div></div>
             </div>
         </div>
 
 
         <!-- ===== SKINSRESTORER TABS ===== -->
 
-        <div id="tab-sr-cmd-skin" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> SkinsRestorer <i class="fas fa-chevron-right"></i> Commands</span>
-            <h1>- skin</h1>
-            <div class="sig-block"><span class="sig-highlight">skin</span> [&lt;name&gt;/&lt;url&gt;/&lt;texture&gt;] (&lt;player&gt;|...)</div>
-            <p>Changes the skin of the specified player(s). If no targets are specified, the player attached to the script queue will be used.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">skin value</span><span class="badge b-req">Required</span></div><div class="prop-desc">A player name, an <code>http</code> URL, or raw texture data in <code>value;signature</code> format.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">targets</span><span class="badge b-opt">Optional</span></div><div class="prop-desc">One or more <code>PlayerTag</code> objects.</div></div>
+        <div id="tab-sr-cmd-skin" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> SkinsRestorer <i class="fas fa-chevron-right"></i> Commands <i class="fas fa-chevron-right"></i> <span>skin</span></div>
+            <h1>skin</h1>
+            <p class="subtitle">Changes the skin of the specified player(s).</p>
+            <div class="signature">- <span class="sig-cmd">skin</span> <span class="sig-arg">[&lt;name&gt;/&lt;url&gt;/&lt;texture&gt;]</span> <span class="sig-opt">(&lt;player&gt;|...)</span></div>
+            <p>If no targets are specified positionally, the player attached to the script queue will be used.</p>
+
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">1. source</span><span class="badge b-req">Required</span></div>
+                    <div class="spec-val">A player name, an <code>http</code> URL, or raw texture data in <code>value;signature</code> format.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">2. targets</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">One or more <code>PlayerTag</code> objects passed as a positional argument.</div>
+                </div>
             </div>
-            <div class="code-window"><div class="code-header"><span class="code-title">Usage</span></div>
+
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">Usage</span></div>
                 <pre><span class="s-k">-</span> <span class="s-v">skin</span> <span class="s-s">Notch</span>
-<span class="s-k">-</span> <span class="s-v">skin</span> <span class="s-s">https://minesk.in/7db... targets:&lt;[some_player]&gt;</span>
-<span class="s-k">-</span> <span class="s-v">skin</span> <span class="s-s">&lt;player.skin_blob&gt; targets:&lt;server.online_players&gt;</span></pre></div>
+<span class="s-k">-</span> <span class="s-v">skin</span> <span class="s-s">https://minesk.in/7db... &lt;[some_player]&gt;</span>
+<span class="s-k">-</span> <span class="s-v">skin</span> <span class="s-s">&lt;player.skin_blob&gt; &lt;server.online_players&gt;</span></pre>
+            </div>
         </div>
 
-        <div id="tab-sr-evt-apply" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> SkinsRestorer <i class="fas fa-chevron-right"></i> Events</span>
+        <div id="tab-sr-evt-apply" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> SkinsRestorer <i class="fas fa-chevron-right"></i> Events <i class="fas fa-chevron-right"></i> <span>player skin apply</span></div>
             <h1>player skin apply</h1>
-            <div class="sig-block"><span class="sig-highlight">on player skin apply:</span></div>
+            <div class="signature"><span class="sig-return">on</span> player skin apply:</div>
             <p>Triggers when a player's skin is being applied via SkinsRestorer.</p>
+
             <h3>Contexts</h3>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;context.value&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="prop-desc">The Base64 texture value of the skin being applied.</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;context.value&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">The Base64 texture value of the skin being applied.</div></div>
             </div>
+
             <h3>Determinations</h3>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">TEXTURE:&lt;val&gt;;&lt;sig&gt;</span><span class="badge b-det">Determine</span></div><div class="prop-desc">Override with raw texture data in <code>value;signature</code> format.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">NAME:&lt;name&gt;</span><span class="badge b-det">Determine</span></div><div class="prop-desc">Override with a skin fetched by player name.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">URL:&lt;url&gt;</span><span class="badge b-det">Determine</span></div><div class="prop-desc">Override with a skin fetched from a URL.</div></div>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">TEXTURE:&lt;val&gt;;&lt;sig&gt;</span><span class="badge b-det">Determine</span></div><div class="spec-val">Override with raw texture data in <code>value;signature</code> format.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">NAME:&lt;name&gt;</span><span class="badge b-det">Determine</span></div><div class="spec-val">Override with a skin fetched by player name.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">URL:&lt;url&gt;</span><span class="badge b-det">Determine</span></div><div class="spec-val">Override with a skin fetched from a URL.</div></div>
             </div>
         </div>
 
-        <div id="tab-sr-tag-player" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> SkinsRestorer <i class="fas fa-chevron-right"></i> Tags</span>
+        <div id="tab-sr-tag-player" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> SkinsRestorer <i class="fas fa-chevron-right"></i> Tags <i class="fas fa-chevron-right"></i> <span>PlayerTag</span></div>
             <h1>PlayerTag (SkinsRestorer)</h1>
             <p class="subtitle">Tags injected into standard Player objects by the bridge.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;PlayerTag.skin_url&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="prop-desc">Returns the URL of the player's current skin texture.</div></div>
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;PlayerTag.skin_type&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="prop-desc">Returns the skin type. Possible values: <code>CUSTOM</code> (linked to custom value/sig), <code>LEGACY</code> (pre-v15 skin), <code>PLAYER</code> (linked to a player UUID), or <code>URL</code>.</div></div>
+
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;PlayerTag.skin_url&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the URL of the player's current skin texture.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;PlayerTag.skin_type&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the skin type. Possible values: <code>CUSTOM</code>, <code>LEGACY</code>, <code>PLAYER</code>, or <code>URL</code>.</div></div>
             </div>
         </div>
 
 
         <!-- ===== DISCORDSRV TABS ===== -->
 
-        <div id="tab-dsrv-evt-link" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> DiscordSRV <i class="fas fa-chevron-right"></i> Events</span>
+        <div id="tab-dsrv-evt-link" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> DiscordSRV <i class="fas fa-chevron-right"></i> Events <i class="fas fa-chevron-right"></i> <span>player links</span></div>
             <h1>player links discord account</h1>
-            <div class="sig-block"><span class="sig-highlight">on player links discord account:</span></div>
+            <div class="signature"><span class="sig-return">on</span> player links discord account:</div>
             <p>Triggers when a Minecraft player successfully links their Discord account.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;context.discord_id&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="prop-desc">Returns the Discord snowflake ID of the account that was linked.</div></div>
+
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;context.discord_id&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the Discord snowflake ID of the account that was linked.</div></div>
             </div>
         </div>
 
-        <div id="tab-dsrv-evt-unlink" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> DiscordSRV <i class="fas fa-chevron-right"></i> Events</span>
+        <div id="tab-dsrv-evt-unlink" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> DiscordSRV <i class="fas fa-chevron-right"></i> Events <i class="fas fa-chevron-right"></i> <span>player unlinks</span></div>
             <h1>player unlinks discord account</h1>
-            <div class="sig-block"><span class="sig-highlight">on player unlinks discord account:</span></div>
+            <div class="signature"><span class="sig-return">on</span> player unlinks discord account:</div>
             <p>Triggers when a Minecraft player unlinks their Discord account.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;context.discord_id&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="prop-desc">Returns the Discord snowflake ID of the account that was unlinked.</div></div>
+
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;context.discord_id&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the Discord snowflake ID of the account that was unlinked.</div></div>
             </div>
         </div>
 
-        <div id="tab-dsrv-tag-player" class="tab-content">
-            <span class="page-eyebrow">Bridges <i class="fas fa-chevron-right"></i> DiscordSRV <i class="fas fa-chevron-right"></i> Tags</span>
+        <div id="tab-dsrv-tag-player" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> DiscordSRV <i class="fas fa-chevron-right"></i> Tags <i class="fas fa-chevron-right"></i> <span>PlayerTag</span></div>
             <h1>PlayerTag (DiscordSRV)</h1>
             <p class="subtitle">Tags injected into standard Player objects by the bridge.</p>
-            <div class="prop-list">
-                <div class="prop-item"><div class="prop-header"><span class="prop-name">&lt;PlayerTag.discord_id&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="prop-desc">Returns the Discord snowflake ID associated with the Minecraft player's account via DiscordSRV. Returns <code>null</code> if the player has not linked their Discord account.</div></div>
+
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;PlayerTag.discord_id&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the Discord snowflake ID associated with the Minecraft player's account via DiscordSRV. Returns <code>null</code> if the player has not linked their Discord account.</div></div>
             </div>
         </div>
 
@@ -891,109 +958,89 @@
 </main>
 
 <script>
-    const navLinks = document.querySelectorAll('.nav-link');
-    const tabContents = document.querySelectorAll('.tab-content');
+    // Tab switching logic
+    const navItems = document.querySelectorAll('.nav-item');
+    const panels = document.querySelectorAll('.tab-panel');
 
-    function switchTab(targetId) {
-        tabContents.forEach(tab => tab.classList.remove('active'));
-        navLinks.forEach(link => link.classList.remove('active'));
+    function showTab(id) {
+        panels.forEach(p => p.classList.remove('active'));
+        navItems.forEach(i => i.classList.remove('active'));
 
-        const targetTab = document.getElementById(targetId);
-        const targetLink = document.querySelector(`[data-tab="${targetId}"]`);
+        const targetPanel = document.getElementById(id);
+        const targetNavItem = document.querySelector(`[data-tab="${id}"]`);
 
-        if (targetTab && targetLink) {
-            targetTab.classList.add('active');
-            targetLink.classList.add('active');
-            window.location.hash = targetId;
+        if (targetPanel) {
+            targetPanel.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-            // Auto-open main Bridge accordion
-            const mainAccordion = targetLink.closest('.bridge-body');
-            if (mainAccordion && !mainAccordion.classList.contains('open')) {
-                const bridgeId = mainAccordion.id.replace('body-', '');
-                openBridge(bridgeId);
-            }
+        if (targetNavItem) {
+            targetNavItem.classList.add('active');
 
-            // Auto-open Sub-accordion
-            const subAccordion = targetLink.closest('.sub-body');
-            if (subAccordion && !subAccordion.classList.contains('open')) {
-                subAccordion.classList.add('open');
-                const arrow = subAccordion.previousElementSibling.querySelector('.bridge-arrow');
-                if (arrow) arrow.classList.add('rotated');
+            // Auto-open parent folders
+            let current = targetNavItem.parentElement;
+            while(current && current.tagName !== 'ASIDE') {
+                if (current.classList.contains('sub-folder-content') || current.classList.contains('folder-content')) {
+                    current.classList.add('open');
+                    const iconId = 'icon-' + current.id;
+                    const icon = document.getElementById(iconId);
+                    if (icon) icon.classList.add('rotated');
+                }
+                current = current.parentElement;
             }
         }
     }
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            switchTab(link.getAttribute('data-tab'));
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const id = item.getAttribute('data-tab');
+            showTab(id);
+            window.location.hash = id;
         });
     });
 
-    window.addEventListener('DOMContentLoaded', () => {
-        const hash = window.location.hash.replace('#', '');
-        if (hash) switchTab(hash);
+    // Hash navigation on load
+    window.addEventListener('load', () => {
+        const hash = window.location.hash.substring(1);
+        if (hash) showTab(hash);
     });
 
-    // Main Accordions
-    function openBridge(id) {
-        const body = document.getElementById('body-' + id);
-        const arrow = document.getElementById('arrow-' + id);
-        if (body) body.classList.add('open');
-        if (arrow) arrow.classList.add('rotated');
+    // Top-level folder logic
+    function toggleFolder(id, btnElement) {
+        const content = document.getElementById(id);
+        const icon = btnElement.querySelector('.chevron');
+        content.classList.toggle('open');
+        icon.classList.toggle('rotated');
     }
 
-    function toggleBridge(id) {
-        const body = document.getElementById('body-' + id);
-        const arrow = document.getElementById('arrow-' + id);
-        if (!body) return;
-        const isOpen = body.classList.contains('open');
-
-        // Close others
-        document.querySelectorAll('.bridge-body').forEach(b => b.classList.remove('open'));
-        document.querySelectorAll('.bridge-header .bridge-arrow').forEach(a => a.classList.remove('rotated'));
-
-        if (!isOpen) {
-            body.classList.add('open');
-            if (arrow) arrow.classList.add('rotated');
-        }
+    // Sub-folder logic
+    function toggleSubFolder(id, btnElement) {
+        const content = document.getElementById(id);
+        const icon = btnElement.querySelector('.chevron');
+        content.classList.toggle('open');
+        icon.classList.toggle('rotated');
     }
 
-    // Sub-Accordions
-    function toggleSub(id) {
-        const body = document.getElementById('sub-' + id);
-        const arrow = document.getElementById('arrow-' + id);
-        if (!body) return;
-        const isOpen = body.classList.contains('open');
-
-        if (!isOpen) {
-            body.classList.add('open');
-            if (arrow) arrow.classList.add('rotated');
-        } else {
-            body.classList.remove('open');
-            if (arrow) arrow.classList.remove('rotated');
-        }
-    }
-
-    // Copy Code Button
+    // Copy button simulation
     document.querySelectorAll('.btn-copy').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const pre = e.target.parentElement.nextElementSibling;
             const txt = document.createElement("textarea");
             txt.innerHTML = pre.innerText;
             navigator.clipboard.writeText(txt.value);
-            const orig = e.target.innerText;
-            e.target.innerText = 'Copied!';
-            e.target.style.color = 'var(--accent-green)';
-            e.target.style.borderColor = 'var(--accent-green)';
+
+            const text = btn.innerText;
+            btn.innerText = 'Copied!';
+            btn.style.color = 'var(--c-mech-text)';
+            btn.style.borderColor = 'var(--c-mech-text)';
             setTimeout(() => {
-                e.target.innerText = orig;
-                e.target.style.color = '';
-                e.target.style.borderColor = '';
+                btn.innerText = text;
+                btn.style.color = '';
+                btn.style.borderColor = '';
             }, 2000);
         });
     });
 </script>
+
 </body>
 </html>
