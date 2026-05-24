@@ -11,6 +11,7 @@ import kr.toxicity.model.api.BetterModel;
 import kr.toxicity.model.api.bone.BoneRenderContext;
 import kr.toxicity.model.api.bone.RenderedBone;
 import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
+import kr.toxicity.model.api.data.renderer.ModelRenderer;
 import kr.toxicity.model.api.data.renderer.RenderSource;
 import kr.toxicity.model.api.player.PlayerLimb;
 import kr.toxicity.model.api.tracker.EntityTracker;
@@ -18,6 +19,8 @@ import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMActiveModelTag
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Arrays;
 
 public class BMPartCommand extends AbstractCommand {
 
@@ -48,9 +51,15 @@ public class BMPartCommand extends AbstractCommand {
 
     public BMPartCommand() {
         setName("bmpart");
-        setSyntax("bmpart [model:<BMModelTag>] [bone:<bone>] [part:<limb_name>] [from:<player>]");
+        setSyntax("bmpart [model:<model>] [bone:<bone>] [part:<limb_name>] [from:<player>]");
         setRequiredArguments(4, 4);
         autoCompile();
+    }
+
+    public void addCustomTabCompletions(TabCompletionsBuilder tab) {
+        tab.addWithPrefix("part:", Arrays.stream(PlayerLimb.values())
+                .map(limb -> limb.name().toLowerCase())
+                .toList());
     }
 
     public static void autoExecute(ScriptEntry scriptEntry,
