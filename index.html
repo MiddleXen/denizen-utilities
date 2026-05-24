@@ -1,188 +1,179 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Denizen Utilities | Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --bg-page: #09090b;
+        --bg-sidebar: #09090b;
+        --bg-card: #121214;
+        --bg-code: #000000;
+        --border: #27272a;
+        --border-bright: #3f3f46;
+        --text-primary: #fafafa;
+        --text-secondary: #a1a1aa;
+        --text-muted: #52525b;
 
-    <style>
-        :root {
-            --bg-page: #09090b;
-            --bg-sidebar: #09090b;
-            --bg-card: #121214;
-            --bg-code: #000000;
-            --border: #27272a;
-            --border-bright: #3f3f46;
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #52525b;
+        --accent: #3b82f6;
+        --accent-glow: rgba(59, 130, 246, 0.15);
 
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.15);
+        /* Badges colors */
+        --c-req-bg: rgba(239, 68, 68, 0.1); --c-req-text: #f87171;
+        --c-opt-bg: rgba(161, 161, 170, 0.1); --c-opt-text: #a1a1aa;
+        --c-root-bg: rgba(168, 85, 247, 0.1); --c-root-text: #c084fc;
+        --c-det-bg: rgba(245, 158, 11, 0.1); --c-det-text: #fbbf24;
+        --c-tag-bg: rgba(59, 130, 246, 0.1); --c-tag-text: #60a5fa;
+        --c-mech-bg: rgba(16, 185, 129, 0.1); --c-mech-text: #34d399;
 
-            /* Badges colors */
-            --c-req-bg: rgba(239, 68, 68, 0.1); --c-req-text: #f87171;
-            --c-opt-bg: rgba(161, 161, 170, 0.1); --c-opt-text: #a1a1aa;
-            --c-root-bg: rgba(168, 85, 247, 0.1); --c-root-text: #c084fc;
-            --c-det-bg: rgba(245, 158, 11, 0.1); --c-det-text: #fbbf24;
-            --c-tag-bg: rgba(59, 130, 246, 0.1); --c-tag-text: #60a5fa;
-            --c-mech-bg: rgba(16, 185, 129, 0.1); --c-mech-text: #34d399;
+        --sidebar-width: 280px;
+    }
 
-            --sidebar-width: 280px;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-page);
+        color: var(--text-primary);
+        display: flex;
+        min-height: 100vh;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-y: scroll;
+    }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-page);
-            color: var(--text-primary);
-            display: flex;
-            min-height: 100vh;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            overflow-y: scroll;
-        }
+    /* Sidebar Navigation */
+    aside {
+        width: var(--sidebar-width);
+        height: 100vh;
+        position: fixed;
+        background: var(--bg-sidebar);
+        border-right: 1px solid var(--border);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        z-index: 100;
+    }
 
-        /* Sidebar Navigation */
-        aside {
-            width: var(--sidebar-width);
-            height: 100vh;
-            position: fixed;
-            background: var(--bg-sidebar);
-            border-right: 1px solid var(--border);
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            z-index: 100;
-        }
+    .logo {
+        font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
+        margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; color: #fff;
+    }
+    .logo i { color: var(--accent); }
 
-        .logo {
-            font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
-            margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; color: #fff;
-        }
-        .logo i { color: var(--accent); }
+    .nav-group { margin-bottom: 1.5rem; }
+    .nav-label {
+        font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+        color: var(--text-muted); letter-spacing: 0.05em;
+        margin-bottom: 0.75rem; padding-left: 0.5rem;
+    }
 
-        .nav-group { margin-bottom: 1.5rem; }
-        .nav-label {
-            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-            color: var(--text-muted); letter-spacing: 0.05em;
-            margin-bottom: 0.75rem; padding-left: 0.5rem;
-        }
+    .nav-item {
+        display: flex; align-items: center; padding: 0.5rem 0.75rem;
+        color: var(--text-secondary); text-decoration: none;
+        font-size: 0.85rem; font-weight: 500; border-radius: 8px;
+        transition: all 0.2s; cursor: pointer; margin-bottom: 2px;
+    }
+    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .nav-item.active { color: var(--accent); background: var(--accent-glow); font-weight: 600; }
 
-        .nav-item {
-            display: flex; align-items: center; padding: 0.5rem 0.75rem;
-            color: var(--text-secondary); text-decoration: none;
-            font-size: 0.85rem; font-weight: 500; border-radius: 8px;
-            transition: all 0.2s; cursor: pointer; margin-bottom: 2px;
-        }
-        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
-        .nav-item.active { color: var(--accent); background: var(--accent-glow); font-weight: 600; }
+    /* Folders (Accordions) */
+    .folder-btn {
+        display: flex; align-items: center; justify-content: space-between;
+        width: 100%; border: none; background: none; color: var(--text-secondary);
+        padding: 0.5rem 0.75rem; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+        border-radius: 8px; transition: all 0.2s;
+    }
+    .folder-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .folder-content {
+        margin-left: 1.25rem; border-left: 1px solid var(--border);
+        padding-left: 0.5rem; display: none; margin-top: 2px; margin-bottom: 4px;
+    }
+    .folder-content.open { display: block; }
+    .sub-folder-btn {
+        font-size: 0.8rem; padding: 0.4rem 0.75rem; color: var(--text-secondary);
+        display: flex; justify-content: space-between; align-items: center;
+        width: 100%; background: none; border: none; cursor: pointer; font-weight: 600;
+    }
+    .sub-folder-btn:hover { color: #fff; }
+    .sub-folder-content {
+        margin-left: 0.5rem; border-left: 1px solid var(--border);
+        padding-left: 0.5rem; display: none; margin-top: 2px;
+    }
+    .sub-folder-content.open { display: block; }
+    .sub-folder-content .nav-item { font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; padding: 0.35rem 0.75rem; }
 
-        /* Folders (Accordions) */
-        .folder-btn {
-            display: flex; align-items: center; justify-content: space-between;
-            width: 100%; border: none; background: none; color: var(--text-secondary);
-            padding: 0.5rem 0.75rem; font-size: 0.85rem; font-weight: 600; cursor: pointer;
-            border-radius: 8px; transition: all 0.2s;
-        }
-        .folder-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
-        .folder-content {
-            margin-left: 1.25rem; border-left: 1px solid var(--border);
-            padding-left: 0.5rem; display: none; margin-top: 2px; margin-bottom: 4px;
-        }
-        .folder-content.open { display: block; }
-        .sub-folder-btn {
-            font-size: 0.8rem; padding: 0.4rem 0.75rem; color: var(--text-secondary);
-            display: flex; justify-content: space-between; align-items: center;
-            width: 100%; background: none; border: none; cursor: pointer; font-weight: 600;
-        }
-        .sub-folder-btn:hover { color: #fff; }
-        .sub-folder-content {
-            margin-left: 0.5rem; border-left: 1px solid var(--border);
-            padding-left: 0.5rem; display: none; margin-top: 2px;
-        }
-        .sub-folder-content.open { display: block; }
-        .sub-folder-content .nav-item { font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; padding: 0.35rem 0.75rem; }
+    .chevron { font-size: 0.65rem; transition: transform 0.2s; color: var(--text-muted); }
+    .rotated { transform: rotate(90deg); }
 
-        .chevron { font-size: 0.65rem; transition: transform 0.2s; color: var(--text-muted); }
-        .rotated { transform: rotate(90deg); }
+    /* Main Content Area */
+    main {
+        margin-left: var(--sidebar-width); flex: 1;
+        padding: 4rem 5%; display: flex; justify-content: center;
+    }
+    .container { width: 100%; max-width: 900px; position: relative; }
 
-        /* Main Content Area */
-        main {
-            margin-left: var(--sidebar-width); flex: 1;
-            padding: 4rem 5%; display: flex; justify-content: center;
-        }
-        .container { width: 100%; max-width: 900px; position: relative; }
+    .tab-panel { display: none; animation: fadeIn 0.3s ease forwards; opacity: 0; transform: translateY(10px); }
+    .tab-panel.active { display: block; }
+    @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
 
-        .tab-panel { display: none; animation: fadeIn 0.3s ease forwards; opacity: 0; transform: translateY(10px); }
-        .tab-panel.active { display: block; }
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .breadcrumb span { color: var(--accent); }
+    .breadcrumb i { font-size: 0.7rem; }
 
-        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-        .breadcrumb span { color: var(--accent); }
-        .breadcrumb i { font-size: 0.7rem; }
+    h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; line-height: 1.1; }
+    .subtitle { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 3rem; }
+    h2 { font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); color: #fff; }
+    h3 { font-size: 1.1rem; font-weight: 600; margin: 2rem 0 1rem; color: #fff; }
+    p { color: var(--text-secondary); margin-bottom: 1.5rem; }
 
-        h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1rem; line-height: 1.1; }
-        .subtitle { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 3rem; }
-        h2 { font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1.5rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); color: #fff; }
-        h3 { font-size: 1.1rem; font-weight: 600; margin: 2rem 0 1rem; color: #fff; }
-        p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+    /* Specifications Table */
+    .spec-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 2rem; overflow: hidden; }
+    .spec-row { display: flex; border-bottom: 1px solid var(--border); }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-key { flex: 0 0 240px; padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.015); border-right: 1px solid var(--border); }
+    .spec-val { flex: 1; padding: 1.25rem 1.5rem; color: var(--text-secondary); font-size: 0.9rem; }
+    .name-label { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.85rem; color: #fff; display: block; margin-bottom: 0.4rem; }
 
-        /* Specifications Table (Replaced .prop-list) */
-        .spec-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 2rem; overflow: hidden; }
-        .spec-row { display: flex; border-bottom: 1px solid var(--border); }
-        .spec-row:last-child { border-bottom: none; }
-        .spec-key { flex: 0 0 240px; padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.015); border-right: 1px solid var(--border); }
-        .spec-val { flex: 1; padding: 1.25rem 1.5rem; color: var(--text-secondary); font-size: 0.9rem; }
-        .name-label { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.85rem; color: #fff; display: block; margin-bottom: 0.4rem; }
+    /* Badges */
+    .badge { display: inline-flex; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+    .b-req { background: var(--c-req-bg); color: var(--c-req-text); }
+    .b-opt { background: var(--c-opt-bg); color: var(--c-opt-text); }
+    .b-root { background: var(--c-root-bg); color: var(--c-root-text); }
+    .b-det { background: var(--c-det-bg); color: var(--c-det-text); }
+    .b-tag { background: var(--c-tag-bg); color: var(--c-tag-text); }
+    .b-mech { background: var(--c-mech-bg); color: var(--c-mech-text); }
 
-        /* Badges */
-        .badge { display: inline-flex; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
-        .b-req { background: var(--c-req-bg); color: var(--c-req-text); }
-        .b-opt { background: var(--c-opt-bg); color: var(--c-opt-text); }
-        .b-root { background: var(--c-root-bg); color: var(--c-root-text); }
-        .b-det { background: var(--c-det-bg); color: var(--c-det-text); }
-        .b-tag { background: var(--c-tag-bg); color: var(--c-tag-text); }
-        .b-mech { background: var(--c-mech-bg); color: var(--c-mech-text); }
+    /* Code Blocks */
+    code { font-family: 'JetBrains Mono', monospace; background: rgba(255,255,255,0.08); padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.85em; color: #e2e8f0; }
+    .code-block { background: #000; border: 1px solid var(--border); border-radius: 12px; margin: 1.5rem 0; position: relative; }
+    .code-header { padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0; }
+    .code-title { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); }
+    pre { padding: 1.5rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; }
+    .s-k { color: #f472b6; } .s-v { color: #38bdf8; } .s-s { color: #a7f3d0; } .s-c { color: #64748b; font-style: italic; }
 
-        /* Code Blocks */
-        code { font-family: 'JetBrains Mono', monospace; background: rgba(255,255,255,0.08); padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.85em; color: #e2e8f0; }
-        .code-block { background: #000; border: 1px solid var(--border); border-radius: 12px; margin: 1.5rem 0; position: relative; }
-        .code-header { padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0; }
-        .code-title { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); }
-        pre { padding: 1.5rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; }
-        .s-k { color: #f472b6; } .s-v { color: #38bdf8; } .s-s { color: #a7f3d0; } .s-c { color: #64748b; font-style: italic; }
+    .btn-copy { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
+    .btn-copy:hover { color: #fff; border-color: var(--border-bright); }
 
-        .btn-copy { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
-        .btn-copy:hover { color: #fff; border-color: var(--border-bright); }
+    .example-preview { margin-top: 2rem; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg-card); }
+    .example-preview img { display: block; width: 100%; height: auto; }
 
-        .example-preview { margin-top: 2rem; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--bg-card); }
-        .example-preview img { display: block; width: 100%; height: auto; }
+    .signature { background: var(--bg-code); border: 1px solid var(--border-bright); padding: 1.25rem; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; margin-bottom: 1.5rem; color: #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .sig-cmd { color: #38bdf8; font-weight: 700; }
+    .sig-return { color: #a7f3d0; }
+    .sig-opt { color: #64748b; font-style: italic; }
 
-        .signature { background: var(--bg-code); border: 1px solid var(--border-bright); padding: 1.25rem; border-radius: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; margin-bottom: 1.5rem; color: #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        .sig-cmd { color: #38bdf8; font-weight: 700; }
-        .sig-return { color: #a7f3d0; }
-        .sig-opt { color: #64748b; font-style: italic; }
-
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--border-bright); }
-    </style>
-</head>
-<body>
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-bright); }
+</style>
 
 <aside>
-    <div class="logo"><i class="fas fa-toolbox"></i> DENIZEN-UTILITIES</div>
+    <div class="logo"><i class="fas fa-cubes"></i> Denizen Utilities</div>
 
     <div class="nav-group">
         <div class="nav-label">General</div>
-        <a class="nav-item" data-tab="tab-config">Configuration</a>
+        <a class="nav-item active" data-tab="tab-config">Configuration</a>
     </div>
 
     <div class="nav-group">
@@ -192,7 +183,7 @@
             <i class="fas fa-chevron-right chevron" id="icon-folder-dialog"></i>
         </button>
         <div class="folder-content" id="folder-dialog">
-            <a class="nav-item active" data-tab="tab-intro">Overview & Core</a>
+            <a class="nav-item" data-tab="tab-intro">Overview & Core</a>
             <a class="nav-item" data-tab="tab-type-multi">Layout: Multi</a>
             <a class="nav-item" data-tab="tab-type-list">Layout: List</a>
             <a class="nav-item" data-tab="tab-type-confirm">Layout: Confirm</a>
@@ -241,14 +232,25 @@
             <div class="sub-folder-content" id="sub-bm-evt">
                 <a class="nav-item" data-tab="tab-bm-evt-start">bm start reload</a>
                 <a class="nav-item" data-tab="tab-bm-evt-end">bm end reload</a>
+                <a class="nav-item" data-tab="tab-bm-evt-signal">bm animation signal</a>
+                <a class="nav-item" data-tab="tab-bm-evt-player-signal">bm player animation signal</a>
             </div>
 
             <button class="sub-folder-btn" onclick="toggleSubFolder('sub-bm-obj', this)">
                 Objects <i class="fas fa-chevron-right chevron" id="icon-sub-bm-obj"></i>
             </button>
             <div class="sub-folder-content" id="sub-bm-obj">
-                <a class="nav-item" data-tab="tab-bm-obj-model">BMModelTag</a>
+                <a class="nav-item" data-tab="tab-bm-obj-model">BMActiveModelTag</a>
+                <a class="nav-item" data-tab="tab-bm-obj-static-model">BMModelTag</a>
                 <a class="nav-item" data-tab="tab-bm-obj-bone">BMBoneTag</a>
+            </div>
+
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-bm-ext', this)">
+                Extensions <i class="fas fa-chevron-right chevron" id="icon-sub-bm-ext"></i>
+            </button>
+            <div class="sub-folder-content" id="sub-bm-ext">
+                <a class="nav-item" data-tab="tab-bm-ext-player">PlayerTag</a>
+                <a class="nav-item" data-tab="tab-bm-ext-entity">EntityTag</a>
             </div>
         </div>
 
@@ -272,11 +274,11 @@
                 <a class="nav-item" data-tab="tab-sr-evt-apply">player skin apply</a>
             </div>
 
-            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-sr-tag', this)">
-                Tags <i class="fas fa-chevron-right chevron" id="icon-sub-sr-tag"></i>
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-sr-ext', this)">
+                Extensions <i class="fas fa-chevron-right chevron" id="icon-sub-sr-ext"></i>
             </button>
-            <div class="sub-folder-content" id="sub-sr-tag">
-                <a class="nav-item" data-tab="tab-sr-tag-player">PlayerTag</a>
+            <div class="sub-folder-content" id="sub-sr-ext">
+                <a class="nav-item" data-tab="tab-sr-ext-player">PlayerTag</a>
             </div>
         </div>
 
@@ -294,11 +296,11 @@
                 <a class="nav-item" data-tab="tab-dsrv-evt-unlink">player unlinks</a>
             </div>
 
-            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-dsrv-tag', this)">
-                Tags <i class="fas fa-chevron-right chevron" id="icon-sub-dsrv-tag"></i>
+            <button class="sub-folder-btn" onclick="toggleSubFolder('sub-dsrv-ext', this)">
+                Extensions <i class="fas fa-chevron-right chevron" id="icon-sub-dsrv-ext"></i>
             </button>
-            <div class="sub-folder-content" id="sub-dsrv-tag">
-                <a class="nav-item" data-tab="tab-dsrv-tag-player">PlayerTag</a>
+            <div class="sub-folder-content" id="sub-dsrv-ext">
+                <a class="nav-item" data-tab="tab-dsrv-ext-player">PlayerTag</a>
             </div>
         </div>
     </div>
@@ -308,7 +310,7 @@
     <div class="container">
 
         <!-- ===== CONFIGURATION ===== -->
-        <div id="tab-config" class="tab-panel">
+        <div id="tab-config" class="tab-panel active">
             <div class="breadcrumb">General <i class="fas fa-chevron-right"></i> <span>Configuration</span></div>
             <h1>Plugin Configuration</h1>
             <p class="subtitle">Global settings and fixes available in the plugin's <code>config.yml</code> file.</p>
@@ -330,13 +332,12 @@
             <div class="code-block">
                 <div class="code-header"><span class="code-title">config.yml</span></div>
                 <pre><span class="s-k">fixes:</span>
-  <span class="s-c"># Fix for Denizen 'fakeinternaldata' command on MC 1.21+</span>
   <span class="s-k">fakeinternaldata:</span> <span class="s-v">true</span></pre>
             </div>
         </div>
 
         <!-- ===== DIALOG: INTRO ===== -->
-        <div id="tab-intro" class="tab-panel active">
+        <div id="tab-intro" class="tab-panel">
             <div class="breadcrumb">Containers <i class="fas fa-chevron-right"></i> Dialog <i class="fas fa-chevron-right"></i> <span>Overview & Core</span></div>
             <h1>Overview & Core Setup</h1>
             <p class="subtitle">Dialog script containers allow you to define native Paper API UI screens rendered on the client side.</p>
@@ -345,13 +346,13 @@
             <div class="code-block">
                 <div class="code-header"><span class="code-title">Structure</span></div>
                 <pre><span class="s-k">my_dialog:</span>
-    <span class="s-k">type:</span> <span class="s-v">dialog</span>
-    <span class="s-k">base:</span>
-        <span class="s-k">type:</span> <span class="s-v">multi</span>
-        <span class="s-k">title:</span> <span class="s-s">&lt;gold&gt;Header Title</span>
-    <span class="s-k">bodies:</span> <span class="s-v">...</span>
-    <span class="s-k">inputs:</span> <span class="s-v">...</span>
-    <span class="s-k">buttons:</span> <span class="s-v">...</span></pre>
+  <span class="s-k">type:</span> <span class="s-v">dialog</span>
+  <span class="s-k">base:</span>
+    <span class="s-k">type:</span> <span class="s-v">multi</span>
+    <span class="s-k">title:</span> <span class="s-s">&lt;gold&gt;Header Title</span>
+  <span class="s-k">bodies:</span> <span class="s-v">...</span>
+  <span class="s-k">inputs:</span> <span class="s-v">...</span>
+  <span class="s-k">buttons:</span> <span class="s-v">...</span></pre>
             </div>
 
             <h2>Universal Base Properties</h2>
@@ -544,42 +545,42 @@
             <div class="code-block">
                 <div class="code-header"><span class="code-title">staff_application.dsc</span><button class="btn-copy">Copy YAML</button></div>
                 <pre><span class="s-k">st:</span>
-    <span class="s-k">type:</span> <span class="s-v">dialog</span>
-    <span class="s-k">base:</span>
-        <span class="s-k">type:</span> <span class="s-v">multi</span>
-        <span class="s-k">title:</span> <span class="s-s">&lt;yellow&gt;Staff Application</span>
-        <span class="s-k">columns:</span> <span class="s-v">1</span>
-    <span class="s-k">bodies:</span>
-        <span class="s-k">header:</span>
-            <span class="s-k">type:</span> <span class="s-v">message</span>
-            <span class="s-k">message:</span> <span class="s-s">&lt;gray&gt;Please fill out the form below carefully.</span>
-    <span class="s-k">inputs:</span>
-        <span class="s-k">1:</span>
-            <span class="s-k">type:</span> <span class="s-v">text</span>
-            <span class="s-k">label:</span> <span class="s-s">Your Real Name</span>
-            <span class="s-k">key:</span> <span class="s-v">applicant_name</span>
-        <span class="s-k">2:</span>
-            <span class="s-k">type:</span> <span class="s-v">number</span>
-            <span class="s-k">label:</span> <span class="s-s">Your Age</span>
-            <span class="s-k">start:</span> <span class="s-v">13</span>
-            <span class="s-k">end:</span> <span class="s-v">99</span>
-            <span class="s-k">initial:</span> <span class="s-v">18</span>
-            <span class="s-k">step:</span> <span class="s-v">1</span>
-            <span class="s-k">key:</span> <span class="s-v">applicant_age</span>
-        <span class="s-k">has_experience:</span>
-            <span class="s-k">type:</span> <span class="s-v">boolean</span>
-            <span class="s-k">label:</span> <span class="s-s">Previous Experience?</span>
-    <span class="s-k">buttons:</span>
-        <span class="s-k">1:</span>
-            <span class="s-k">label:</span> <span class="s-s">&lt;green&gt;Submit Application</span>
-            <span class="s-k">script:</span>
-            <span class="s-k">-</span> <span class="s-s">narrate "Name: &lt;context.applicant_name&gt;"</span>
-            <span class="s-k">-</span> <span class="s-s">narrate "Age: &lt;context.applicant_age&gt;"</span>
-            <span class="s-k">-</span> <span class="s-s">narrate "Experience: &lt;context.has_experience&gt;"</span>
-        <span class="s-k">2:</span>
-            <span class="s-k">type:</span> <span class="s-v">OPEN_URL</span>
-            <span class="s-k">label:</span> <span class="s-s">Join Support Discord</span>
-            <span class="s-k">url:</span> <span class="s-s">https://discord.gg/example</span></pre>
+  <span class="s-k">type:</span> <span class="s-v">dialog</span>
+  <span class="s-k">base:</span>
+    <span class="s-k">type:</span> <span class="s-v">multi</span>
+    <span class="s-k">title:</span> <span class="s-s">&lt;yellow&gt;Staff Application</span>
+    <span class="s-k">columns:</span> <span class="s-v">1</span>
+  <span class="s-k">bodies:</span>
+    <span class="s-k">header:</span>
+      <span class="s-k">type:</span> <span class="s-v">message</span>
+      <span class="s-k">message:</span> <span class="s-s">&lt;gray&gt;Please fill out the form below carefully.</span>
+  <span class="s-k">inputs:</span>
+    <span class="s-k">1:</span>
+      <span class="s-k">type:</span> <span class="s-v">text</span>
+      <span class="s-k">label:</span> <span class="s-s">Your Real Name</span>
+      <span class="s-k">key:</span> <span class="s-v">applicant_name</span>
+    <span class="s-k">2:</span>
+      <span class="s-k">type:</span> <span class="s-v">number</span>
+      <span class="s-k">label:</span> <span class="s-s">Your Age</span>
+      <span class="s-k">start:</span> <span class="s-v">13</span>
+      <span class="s-k">end:</span> <span class="s-v">99</span>
+      <span class="s-k">initial:</span> <span class="s-v">18</span>
+      <span class="s-k">step:</span> <span class="s-v">1</span>
+      <span class="s-k">key:</span> <span class="s-v">applicant_age</span>
+    <span class="s-k">has_experience:</span>
+      <span class="s-k">type:</span> <span class="s-v">boolean</span>
+      <span class="s-k">label:</span> <span class="s-s">Previous Experience?</span>
+  <span class="s-k">buttons:</span>
+    <span class="s-k">1:</span>
+      <span class="s-k">label:</span> <span class="s-s">&lt;green&gt;Submit Application</span>
+      <span class="s-k">script:</span>
+        <span class="s-k">-</span> <span class="s-s">narrate "Name: &lt;context.applicant_name&gt;"</span>
+        <span class="s-k">-</span> <span class="s-s">narrate "Age: &lt;context.applicant_age&gt;"</span>
+        <span class="s-k">-</span> <span class="s-s">narrate "Experience: &lt;context.has_experience&gt;"</span>
+    <span class="s-k">2:</span>
+      <span class="s-k">type:</span> <span class="s-v">OPEN_URL</span>
+      <span class="s-k">label:</span> <span class="s-s">Join Support Discord</span>
+      <span class="s-k">url:</span> <span class="s-s">https://discord.gg/example</span></pre>
             </div>
             <div class="example-preview"><img src="https://i.postimg.cc/d3fHjsND/image.png" alt="Preview"></div>
         </div>
@@ -738,11 +739,11 @@
         <div id="tab-bm-cmd-bmstate" class="tab-panel">
             <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands <i class="fas fa-chevron-right"></i> <span>bmstate</span></div>
             <h1>bmstate</h1>
-            <div class="signature">- <span class="sig-cmd">bmstate</span> <span class="sig-arg">model:&lt;BMModelTag&gt;</span> <span class="sig-arg">state:&lt;animation&gt;</span> <span class="sig-opt">(bones:&lt;list&gt;) (loop:&lt;mode&gt;) (speed:&lt;#.#&gt;) (remove)</span></div>
+            <div class="signature">- <span class="sig-cmd">bmstate</span> <span class="sig-arg">model:&lt;BMActiveModelTag&gt;</span> <span class="sig-arg">state:&lt;animation&gt;</span> <span class="sig-opt">(bones:&lt;list&gt;) (loop:&lt;mode&gt;) (speed:&lt;#.#&gt;) (remove)</span></div>
             <p>Starts, stops, or modifies animations on a model. Optionally targets specific bones.</p>
 
             <div class="spec-container">
-                <div class="spec-row"><div class="spec-key"><span class="name-label">model:</span><span class="badge b-req">Required</span></div><div class="spec-val">The <code>BMModelTag</code> instance to target.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">model:</span><span class="badge b-req">Required</span></div><div class="spec-val">The <code>BMActiveModelTag</code> instance to target.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">state:</span><span class="badge b-req">Required*</span></div><div class="spec-val">The animation name. Required to start. Optional when stopping all animations via <code>remove</code>.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">bones:</span><span class="badge b-opt">Optional</span></div><div class="spec-val">List of bone names to target. Omit to affect all bones.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">loop:</span><span class="badge b-opt">Optional</span></div><div class="spec-val">Playback mode: <code>PLAY_ONCE</code> (default), <code>LOOP</code>, or <code>HOLD</code>.</div></div>
@@ -761,20 +762,20 @@
         <div id="tab-bm-cmd-bmpart" class="tab-panel">
             <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands <i class="fas fa-chevron-right"></i> <span>bmpart</span></div>
             <h1>bmpart</h1>
-            <div class="signature">- <span class="sig-cmd">bmpart</span> <span class="sig-arg">model:&lt;BMModelTag&gt;</span> <span class="sig-arg">bone:&lt;bone&gt;</span> <span class="sig-arg">part:&lt;limb_name&gt;</span> <span class="sig-arg">from:&lt;player&gt;</span></div>
+            <div class="signature">- <span class="sig-cmd">bmpart</span> <span class="sig-arg">model:&lt;BMActiveModelTag&gt;</span> <span class="sig-arg">bone:&lt;bone&gt;</span> <span class="sig-arg">part:&lt;limb_name&gt;</span> <span class="sig-arg">from:&lt;player&gt;</span></div>
             <p>Applies a limb texture from an online player's skin to a specific bone. Useful for player-skin-based models.</p>
 
             <div class="spec-container">
-                <div class="spec-row"><div class="spec-key"><span class="name-label">model:</span><span class="badge b-req">Required</span></div><div class="spec-val">The <code>BMModelTag</code> to modify.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">model:</span><span class="badge b-req">Required</span></div><div class="spec-val">The <code>BMActiveModelTag</code> to modify.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">bone:</span><span class="badge b-req">Required</span></div><div class="spec-val">The destination bone name in your model.</div></div>
-                <div class="spec-row"><div class="spec-key"><span class="name-label">part:</span><span class="badge b-req">Required</span></div><div class="spec-val">Source limb name from the player skin (e.g. <code>HEAD</code>, <code>TORSO</code>).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">part:</span><span class="badge b-req">Required</span></div><div class="spec-val">Source limb name from the player skin (e.g. <code>HEAD</code>, <code>CHEST</code>).</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">from:</span><span class="badge b-req">Required</span></div><div class="spec-val">An online <code>PlayerTag</code> whose skin provides the texture source.</div></div>
             </div>
 
             <div class="code-block">
                 <div class="code-header"><span class="code-title">Usage</span></div>
                 <pre><span class="s-k">-</span> <span class="s-v">bmpart</span> <span class="s-s">model:&lt;[my_model]&gt; bone:head part:HEAD from:&lt;player&gt;</span>
-<span class="s-k">-</span> <span class="s-v">bmpart</span> <span class="s-s">model:&lt;[my_model]&gt; bone:chest part:TORSO from:&lt;player[PlayerName]&gt;</span></pre>
+<span class="s-k">-</span> <span class="s-v">bmpart</span> <span class="s-s">model:&lt;[my_model]&gt; bone:chest part:CHEST from:&lt;player[PlayerName]&gt;</span></pre>
             </div>
         </div>
 
@@ -798,33 +799,161 @@
             </div>
         </div>
 
+        <div id="tab-bm-evt-signal" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Events <i class="fas fa-chevron-right"></i> <span>bm animation signal</span></div>
+            <h1>bm animation signal</h1>
+            <div class="signature"><span class="sig-return">on</span> bm animation signal:</div>
+            <p class="subtitle">Triggers globally on the server when a BetterModel Blockbench animation keyframe is reached on the Instructions (Effects) track with a <code>denizen:</code> prefix.</p>
+
+            <h3>Switches</h3>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">name:&lt;name&gt;</span></div>
+                    <div class="spec-val">Filter by the signal name argument to only run if matching.</div>
+                </div>
+            </div>
+
+            <h3>Contexts</h3>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;context.name&gt;</span><span class="badge b-tag">ElementTag</span></div>
+                    <div class="spec-val">Returns the basic name of the signal (e.g. 'strike' from <code>denizen:strike{damage=5}</code>).</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;context.model&gt;</span><span class="badge b-tag">BMActiveModelTag</span></div>
+                    <div class="spec-val">Returns the active model instance triggering the script keyframe.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;context.[key]&gt;</span><span class="badge b-tag">ElementTag</span></div>
+                    <div class="spec-val">Returns custom parameter values defined inside the braces <code>{}</code> of the script line. (e.g. <code>&lt;context.damage&gt;</code> for the argument <code>denizen:strike{damage=5}</code>).</div>
+                </div>
+            </div>
+
+            <h2>Blockbench Script Rules</h2>
+            <p>Enter keyframes with: <code>denizen:signal_name{arg1=val1;arg2=val2}</code> on your animation instructions track.</p>
+
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">Example usage</span></div>
+                <pre><span class="s-k">on</span> <span class="s-s">bm animation signal name:strike:</span>
+  <span class="s-k">-</span> <span class="s-s">narrate "Active model &lt;context.model.name&gt; applied &lt;context.damage&gt; points!"</span></pre>
+            </div>
+
+            <h3>Instruction Tracking Constraint</h3>
+            <p>Currently in BetterModel, multiple script keys using identical prefixes on the Instructions track might fail to trigger sequentially (only the final key registers). To work around this constraint, place your script triggers on the <strong>Particle track</strong> in the "Script" options field, where keyframes execute sequentially without dropping events.</p>
+        </div>
+
+        <div id="tab-bm-evt-player-signal" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Events <i class="fas fa-chevron-right"></i> <span>bm player animation signal</span></div>
+            <h1>bm player animation signal</h1>
+            <div class="signature"><span class="sig-return">on</span> bm player animation signal:</div>
+            <p class="subtitle">Triggers on the client-renderer level when an animation keyframe issues a personal visual trigger (using the built-in <code>signal:</code> prefix).</p>
+            <p>This event fires individually for every active player viewing the model at the keyframe's precise timeline moment.</p>
+
+            <h3>Switches</h3>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">name:&lt;name&gt;</span></div>
+                    <div class="spec-val">Filters by the string value of the signal.</div>
+                </div>
+            </div>
+
+            <h3>Contexts</h3>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;context.name&gt;</span><span class="badge b-tag">ElementTag</span></div>
+                    <div class="spec-val">Returns the plain signal name (e.g. 'hit' from <code>signal:hit</code>).</div>
+                </div>
+            </div>
+
+            <h3>Linked Player Context</h3>
+            <p>The standard event player context <code>&lt;player&gt;</code> represents the individual viewing player who receives this visual indicator trigger.</p>
+        </div>
+
+        <!-- ===== BETTERMODEL OBJECTS (REORDERED: BMActiveModelTag -> BMModelTag -> BMBoneTag) ===== -->
         <div id="tab-bm-obj-model" class="tab-panel">
-            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Objects <i class="fas fa-chevron-right"></i> <span>BMModelTag</span></div>
-            <h1>BMModelTag</h1>
-            <p>Prefix: <code>bmmodel@</code>. Represents an active BetterModel tracker instance attached to an entity.</p>
-            <div class="signature">Format: <span class="sig-cmd">bmmodel@</span>&lt;entity_uuid&gt;/<span class="sig-return">&lt;model_name&gt;</span></div>
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Objects <i class="fas fa-chevron-right"></i> <span>BMActiveModelTag</span></div>
+            <h1>BMActiveModelTag</h1>
+            <p class="subtitle">Prefix: <code>bmactivemodel@</code>. Represents an active tracker instance currently spawned and displaying in the game world.</p>
+            <div class="signature">Format: <span class="sig-cmd">bmactivemodel@</span>&lt;entity_uuid&gt;/<span class="sig-return">&lt;model_name&gt;</span></div>
 
             <h3>Tags</h3>
             <div class="spec-container">
-                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;EntityTag.model[(&lt;name&gt;)]&gt;</span><span class="badge b-tag">BMModelTag</span></div><div class="spec-val">Returns the BetterModel tracker with the specified name from the entity.</div></div>
-                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMModelTag.name&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the name of the model tracker.</div></div>
-                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMModelTag.bone[&lt;name&gt;]&gt;</span><span class="badge b-tag">BMBoneTag</span></div><div class="spec-val">Returns a specific bone from this model by name.</div></div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BMActiveModelTag.name&gt;</span><span class="badge b-tag">ElementTag</span></div>
+                    <div class="spec-val">Returns the name identification string of this model tracker instance.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BMActiveModelTag.bone[&lt;name&gt;]&gt;</span><span class="badge b-tag">BMBoneTag</span></div>
+                    <div class="spec-val">Returns the specific bone tag object matching the query name.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BMActiveModelTag.bones&gt;</span><span class="badge b-tag">MapTag</span></div>
+                    <div class="spec-val">Returns a map grouping all structural bones inside this tracker (mapped by bone name to <code>BMBoneTag</code>).</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BMActiveModelTag.running_animation&gt;</span><span class="badge b-tag">ElementTag</span></div>
+                    <div class="spec-val">Returns the animation name currently running. Append <code>.type</code> to retrieve the loop playback mode (e.g. <code>play_once</code>, <code>loop</code>, <code>hold_on_last</code>).</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BMActiveModelTag.animations&gt;</span><span class="badge b-tag">ListTag(ElementTag)</span></div>
+                    <div class="spec-val">Returns a list of all animations configured for this active instance model.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BMActiveModelTag.animation_duration[&lt;name&gt;]&gt;</span><span class="badge b-tag">DurationTag</span></div>
+                    <div class="spec-val">Returns the total duration value of the designated animation.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BMActiveModelTag.viewers&gt;</span><span class="badge b-tag">ListTag(PlayerTag)</span></div>
+                    <div class="spec-val">Returns a list of online players who are currently actively rendering/viewing the model tracker.</div>
+                </div>
             </div>
 
             <h3>Mechanisms</h3>
             <div class="spec-container">
-                <div class="spec-row"><div class="spec-key"><span class="name-label">billboard</span><span class="badge b-mech">ElementTag</span></div><div class="spec-val">Globally sets the billboard mode for <strong>all</strong> bones.</div></div>
-                <div class="spec-row"><div class="spec-key"><span class="name-label">view_range</span><span class="badge b-mech">Decimal</span></div><div class="spec-val">Globally sets the view range for all bones.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">billboard</span><span class="badge b-mech">ElementTag</span></div><div class="spec-val">Globally sets the billboard mode for <strong>all</strong> bones in the model (e.g. CENTER, VERTICAL, HORIZONTAL).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">view_range</span><span class="badge b-mech">Decimal</span></div><div class="spec-val">Globally sets the view range for all bones in this model.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">glow</span><span class="badge b-mech">Boolean</span></div><div class="spec-val">Globally toggles glow on the entire model.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">glow_color</span><span class="badge b-mech">ColorTag</span></div><div class="spec-val">Globally sets glow color for all bones.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">tint</span><span class="badge b-mech">ColorTag</span></div><div class="spec-val">Globally sets tint color for all bones.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">visible</span><span class="badge b-mech">Boolean</span></div><div class="spec-val">Globally toggles visibility of the entire model.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">item</span><span class="badge b-mech">ItemTag</span></div><div class="spec-val">Globally overrides the item displayed on all bones.</div></div>
-                <div class="spec-row"><div class="spec-key"><span class="name-label">scale</span><span class="badge b-mech">LocationTag</span></div><div class="spec-val">Globally overrides the scale for all bones (XYZ vector).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">scale</span><span class="badge b-mech">LocationTag</span></div><div class="spec-val">Globally overrides the scale for all bones (XYZ vector format).</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">translation</span><span class="badge b-mech">LocationTag</span></div><div class="spec-val">Globally overrides translation vectors for all model bones.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">rotation</span><span class="badge b-mech">QuaternionTag</span></div><div class="spec-val">Globally sets a custom rotation modifier for all bones.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">hide_from</span><span class="badge b-mech">ListTag(PlayerTag)</span></div><div class="spec-val">Hides the entire model from the specified list of players.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">show_to</span><span class="badge b-mech">ListTag(PlayerTag)</span></div><div class="spec-val">Makes the model visible again to the specified list of players.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">force_update</span><span class="badge b-mech">None</span></div><div class="spec-val">Manually forces a full synchronization update.</div></div>
+            </div>
+        </div>
+
+        <div id="tab-bm-obj-static-model" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Objects <i class="fas fa-chevron-right"></i> <span>BMModelTag</span></div>
+            <h1>BMModelTag</h1>
+            <p class="subtitle">Prefix: <code>bmmodel@</code>. Represents a model blueprint allowing retrieval of its data without creating an object in the world.</p>
+            <div class="signature">Format: <span class="sig-cmd">bmmodel@</span><span class="sig-return">&lt;model_name&gt;</span></div>
+
+            <h3>Base Tag</h3>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;model[&lt;name&gt;]&gt;</span><span class="badge b-tag">BMModelTag</span></div>
+                    <div class="spec-val">Returns the blueprint.</div>
+                </div>
+            </div>
+
+            <h3>Tags</h3>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BMModelTag.name&gt;</span><span class="badge b-tag">ElementTag</span></div>
+                    <div class="spec-val">Returns the name key of the model template.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BMModelTag.animations&gt;</span><span class="badge b-tag">ListTag(ElementTag)</span></div>
+                    <div class="spec-val">Returns a list of all raw animation timeline names loaded for this file template.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;BMModelTag.animation_duration[&lt;name&gt;]&gt;</span><span class="badge b-tag">DurationTag</span></div>
+                    <div class="spec-val">Returns the total duration value of the designated blueprint animation.</div>
+                </div>
             </div>
         </div>
 
@@ -840,6 +969,7 @@
                 <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMBoneTag.location&gt;</span><span class="badge b-tag">LocationTag</span></div><div class="spec-val">Current world location of the bone (entity + relative offset).</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMBoneTag.euler&gt;</span><span class="badge b-tag">LocationTag</span></div><div class="spec-val">Returns the rotation of the bone as Euler angles.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMBoneTag.passengers&gt;</span><span class="badge b-tag">ListTag(EntityTag)</span></div><div class="spec-val">List of entities mounted on this bone's seat.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;BMBoneTag.item&gt;</span><span class="badge b-tag">ItemTag</span></div><div class="spec-val">Returns the ItemTag currently displayed on this bone.</div></div>
             </div>
 
             <h3>Mechanisms</h3>
@@ -857,6 +987,37 @@
                 <div class="spec-row"><div class="spec-key"><span class="name-label">item</span><span class="badge b-mech">ItemTag</span></div><div class="spec-val">Changes the item display of this bone.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">scale</span><span class="badge b-mech">LocationTag</span></div><div class="spec-val">Sets the scale of the bone's item.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">translation</span><span class="badge b-mech">LocationTag</span></div><div class="spec-val">Sets the translation of the bone's item.</div></div>
+            </div>
+        </div>
+
+        <!-- ===== BETTERMODEL EXTENSIONS ===== -->
+        <div id="tab-bm-ext-player" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Extensions <i class="fas fa-chevron-right"></i> <span>PlayerTag</span></div>
+            <h1>PlayerTag (Extensions)</h1>
+            <p class="subtitle">Tags injected into standard Player objects by the BetterModel bridge.</p>
+
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;PlayerTag.limb&gt;</span><span class="badge b-tag">BMActiveModelTag</span></div>
+                    <div class="spec-val">Returns the player's active player-renderer limb tracker.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-bm-ext-entity" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Extensions <i class="fas fa-chevron-right"></i> <span>EntityTag</span></div>
+            <h1>EntityTag (Extensions)</h1>
+            <p class="subtitle">Tags injected into standard Entity objects by the BetterModel bridge.</p>
+
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;EntityTag.model[(&lt;name&gt;)]&gt;</span><span class="badge b-tag">BMActiveModelTag</span></div>
+                    <div class="spec-val">Returns the BetterModel active tracker model with the specified name from the entity. If no name is provided, returns the first active model.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;EntityTag.models&gt;</span><span class="badge b-tag">ListTag</span></div>
+                    <div class="spec-val">Returns a list of all active BetterModel model names currently operating on the entity.</div>
+                </div>
             </div>
         </div>
 
@@ -908,10 +1069,10 @@
             </div>
         </div>
 
-        <div id="tab-sr-tag-player" class="tab-panel">
-            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> SkinsRestorer <i class="fas fa-chevron-right"></i> Tags <i class="fas fa-chevron-right"></i> <span>PlayerTag</span></div>
-            <h1>PlayerTag (SkinsRestorer)</h1>
-            <p class="subtitle">Tags injected into standard Player objects by the bridge.</p>
+        <div id="tab-sr-ext-player" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> SkinsRestorer <i class="fas fa-chevron-right"></i> Extensions <i class="fas fa-chevron-right"></i> <span>PlayerTag</span></div>
+            <h1>PlayerTag (Extensions)</h1>
+            <p class="subtitle">Tags injected into standard Player objects by the SkinsRestorer bridge.</p>
 
             <div class="spec-container">
                 <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;PlayerTag.skin_url&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the URL of the player's current skin texture.</div></div>
@@ -944,10 +1105,10 @@
             </div>
         </div>
 
-        <div id="tab-dsrv-tag-player" class="tab-panel">
-            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> DiscordSRV <i class="fas fa-chevron-right"></i> Tags <i class="fas fa-chevron-right"></i> <span>PlayerTag</span></div>
-            <h1>PlayerTag (DiscordSRV)</h1>
-            <p class="subtitle">Tags injected into standard Player objects by the bridge.</p>
+        <div id="tab-dsrv-ext-player" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> DiscordSRV <i class="fas fa-chevron-right"></i> Extensions <i class="fas fa-chevron-right"></i> <span>PlayerTag</span></div>
+            <h1>PlayerTag (Extensions)</h1>
+            <p class="subtitle">Tags injected into standard Player objects by the DiscordSRV bridge.</p>
 
             <div class="spec-container">
                 <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;PlayerTag.discord_id&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the Discord snowflake ID associated with the Minecraft player's account via DiscordSRV. Returns <code>null</code> if the player has not linked their Discord account.</div></div>
@@ -958,89 +1119,61 @@
 </main>
 
 <script>
-    // Tab switching logic
-    const navItems = document.querySelectorAll('.nav-item');
-    const panels = document.querySelectorAll('.tab-panel');
-
-    function showTab(id) {
-        panels.forEach(p => p.classList.remove('active'));
-        navItems.forEach(i => i.classList.remove('active'));
-
-        const targetPanel = document.getElementById(id);
-        const targetNavItem = document.querySelector(`[data-tab="${id}"]`);
-
-        if (targetPanel) {
-            targetPanel.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        if (targetNavItem) {
-            targetNavItem.classList.add('active');
-
-            // Auto-open parent folders
-            let current = targetNavItem.parentElement;
-            while(current && current.tagName !== 'ASIDE') {
-                if (current.classList.contains('sub-folder-content') || current.classList.contains('folder-content')) {
-                    current.classList.add('open');
-                    const iconId = 'icon-' + current.id;
-                    const icon = document.getElementById(iconId);
-                    if (icon) icon.classList.add('rotated');
-                }
-                current = current.parentElement;
-            }
+    // Folder Toggles
+    function toggleFolder(id, btn) {
+        const content = document.getElementById(id);
+        const icon = btn.querySelector('.chevron');
+        if (content && icon) {
+            content.classList.toggle('open');
+            icon.classList.toggle('rotated');
         }
     }
 
-    navItems.forEach(item => {
+    function toggleSubFolder(id, btn) {
+        const content = document.getElementById(id);
+        const icon = btn.querySelector('.chevron');
+        if (content && icon) {
+            content.classList.toggle('open');
+            icon.classList.toggle('rotated');
+        }
+    }
+
+    // Tab Switching Mechanics
+    document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
-            const id = item.getAttribute('data-tab');
-            showTab(id);
-            window.location.hash = id;
+            const tabId = item.getAttribute('data-tab');
+            if (!tabId) return;
+
+            // Remove active classes
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.remove('active');
+            });
+
+            // Set active
+            const activePanel = document.getElementById(tabId);
+            if (activePanel) {
+                activePanel.classList.add('active');
+                item.classList.add('active');
+            }
         });
     });
 
-    // Hash navigation on load
-    window.addEventListener('load', () => {
-        const hash = window.location.hash.substring(1);
-        if (hash) showTab(hash);
-    });
-
-    // Top-level folder logic
-    function toggleFolder(id, btnElement) {
-        const content = document.getElementById(id);
-        const icon = btnElement.querySelector('.chevron');
-        content.classList.toggle('open');
-        icon.classList.toggle('rotated');
-    }
-
-    // Sub-folder logic
-    function toggleSubFolder(id, btnElement) {
-        const content = document.getElementById(id);
-        const icon = btnElement.querySelector('.chevron');
-        content.classList.toggle('open');
-        icon.classList.toggle('rotated');
-    }
-
-    // Copy button simulation
+    // Copy to Clipboard Action
     document.querySelectorAll('.btn-copy').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const pre = e.target.parentElement.nextElementSibling;
-            const txt = document.createElement("textarea");
-            txt.innerHTML = pre.innerText;
-            navigator.clipboard.writeText(txt.value);
-
-            const text = btn.innerText;
-            btn.innerText = 'Copied!';
-            btn.style.color = 'var(--c-mech-text)';
-            btn.style.borderColor = 'var(--c-mech-text)';
-            setTimeout(() => {
-                btn.innerText = text;
-                btn.style.color = '';
-                btn.style.borderColor = '';
-            }, 2000);
+        btn.addEventListener('click', () => {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            if (pre) {
+                navigator.clipboard.writeText(pre.innerText).then(() => {
+                    const originalText = btn.innerText;
+                    btn.innerText = 'Copied!';
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                    }, 2000);
+                });
+            }
         });
     });
 </script>
-
-</body>
-</html>
