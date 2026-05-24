@@ -21,12 +21,9 @@ public class BMStartReloadScriptEvent extends ScriptEvent implements Listener {
     //
     // -->
 
-    public static BMStartReloadScriptEvent instance;
-
     private ModelEventListener subscription;
 
     public BMStartReloadScriptEvent() {
-        instance = this;
         registerCouldMatcher("bm start reload");
     }
 
@@ -34,7 +31,7 @@ public class BMStartReloadScriptEvent extends ScriptEvent implements Listener {
     public void init() {
         if (subscription == null) {
             subscription = BetterModel.eventBus().subscribe(BetterModelBukkit.platform(), PluginStartReloadEvent.class, _ -> {
-                instance.fire();
+                fire();
             });
         }
     }

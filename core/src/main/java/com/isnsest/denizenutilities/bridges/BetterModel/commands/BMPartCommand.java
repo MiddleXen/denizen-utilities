@@ -14,7 +14,7 @@ import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
 import kr.toxicity.model.api.data.renderer.RenderSource;
 import kr.toxicity.model.api.player.PlayerLimb;
 import kr.toxicity.model.api.tracker.EntityTracker;
-import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMModelTag;
+import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMActiveModelTag;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,7 +54,7 @@ public class BMPartCommand extends AbstractCommand {
     }
 
     public static void autoExecute(ScriptEntry scriptEntry,
-                                   @ArgName("model") @ArgPrefixed BMModelTag model,
+                                   @ArgName("model") @ArgPrefixed BMActiveModelTag model,
                                    @ArgName("bone") @ArgPrefixed ElementTag boneName,
                                    @ArgName("part") @ArgPrefixed ElementTag partName,
                                    @ArgName("from") @ArgPrefixed PlayerTag skinSource) {

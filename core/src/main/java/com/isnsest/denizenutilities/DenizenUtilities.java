@@ -8,7 +8,6 @@ import com.isnsest.denizenutilities.extensions.objects.ConnectionTag;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.isnsest.denizenutilities.nms.NMSHandler;
-import com.denizenscript.denizen.nms.NMSVersion;
 import com.denizenscript.denizencore.scripts.ScriptRegistry;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.isnsest.denizenutilities.extensions.properties.BiomeExtensions;
@@ -16,12 +15,9 @@ import com.isnsest.denizenutilities.extensions.properties.PlayerExtensions;
 
 import java.util.List;
 
-import static com.denizenscript.denizen.nms.NMSHandler.getVersion;
-
 public class DenizenUtilities extends JavaPlugin {
 
     public static DenizenUtilities instance;
-    public static boolean supportsPaper = false;
 
     Metrics metrics = new Metrics(this, 29915);
 
@@ -29,13 +25,15 @@ public class DenizenUtilities extends JavaPlugin {
         PlayerExtensions.register();
         BiomeExtensions.register();
 
-        if (!supportsPaper) return;
+        ScriptRegistry._registerType("dialog", DialogScriptContainer.class);
 
-        if (getVersion().isAtLeast(NMSVersion.v1_21)) {
-            ScriptRegistry._registerType("dialog", DialogScriptContainer.class);
-        }
+        // Events
         ScriptEvent.registerScriptEvent(PlayerConnectionConfigureEvent.class);
+        //
+
+        // Objects
         ObjectFetcher.registerWithObjectFetcher(ConnectionTag.class, ConnectionTag.tagProcessor);
+        //
     }
 
     private void registerBridges() {
@@ -71,14 +69,6 @@ public class DenizenUtilities extends JavaPlugin {
 
         Debug.log("denizen-utilities", "Loading...");
         saveDefaultConfig();
-
-        try {
-            Class.forName("com.destroystokyo.paper.PaperConfig");
-            supportsPaper = true;
-        }
-        catch (ClassNotFoundException ignored) {
-            // Ignore.
-        }
 
         if (NMSHandler.initialize()) {
             if (getConfig().getBoolean("fixes.fakeinternaldata", false)) {

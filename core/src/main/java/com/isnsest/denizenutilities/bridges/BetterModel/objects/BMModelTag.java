@@ -1,88 +1,55 @@
-/*
- * Copyright 2025 Meigo™ Corporation
- * SPDX-License-Identifier: MIT
- */
-
 package com.isnsest.denizenutilities.bridges.BetterModel.objects;
 
-import com.denizenscript.denizen.objects.EntityTag;
-import com.denizenscript.denizen.objects.ItemTag;
-import com.denizenscript.denizen.objects.LocationTag;
-import com.denizenscript.denizen.objects.PlayerTag;
-import com.denizenscript.denizencore.objects.Adjustable;
 import com.denizenscript.denizencore.objects.Fetchable;
-import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.ObjectTag;
-import com.denizenscript.denizencore.objects.core.*;
+import com.denizenscript.denizencore.objects.core.DurationTag;
+import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.denizenscript.denizencore.objects.core.ListTag;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.CoreUtilities;
-import com.isnsest.denizenutilities.bridges.BetterModel.BetterModelUtils;
 import kr.toxicity.model.api.BetterModel;
-import kr.toxicity.model.api.bone.RenderedBone;
-import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
-import kr.toxicity.model.api.platform.PlatformBillboard;
-import kr.toxicity.model.api.tracker.EntityTracker;
-import kr.toxicity.model.api.tracker.TrackerUpdateAction;
-import kr.toxicity.model.api.util.TransformedItemStack;
-import kr.toxicity.model.api.util.function.BonePredicate;
-import org.bukkit.entity.Player;
-import org.joml.Quaternionf;
-
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.UnaryOperator;
+import kr.toxicity.model.api.data.renderer.ModelRenderer;
 
 // <--[ObjectType]
 // @name BMModelTag
 // @prefix bmmodel
 // @base ElementTag
-// @ExampleTagBase player.model[steve]
-// @format
-// The identity format for a BMModelTag is the UUID of the entity and the model name, separated by a slash.
+// @format The identity format for BMModelTag is the name of the model.
+// For example: 'bmmodel@demon_knight'.
 //
 // @plugin denizen-utilities, BetterModel
 // @description
-// A BMModelTag represents an active BetterModel tracker instance.
-// To modify specific parts, use <@link tag BMModelTag.bone>.
+// A BMModelTag represents a BetterModel blueprint (the raw model data from the files).
+// It can be used to retrieve information about a model without needing to spawn it.
 //
 // -->
-public class BMModelTag implements ObjectTag, Adjustable {
+public class BMModelTag implements ObjectTag {
 
     @Fetchable("bmmodel")
     public static BMModelTag valueOf(String string, TagContext context) {
         if (string == null || string.isEmpty()) return null;
-        if (CoreUtilities.toLowerCase(string).startsWith("bmmodel@")) {
-            string = string.substring("bmmodel@".length());
-        }
-        String[] split = string.split("/", 2);
-        if (split.length < 2) return null;
-        try {
-            UUID uuid = UUID.fromString(split[0]);
-            String modelName = split[1];
-            return BetterModel.registry(uuid)
-                    .flatMap(reg -> Optional.ofNullable(reg.tracker(modelName)))
-                    .map(BMModelTag::new)
-                    .orElse(null);
-        } catch (Exception e) {
-            return null;
-        }
+
+        final String name = CoreUtilities.toLowerCase(string).startsWith("bmmodel@")
+                ? string.substring(8)
+                : string;
+
+        return BetterModel.model(name)
+                .or(() -> BetterModel.limb(name))
+                .map(BMModelTag::new)
+                .orElse(null);
     }
 
     public static boolean matches(String input) {
-        return input != null && CoreUtilities.toLowerCase(input).startsWith("bmmodel@");
+        return input != null && input.startsWith("bmmodel@");
     }
 
-    private final EntityTracker tracker;
+    private final ModelRenderer model;
     private String prefix = "bmmodel";
 
-    public BMModelTag(EntityTracker tracker) {
-        this.tracker = tracker;
-    }
-
-    public EntityTracker getTracker() {
-        return tracker;
+    public BMModelTag(ModelRenderer model) {
+        this.model = model;
     }
 
     @Override
@@ -98,12 +65,12 @@ public class BMModelTag implements ObjectTag, Adjustable {
 
     @Override
     public boolean isUnique() {
-        return true;
+        return false;
     }
 
     @Override
     public String identify() {
-        return "bmmodel@" + getTracker().registry().uuid() + "/" + getTracker().name();
+        return "bmmodel@" + model.name();
     }
 
     @Override
@@ -113,7 +80,7 @@ public class BMModelTag implements ObjectTag, Adjustable {
 
     @Override
     public Object getJavaObject() {
-        return tracker;
+        return model;
     }
 
     @Override
@@ -126,238 +93,38 @@ public class BMModelTag implements ObjectTag, Adjustable {
     public static void register() {
 
         // <--[tag]
-        // @attribute <EntityTag.model[(<model_name>)]>
-        // @returns BMModelTag
-        // @plugin denizen-utilities, BetterModel
+        // @attribute <BMModelTag.name>
+        // @returns ElementTag
         // @description
-        // Returns the BetterModel tracker with the specified name from the entity.
-        // If no name is provided, returns the first active model.
+        // Returns the name of the model.
         // -->
-        EntityTag.tagProcessor.registerTag(BMModelTag.class, "model", (attribute, object) -> {
-            return BetterModel.registry(object.getUUID()).map(registry -> {
-                EntityTracker tracker = attribute.hasParam() ? registry.tracker(attribute.getParam()) : registry.first();
-                if (tracker == null) return null;
-                return new BMModelTag(tracker);
-            }).orElse(null);
-        });
-
-        tagProcessor.registerTag(ElementTag.class, "name", (_, object) -> new ElementTag(object.tracker.name()));
+        tagProcessor.registerTag(ElementTag.class, "name", (_, object) -> new ElementTag(object.model.name()));
 
         // <--[tag]
-        // @attribute <BMModelTag.bone[<bone_name>]>
-        // @returns BMBoneTag
-        // @plugin denizen-utilities, BetterModel
+        // @attribute <BMModelTag.animations>
+        // @returns ListTag<ElementTag>
         // @description
-        // Returns a specific bone from this model.
+        // Returns a list of all animation names available for this model.
         // -->
-        tagProcessor.registerTag(BMBoneTag.class, ElementTag.class, "bone", (_, object, input) -> {
-            RenderedBone bone = object.tracker.bone(input.toString());
-            return bone == null ? null : new BMBoneTag(object.tracker, bone);
+        tagProcessor.registerTag(ListTag.class, "animations", (_, object) -> {
+            return new ListTag(object.model.animations().keySet());
         });
 
         // <--[tag]
-        // @attribute <BMModelTag.bones>
-        // @returns MapTag
-        // @plugin denizen-utilities, BetterModel
+        // @attribute <BMModelTag.animation_duration[<name>]>
+        // @returns DurationTag
         // @description
-        // Returns a list of all bones in this model tracker.
+        // Returns the duration of a specific animation for this model.
         // -->
-        tagProcessor.registerTag(MapTag.class, "bones", (_, object) -> {
-            MapTag mapTag = new MapTag();
-            for (RenderedBone bone : object.getTracker().bones()) {
-                mapTag.putObject(bone.name().name(), new BMBoneTag(object.getTracker(), bone));
-            }
-            return mapTag;
-        });
-
-        // --- Mechanisms ---
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name billboard
-        // @plugin denizen-utilities, BetterModel
-        // @input ElementTag
-        // @description
-        // Globally sets the billboard mode for ALL bones in the model (CENTER, VERTICAL, HORIZONTAL).
-        // -->
-        tagProcessor.registerMechanism("billboard", false, ElementTag.class, (object, mechanism, input) -> {
-            try {
-                object.tracker.update(TrackerUpdateAction.billboard(PlatformBillboard.valueOf(input.asString().toUpperCase())));
-            } catch (IllegalArgumentException e) {
-                mechanism.echoError("Invalid billboard mode: " + input.asString());
-            }
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name view_range
-        // @plugin denizen-utilities, BetterModel
-        // @input ElementTag(Decimal)
-        // @description
-        // Globally sets the view range for ALL bones in this model.
-        // -->
-        tagProcessor.registerMechanism("view_range", false, ElementTag.class, (object, mechanism, input) -> {
-            if (mechanism.requireFloat()) {
-                object.tracker.update(TrackerUpdateAction.viewRange(input.asFloat() * 64));
-            }
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name glow
-        // @plugin denizen-utilities, BetterModel
-        // @input ElementTag(Boolean)
-        // @description
-        // Globally sets whether the ENTIRE model should glow.
-        // -->
-        tagProcessor.registerMechanism("glow", false, ElementTag.class, (object, mechanism, input) -> {
-            if (mechanism.requireBoolean()) {
-                object.tracker.update(TrackerUpdateAction.glow(input.asBoolean()));
-            }
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name glow_color
-        // @plugin denizen-utilities, BetterModel
-        // @input ColorTag
-        // @description
-        // Globally sets the glow color for ALL bones in the model.
-        // -->
-        tagProcessor.registerMechanism("glow_color", false, ColorTag.class, (object, _, input) -> {
-            int color = (input.red << 16) | (input.green << 8) | (input.blue);
-            object.tracker.update(TrackerUpdateAction.glowColor(color));
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name tint
-        // @plugin denizen-utilities, BetterModel
-        // @input ColorTag
-        // @description
-        // Globally sets the tint color for ALL bones in the model.
-        // -->
-        tagProcessor.registerMechanism("tint", false, ColorTag.class, (object, _, input) -> {
-            int color = (input.red << 16) | (input.green << 8) | (input.blue);
-            object.tracker.update(TrackerUpdateAction.tint(color));
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name visible
-        // @plugin denizen-utilities, BetterModel
-        // @input ElementTag(Boolean)
-        // @description
-        // Globally toggles the visibility of the ENTIRE model.
-        // -->
-        tagProcessor.registerMechanism("visible", false, ElementTag.class, (object, mechanism, input) -> {
-            if (mechanism.requireBoolean()) {
-                object.tracker.update(TrackerUpdateAction.togglePart(input.asBoolean()));
-            }
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name rotation
-        // @plugin denizen-utilities, BetterModel
-        // @input QuaternionTag
-        // @description
-        // Sets a custom rotation modifier for all bones.
-        // -->
-        tagProcessor.registerMechanism("rotation", false, QuaternionTag.class, (object, _, input) -> {
-            object.tracker.getPipeline().addLocalRotModifier(BonePredicate.TRUE, _ ->
-                    new Quaternionf(input.x, input.y, input.z, input.w).conjugate()
-            );
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name item
-        // @plugin denizen-utilities, BetterModel
-        // @input ItemTag
-        // @description
-        // Globally overrides the item displayed on ALL bones in the model.
-        // -->
-        tagProcessor.registerMechanism("item", false, ItemTag.class, (object, _, input) -> {
-            updateBones(object, t -> TransformedItemStack.of(t.position(), t.offset(), t.scale(), BukkitAdapter.adapt(input.getItemStack())));
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name scale
-        // @plugin denizen-utilities, BetterModel
-        // @input LocationTag
-        // @description
-        // Globally overrides the scale for ALL bones in the model.
-        // -->
-        tagProcessor.registerMechanism("scale", false, LocationTag.class, (object, _, input) -> {
-            updateBones(object, t -> TransformedItemStack.of(t.position(), t.offset(), input.toVector().toVector3f(), t.itemStack()));
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name hide_from
-        // @plugin denizen-utilities, BetterModel
-        // @input ListTag(PlayerTag)
-        // @description
-        // Hides the entire model from the specified list of players.
-        // -->
-        tagProcessor.registerMechanism("hide_from", false, ListTag.class, (object, mechanism, input) -> {
-            EntityTracker tracker = object.getTracker();
-            for (PlayerTag pTag : input.filter(PlayerTag.class, mechanism.context)) {
-                Player p = pTag.getPlayerEntity();
-                tracker.hide(BukkitAdapter.adapt(p));
-            }
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name show_to
-        // @plugin denizen-utilities, BetterModel
-        // @input ListTag(PlayerTag)
-        // @description
-        // Makes the model visible again to the specified list of players if it was previously hidden.
-        // -->
-        tagProcessor.registerMechanism("show_to", false, ListTag.class, (object, mechanism, input) -> {
-            EntityTracker tracker = object.getTracker();
-            for (PlayerTag pTag : input.filter(PlayerTag.class, mechanism.context)) {
-                Player p = pTag.getPlayerEntity();
-                tracker.show(BukkitAdapter.adapt(p));
-            }
-        });
-
-        // <--[mechanism]
-        // @object BMModelTag
-        // @name force_update
-        // @plugin denizen-utilities, BetterModel
-        // @input None
-        // @description
-        // Manually forces a full synchronization update (bones, metadata, and hitboxes) for the model.
-        // -->
-        tagProcessor.registerMechanism("force_update", false, (object, _) -> {
-            object.getTracker().forceUpdate(true);
-        });
-    }
-
-    private static void updateBones(BMModelTag object, UnaryOperator<TransformedItemStack> mapper) {
-        object.tracker.bones().forEach(bone -> {
-            TransformedItemStack current = BetterModelUtils.getTransform(bone);
-            bone.itemStack(b -> true, mapper.apply(current));
+        tagProcessor.registerTag(DurationTag.class, ElementTag.class, "animation_duration", (_, object, input) -> {
+            return object.model.animation(input.asString())
+                    .map(anim -> new DurationTag(anim.length()))
+                    .orElse(null);
         });
     }
 
     @Override
     public ObjectTag getObjectAttribute(Attribute attribute) {
         return tagProcessor.getObjectAttribute(this, attribute);
-    }
-
-    @Override
-    public void adjust(Mechanism mechanism) {
-        tagProcessor.processMechanism(this, mechanism);
-    }
-
-    @Override
-    public void applyProperty(Mechanism mechanism) {
-        adjust(mechanism);
     }
 }

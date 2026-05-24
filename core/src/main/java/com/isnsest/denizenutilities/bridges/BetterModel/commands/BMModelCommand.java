@@ -6,11 +6,12 @@ import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.commands.generator.*;
 import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import com.isnsest.denizenutilities.bridges.BetterModel.BetterModelUtils;
 import kr.toxicity.model.api.BetterModel;
 import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
 import kr.toxicity.model.api.data.renderer.ModelRenderer;
-import kr.toxicity.model.api.tracker.TrackerModifier;
+import kr.toxicity.model.api.tracker.Tracker;
+
+import java.util.Optional;
 
 public class BMModelCommand extends AbstractCommand {
 
@@ -53,14 +54,23 @@ public class BMModelCommand extends AbstractCommand {
                                    @ArgName("entity") @ArgPrefixed EntityTag entity,
                                    @ArgName("model") @ArgPrefixed ElementTag model,
                                    @ArgName("remove") boolean remove) {
-        if (BetterModel.model(model.asString()).isEmpty()) {
-            Debug.echoError(scriptEntry, "Model '" + model.asString() + "' is not found.");
-            return;
-        } else if (remove) {
-            BetterModelUtils.remove(entity.getBukkitEntity(), model.asString());
+
+        String modelName = model.asString();
+
+        if (BetterModel.model(modelName).isEmpty()) {
+            Debug.echoError(scriptEntry, "Model '" + modelName + "' is not found.");
             return;
         }
-        BetterModel.model(model.asString())
-                .map(renderer -> renderer.create(BukkitAdapter.adapt(entity.getBukkitEntity()), TrackerModifier.DEFAULT, e -> {}));
+
+        if (remove) {
+            BetterModel.registry(entity.getUUID())
+                    .flatMap(reg -> Optional.ofNullable(reg.tracker(modelName)))
+                    .ifPresent(Tracker::close);
+            return;
+        }
+
+        BetterModel.model(modelName).ifPresent(renderer -> {
+            renderer.getOrCreate(BukkitAdapter.adapt(entity.getBukkitEntity()));
+        });
     }
 }

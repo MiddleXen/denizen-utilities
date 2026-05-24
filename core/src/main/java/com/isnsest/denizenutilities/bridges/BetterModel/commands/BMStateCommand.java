@@ -8,17 +8,18 @@ import com.denizenscript.denizencore.scripts.commands.generator.*;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import kr.toxicity.model.api.animation.AnimationIterator;
 import kr.toxicity.model.api.animation.AnimationModifier;
-import kr.toxicity.model.api.animation.AnimationOverrideState;
 import kr.toxicity.model.api.bone.RenderedBone;
 import kr.toxicity.model.api.data.blueprint.BlueprintAnimation;
 import kr.toxicity.model.api.tracker.EntityTracker;
 import kr.toxicity.model.api.util.function.BonePredicate;
 import kr.toxicity.model.api.util.function.BooleanConstantSupplier;
 import kr.toxicity.model.api.util.function.FloatSupplier;
-import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMModelTag;
+import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMActiveModelTag;
 
 import java.util.List;
 import java.util.function.Predicate;
+
+import static com.isnsest.denizenutilities.bridges.BetterModel.BetterModelUtils.parseLoop;
 
 public class BMStateCommand extends AbstractCommand {
 
@@ -63,7 +64,7 @@ public class BMStateCommand extends AbstractCommand {
     }
 
     public static void autoExecute(ScriptEntry scriptEntry,
-                                   @ArgName("model") @ArgPrefixed BMModelTag modelTag,
+                                   @ArgName("model") @ArgPrefixed BMActiveModelTag modelTag,
                                    @ArgName("state") @ArgPrefixed @ArgDefaultNull ElementTag animation,
                                    @ArgName("bones") @ArgPrefixed @ArgDefaultNull ListTag bones,
                                    @ArgName("loop") @ArgDefaultText("PLAY_ONCE") @ArgPrefixed ElementTag loopMode,
@@ -108,13 +109,16 @@ public class BMStateCommand extends AbstractCommand {
                 .speed(FloatSupplier.of(speed.asFloat()))
                 .build();
 
-        tracker.getPipeline().matchTree(bonePredicate, (bone, p) -> {
-            if (p.test(bone)) {
-                bone.addAnimation(AnimationOverrideState.MATCHED, blueprint, modifier, () -> {});
+        tracker.animate(blueprint, modifier, () -> {});
+        if (bones != null && !bones.isEmpty()) {
+            tracker.getPipeline().matchTree(BonePredicate.TRUE, (bone, p) -> {
+                String name = bone.name().name();
+                if (!bones.contains(name)) {
+                    bone.stopAnimation(b -> true, blueprint.name(), null);
+                }
                 return true;
-            }
-            return false;
-        });
+            });
+        }
     }
 
     private static void handleRemove(EntityTracker tracker, ElementTag animation, Predicate<RenderedBone> predicate) {
@@ -123,13 +127,5 @@ public class BMStateCommand extends AbstractCommand {
         } else {
             tracker.stopAnimation(predicate, animation.asString());
         }
-    }
-
-    private static AnimationIterator.Type parseLoop(String mode) {
-        return switch (mode.toUpperCase()) {
-            case "LOOP" -> AnimationIterator.Type.LOOP;
-            case "HOLD", "HOLD_ON_LAST" -> AnimationIterator.Type.HOLD_ON_LAST;
-            default -> AnimationIterator.Type.PLAY_ONCE;
-        };
     }
 }

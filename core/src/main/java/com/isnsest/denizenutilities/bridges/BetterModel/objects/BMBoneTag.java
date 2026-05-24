@@ -1,8 +1,3 @@
-/*
- * Copyright 2025 Meigo™ Corporation
- * SPDX-License-Identifier: MIT
- */
-
 package com.isnsest.denizenutilities.bridges.BetterModel.objects;
 
 import com.denizenscript.denizen.objects.EntityTag;
@@ -25,6 +20,7 @@ import kr.toxicity.model.api.BetterModel;
 import kr.toxicity.model.api.bone.RenderedBone;
 import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
 import kr.toxicity.model.api.bukkit.platform.BukkitEntity;
+import kr.toxicity.model.api.bukkit.platform.BukkitItemStack;
 import kr.toxicity.model.api.bukkit.platform.BukkitLocation;
 import kr.toxicity.model.api.nms.HitBox;
 import kr.toxicity.model.api.platform.PlatformBillboard;
@@ -151,7 +147,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Returns the name of the bone.
         // -->
-        tagProcessor.registerTag(ElementTag.class, "name", (attribute, object) -> new ElementTag(object.name));
+        tagProcessor.registerTag(ElementTag.class, "name", (_, object) -> new ElementTag(object.name));
 
         // <--[tag]
         // @attribute <BMBoneTag.location>
@@ -160,7 +156,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Returns the current world location of the bone.
         // -->
-        tagProcessor.registerTag(LocationTag.class, "location", (attribute, object) -> {
+        tagProcessor.registerTag(LocationTag.class, "location", (_, object) -> {
             Vector3f relativePos = object.bone.hitBoxPosition();
             Location boneLocation = ((BukkitLocation) object.tracker.location().add(relativePos.x, relativePos.y, relativePos.z)).source();
             return new LocationTag(boneLocation);
@@ -173,7 +169,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Returns the rotation of the bone as Euler angles.
         // -->
-        tagProcessor.registerTag(LocationTag.class, "euler", (attribute, object) -> {
+        tagProcessor.registerTag(LocationTag.class, "euler", (_, object) -> {
             Vector3f wR = object.bone.worldRotation();
             return new LocationTag(Vector.fromJOML(wR));
         });
@@ -185,7 +181,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Returns a list of entities mounted on this bone.
         // -->
-        tagProcessor.registerTag(ListTag.class, "passengers", (attribute, object) -> {
+        tagProcessor.registerTag(ListTag.class, "passengers", (_, object) -> {
             HitBox hitBox = object.bone.getHitBox();
             if (hitBox == null) {
                 return new ListTag();
@@ -196,6 +192,19 @@ public class BMBoneTag implements ObjectTag, Adjustable {
                 list.addObject(new EntityTag(e));
             }
             return list;
+        });
+
+        // <--[tag]
+        // @attribute <BMBoneTag.item>
+        // @returns ItemTag
+        // @plugin denizen-utilities, BetterModel
+        // @description
+        // Returns the ItemTag currently displayed on this bone.
+        // -->
+        tagProcessor.registerTag(ItemTag.class, "item", (_, object) -> {
+            var transformed = BetterModelUtils.getTransform(object.bone).itemStack();
+            var itemStack = ((BukkitItemStack) transformed).source();
+            return new ItemTag(itemStack);
         });
 
 
@@ -259,7 +268,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Sets the glow color for the bone.
         // -->
-        tagProcessor.registerMechanism("glow_color", false, ColorTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("glow_color", false, ColorTag.class, (object, _, input) -> {
             int color = (input.red << 16) | (input.green << 8) | (input.blue);
             TrackerUpdateAction.GlowColor action = TrackerUpdateAction.glowColor(color);
             object.tracker.update(action, object.bonePredicate);
@@ -273,7 +282,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Sets the tint color for the bone.
         // -->
-        tagProcessor.registerMechanism("tint", false, ColorTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("tint", false, ColorTag.class, (object, _, input) -> {
             int color = (input.red << 16) | (input.green << 8) | (input.blue);
             TrackerUpdateAction.Tint action = TrackerUpdateAction.tint(color);
             object.tracker.update(action, object.bonePredicate);
@@ -302,8 +311,8 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Sets a custom rotation modifier for the bone.
         // -->
-        tagProcessor.registerMechanism("rotation", false, QuaternionTag.class, (object, mechanism, input) -> {
-            object.tracker.getPipeline().addLocalRotModifier(object.bonePredicate, currentRotation -> {
+        tagProcessor.registerMechanism("rotation", false, QuaternionTag.class, (object, _, input) -> {
+            object.tracker.getPipeline().addLocalRotModifier(object.bonePredicate, _ -> {
                 return new Quaternionf(input.x, input.y, input.z, input.w).conjugate();
             });
         });
@@ -333,7 +342,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Dismounts a specific entity from this bone.
         // -->
-        tagProcessor.registerMechanism("dismount", false, EntityTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("dismount", false, EntityTag.class, (object, _, input) -> {
             HitBox hitBox = object.bone.getHitBox();
             if (hitBox != null) {
                 hitBox.dismount(BukkitAdapter.adapt(input.getBukkitEntity()));
@@ -348,7 +357,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Dismounts all entities from this bone.
         // -->
-        tagProcessor.registerMechanism("dismount_all", false, (object, mechanism) -> {
+        tagProcessor.registerMechanism("dismount_all", false, (object, _) -> {
             HitBox hitBox = object.bone.getHitBox();
             if (hitBox != null) {
                 hitBox.dismountAll();
@@ -363,7 +372,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Changes the item display of this bone.
         // -->
-        tagProcessor.registerMechanism("item", false, ItemTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("item", false, ItemTag.class, (object, _, input) -> {
             TransformedItemStack transformed = BetterModelUtils.getTransform(object.bone);
             TransformedItemStack result = TransformedItemStack.of(transformed.position(), transformed.offset(), transformed.scale(), BukkitAdapter.adapt(input.getItemStack()));
             object.bone.itemStack(_ -> true, result);
@@ -378,7 +387,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Sets the scale of the bone's item.
         // -->
-        tagProcessor.registerMechanism("scale", false, LocationTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("scale", false, LocationTag.class, (object, _, input) -> {
             TransformedItemStack transformed = BetterModelUtils.getTransform(object.bone);
             TransformedItemStack result = TransformedItemStack.of(transformed.position(), transformed.offset(), input.toVector().toVector3f(), transformed.itemStack());
             object.bone.itemStack(_ -> true, result);
@@ -392,7 +401,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // @description
         // Sets the translation of the bone's item.
         // -->
-        tagProcessor.registerMechanism("translation", false, LocationTag.class, (object, mechanism, input) -> {
+        tagProcessor.registerMechanism("translation", false, LocationTag.class, (object, _, input) -> {
             TransformedItemStack transformed = BetterModelUtils.getTransform(object.bone);
             TransformedItemStack result = TransformedItemStack.of(input.toVector().toVector3f(), transformed.offset(), transformed.scale(), transformed.itemStack());
             object.bone.itemStack(_ -> true, result);

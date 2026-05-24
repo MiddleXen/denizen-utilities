@@ -1,14 +1,10 @@
 package com.isnsest.denizenutilities.bridges.BetterModel;
 
-import kr.toxicity.model.api.BetterModel;
+import kr.toxicity.model.api.animation.AnimationIterator;
 import kr.toxicity.model.api.bone.RenderedBone;
-import kr.toxicity.model.api.tracker.EntityTracker;
-import kr.toxicity.model.api.tracker.EntityTrackerRegistry;
 import kr.toxicity.model.api.util.TransformedItemStack;
-import org.bukkit.entity.Entity;
 
 import java.lang.reflect.Field;
-import java.util.Optional;
 
 public class BetterModelUtils {
 
@@ -32,14 +28,12 @@ public class BetterModelUtils {
         return TransformedItemStack.empty();
     }
 
-    public static void remove(Entity entity, String modelId) {
-        Optional<EntityTrackerRegistry> registry = BetterModel.registry(entity.getUniqueId());
-        if (registry.isPresent()) {
-            EntityTracker tracker = registry.get().tracker(modelId);
-            if (tracker != null) {
-                tracker.close();
-            }
-        }
+    public static AnimationIterator.Type parseLoop(String mode) {
+        return switch (mode.toUpperCase()) {
+            case "LOOP" -> AnimationIterator.Type.LOOP;
+            case "HOLD", "HOLD_ON_LAST" -> AnimationIterator.Type.HOLD_ON_LAST;
+            default -> AnimationIterator.Type.PLAY_ONCE;
+        };
     }
 
 }

@@ -26,13 +26,11 @@ public class BMEndReloadScriptEvent extends ScriptEvent implements Listener {
     // <context.result> returns a MapTag containing the reload details.
     // -->
 
-    public static BMEndReloadScriptEvent instance;
     private ModelEventListener subscription;
 
     public PluginEndReloadEvent event;
 
     public BMEndReloadScriptEvent() {
-        instance = this;
         registerCouldMatcher("bm end reload");
     }
 
@@ -53,8 +51,8 @@ public class BMEndReloadScriptEvent extends ScriptEvent implements Listener {
     public void init() {
         if (subscription == null) {
             subscription = BetterModel.eventBus().subscribe(BetterModelBukkit.platform(), PluginEndReloadEvent.class, event -> {
-                instance.event = event;
-                instance.fire();
+                this.event = event;
+                fire();
             });
         }
     }

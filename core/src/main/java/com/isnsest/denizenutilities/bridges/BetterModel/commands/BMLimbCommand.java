@@ -16,6 +16,8 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
+import static com.isnsest.denizenutilities.bridges.BetterModel.BetterModelUtils.parseLoop;
+
 public class BMLimbCommand extends AbstractCommand {
 
     // <--[command]
@@ -79,13 +81,5 @@ public class BMLimbCommand extends AbstractCommand {
                 .build();
 
         BetterModel.platform().modelManager().animate(BukkitAdapter.adapt(player), model, animation, modifier);
-    }
-
-    private static AnimationIterator.Type parseLoop(String mode) {
-        return switch (mode.toUpperCase()) {
-            case "LOOP" -> AnimationIterator.Type.LOOP;
-            case "HOLD", "HOLD_ON_LAST" -> AnimationIterator.Type.HOLD_ON_LAST;
-            default -> AnimationIterator.Type.PLAY_ONCE;
-        };
     }
 }
