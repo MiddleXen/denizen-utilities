@@ -8,7 +8,7 @@ public class Handler extends NMSHandler {
 
     public Handler() {
         entityHelper = new FixedEntityHelperImpl();
-        biomeHelper = new BiomeHelperImpl(); //
+        biomeHelper = new BiomeHelperImpl();
     }
 
     @Override

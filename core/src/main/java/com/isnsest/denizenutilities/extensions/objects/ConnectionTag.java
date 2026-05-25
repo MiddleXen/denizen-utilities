@@ -1,6 +1,5 @@
 package com.isnsest.denizenutilities.extensions.objects;
 
-import com.denizenscript.denizen.paper.PaperModule;
 import com.denizenscript.denizen.tags.BukkitTagContext;
 import com.denizenscript.denizencore.objects.Adjustable;
 import com.denizenscript.denizencore.objects.Fetchable;
@@ -12,11 +11,11 @@ import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import com.isnsest.denizenutilities.Compatibility;
 import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
 import com.isnsest.denizenutilities.extensions.events.PlayerConnectionConfigureEvent;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
 import io.papermc.paper.dialog.Dialog;
-import net.md_5.bungee.api.ChatColor;
 
 import java.util.Map;
 import java.util.UUID;
@@ -137,7 +136,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // Disconnects the connection with a specified reason. Supports Paper-formatted text (MiniMessage/Legacy).
         // -->
         tagProcessor.registerMechanism("disconnect", false, ElementTag.class, (object, mechanism, input) -> {
-            object.connection.disconnect(PaperModule.parseFormattedText(input.toString(), ChatColor.WHITE));
+            object.connection.disconnect(Compatibility.get().parse(input.toString()));
         });
 
         // <--[mechanism]

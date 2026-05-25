@@ -70,6 +70,8 @@ public class DenizenUtilities extends JavaPlugin {
         Debug.log("denizen-utilities", "Loading...");
         saveDefaultConfig();
 
+        Compatibility.init();
+
         if (NMSHandler.initialize()) {
             if (getConfig().getBoolean("fixes.fakeinternaldata", false)) {
                 NMSHandler.instance.patchEntityHelper();

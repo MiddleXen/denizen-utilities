@@ -3,7 +3,7 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.8"
 }
 
-val pluginVersion = "2.2.0"
+val pluginVersion = "2.3.0"
 
 allprojects {
     group = "com.isnsest"
@@ -25,11 +25,6 @@ subprojects {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(25))
         }
-    }
-
-    dependencies {
-        "api"("com.denizenscript:denizen:1.3.2-SNAPSHOT")
-        "api"(fileTree(rootDir.resolve("libs")) { include("*.jar") })
     }
 
     tasks.withType<JavaCompile>().configureEach {

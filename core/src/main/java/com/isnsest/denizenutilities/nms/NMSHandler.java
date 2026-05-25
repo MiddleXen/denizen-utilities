@@ -1,7 +1,7 @@
 package com.isnsest.denizenutilities.nms;
 
 import com.denizenscript.denizencore.utilities.debugging.Debug;
-import com.isnsest.denizenutilities.extensions.helpers.BiomeHelper;
+import com.isnsest.denizenutilities.nms.helpers.BiomeHelper;
 import org.bukkit.Bukkit;
 
 import java.util.List;

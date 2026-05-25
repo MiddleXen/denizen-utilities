@@ -1,7 +1,6 @@
 package com.isnsest.denizenutilities.extensions.containers;
 
 import com.denizenscript.denizen.objects.ItemTag;
-import com.denizenscript.denizen.paper.PaperModule;
 import com.denizenscript.denizen.tags.BukkitTagContext;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.objects.ArgumentHelper;
@@ -17,6 +16,7 @@ import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.text.StringHolder;
+import com.isnsest.denizenutilities.Compatibility;
 import com.isnsest.denizenutilities.extensions.objects.ConnectionTag;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.RegistryKey;
@@ -33,7 +33,6 @@ import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -333,33 +332,40 @@ public class DialogScriptContainer extends ScriptContainer {
             return null;
         }
 
+        DialogType dialogType = getDialogType(context);
+        if (dialogType == null) {
+            return null;
+        }
+
+        return Dialog.create(builder -> builder.empty()
+                .base(dialogBase)
+                .type(dialogType));
+    }
+
+    public DialogType getDialogType(TagContext context) {
         String type = getString("base.type");
         if (type == null) {
             Debug.echoError("Dialog script '" + getName() + "' is missing a required 'base.type'!");
             return null;
         }
 
-        switch (type) {
+        return switch (type) {
             case "confirm" -> {
                 ActionButton yes = createActionButton("yes", context);
                 ActionButton no = createActionButton("no", context);
                 if (yes == null || no == null) {
-                    return null;
+                    yield null;
                 }
-                ConfirmationType confirmationType = DialogType.confirmation(yes, no);
-                return Dialog.create(builder -> builder.empty()
-                        .base(dialogBase)
-                        .type(confirmationType));
+                yield DialogType.confirmation(yes, no);
             }
             case "list" -> {
                 if (!containsScriptSection("dialogs")) {
-                    Debug.echoError("Dialog script '" + getName() + "'  is missing a required 'dialogs'");
-                    return null;
+                    Debug.echoError("Dialog script '" + getName() + "' is missing a required 'dialogs'");
+                    yield null;
                 }
                 YamlConfiguration config = getConfigurationSection("base");
                 Integer columns = getInt(config, "columns", context);
                 Integer buttonWidth = getInt(config, "button width", context);
-
 
                 List<Dialog> dialogs = new ArrayList<>();
                 for (String id : getStringList("dialogs")) {
@@ -387,27 +393,16 @@ public class DialogScriptContainer extends ScriptContainer {
                 if (exitButton != null) {
                     dialogList.exitAction(exitButton);
                 }
-                return Dialog.create(builder -> builder.empty()
-                        .base(dialogBase)
-                        .type(dialogList.build()));
-
+                yield dialogList.build();
             }
             case "notice" -> {
                 ActionButton actionButton = createActionButton("button", context);
-                NoticeType noticeType;
-                if (actionButton == null) {
-                    noticeType = DialogType.notice();
-                } else {
-                    noticeType = DialogType.notice(actionButton);
-                }
-                return Dialog.create(builder -> builder.empty()
-                        .base(dialogBase)
-                        .type(noticeType));
+                yield (actionButton == null) ? DialogType.notice() : DialogType.notice(actionButton);
             }
             case "multi" -> {
                 if (!contains("buttons")) {
                     Debug.echoError("Dialog script '" + getName() + "' is missing a required 'buttons'");
-                    return null;
+                    yield null;
                 }
                 Integer columns = getInt(getContents(), "base.columns", context);
                 ActionButton exitButton = createActionButton("base.exit button", context);
@@ -419,15 +414,13 @@ public class DialogScriptContainer extends ScriptContainer {
                 if (exitButton != null) {
                     multiActionType.exitAction(exitButton);
                 }
-                return Dialog.create(builder -> builder.empty()
-                        .base(dialogBase)
-                        .type(multiActionType.build()));
+                yield multiActionType.build();
             }
             default -> {
                 Debug.echoError("Unknown dialog type: " + type);
-                return null;
+                yield null;
             }
-        }
+        };
     }
 
     public void showTo(Player player, TagContext context) {
@@ -439,7 +432,7 @@ public class DialogScriptContainer extends ScriptContainer {
         player.showDialog(dialog);
     }
 
-    private DialogBase getDialogBase(TagContext context) {
+    public DialogBase getDialogBase(TagContext context) {
         Component title = getComponent(getContents(), "base.title", context);
         if (title == null) {
             Debug.echoError("Dialog script '" + getName() + "' is missing a required 'base.title'!");
@@ -548,7 +541,7 @@ public class DialogScriptContainer extends ScriptContainer {
 
             DialogInput input = switch (type) {
                 case TEXT -> createTextInput(key, label, objectSection, context);
-                case BOOLEAN -> createBooleanInput(key, label, objectSection);
+                case BOOLEAN -> createBooleanInput(key, label, objectSection, context);
                 case NUMBER -> createNumberRangeInput(key, label, objectSection, context);
                 case SINGLE -> createSingleOptionInput(key, label, objectSection, context);
             };
@@ -699,11 +692,11 @@ public class DialogScriptContainer extends ScriptContainer {
         return builder.build();
     }
 
-    private DialogInput createBooleanInput(String key, Component label, YamlConfiguration config) {
+    private DialogInput createBooleanInput(String key, Component label, YamlConfiguration config, TagContext context) {
         boolean initial = CoreUtilities.equalsIgnoreCase(config.getString("initial", "false"), "true");
 
-        String onTrue = config.getString("on true", "true");
-        String onFalse = config.getString("on false", "false");
+        String onTrue = getString(config, "on true", context, "true");
+        String onFalse = getString(config, "on false", context, "false");
 
         return DialogInput.bool(key, label, initial, onTrue, onFalse);
     }
@@ -780,8 +773,8 @@ public class DialogScriptContainer extends ScriptContainer {
         if (!config.contains(path)) {
             return null;
         }
-        String text = config.getString(path);
-        return PaperModule.parseFormattedText(TagManager.tag(text, context), ChatColor.WHITE);
+        String text = TagManager.tag(config.getString(path), context);
+        return Compatibility.get().parse(text);
     }
 
     private Float getFloat(YamlConfiguration config, String path, TagContext context) {

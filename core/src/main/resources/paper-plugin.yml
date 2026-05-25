@@ -1,0 +1,28 @@
+name: denizen-utilities
+author: isnsest
+version: ${version}
+main: com.isnsest.denizenutilities.DenizenUtilities
+description: Extending Denizen for greater capabilities
+api-version: '1.21'
+
+dependencies:
+  server:
+    Denizen:
+      load: BEFORE
+      required: true
+      join-classpath: true
+
+    BetterModel:
+      load: BEFORE
+      required: false
+      join-classpath: true
+
+    SkinsRestorer:
+      load: BEFORE
+      required: false
+      join-classpath: true
+
+    DiscordSRV:
+      load: BEFORE
+      required: false
+      join-classpath: true

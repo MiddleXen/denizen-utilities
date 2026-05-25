@@ -1,7 +1,7 @@
 package com.isnsest.denizenutilities.nms.v26_1.helpers;
 
 import com.denizenscript.denizen.nms.v26_1.impl.BiomeNMSImpl;
-import com.isnsest.denizenutilities.extensions.helpers.BiomeHelper;
+import com.isnsest.denizenutilities.nms.helpers.BiomeHelper;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 
 public class BiomeHelperImpl implements BiomeHelper {
