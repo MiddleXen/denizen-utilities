@@ -101,6 +101,15 @@ public class BMModelTag implements ObjectTag {
         tagProcessor.registerTag(ElementTag.class, "name", (_, object) -> new ElementTag(object.model.name()));
 
         // <--[tag]
+        // @attribute <BMModelTag.type>
+        // @returns ElementTag
+        // @description
+        // Returns the template type of the model.
+        // Possible values: PLAYER or GENERAL.
+        // -->
+        tagProcessor.registerTag(ElementTag.class, "type", (_, object) -> new ElementTag(object.model.type().name()));
+
+        // <--[tag]
         // @attribute <BMModelTag.animations>
         // @returns ListTag<ElementTag>
         // @description

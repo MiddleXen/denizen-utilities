@@ -1,5 +1,6 @@
 package com.isnsest.denizenutilities.bridges.BetterModel.objects;
 
+import com.denizenscript.denizen.objects.EntityTag;
 import com.denizenscript.denizen.objects.ItemTag;
 import com.denizenscript.denizen.objects.LocationTag;
 import com.denizenscript.denizen.objects.PlayerTag;
@@ -23,6 +24,8 @@ import kr.toxicity.model.api.tracker.EntityTracker;
 import kr.toxicity.model.api.tracker.TrackerUpdateAction;
 import kr.toxicity.model.api.util.TransformedItemStack;
 import kr.toxicity.model.api.util.function.BonePredicate;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.joml.Quaternionf;
 
@@ -122,7 +125,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
     public static void register() {
 
         // <--[tag]
-        // @attribute <BMModelTag.name>
+        // @attribute <BMActiveModelTag.name>
         // @returns ElementTag
         // @plugin denizen-utilities, BetterModel
         // @description
@@ -131,7 +134,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         tagProcessor.registerTag(ElementTag.class, "name", (_, object) -> new ElementTag(object.tracker.name()));
 
         // <--[tag]
-        // @attribute <BMModelTag.bone[<bone_name>]>
+        // @attribute <BMActiveModelTag.bone[<bone_name>]>
         // @returns BMBoneTag
         // @plugin denizen-utilities, BetterModel
         // @description
@@ -143,7 +146,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[tag]
-        // @attribute <BMModelTag.bones>
+        // @attribute <BMActiveModelTag.bones>
         // @returns MapTag
         // @plugin denizen-utilities, BetterModel
         // @description
@@ -156,6 +159,15 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
             }
             return mapTag;
         });
+
+        // <--[tag]
+        // @attribute <BMActiveModelTag.type>
+        // @returns ElementTag
+        // @description
+        // Returns the type of the model.
+        // Possible values: PLAYER or GENERAL.
+        // -->
+        tagProcessor.registerTag(ElementTag.class, "type", (_, object) -> new ElementTag(object.tracker.getPipeline().getParent().type().name()));
 
         // <--[tag]
         // @attribute <BMActiveModelTag.running_animation>
@@ -216,10 +228,22 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
             return list;
         });
 
+        // <--[tag]
+        // @attribute <BMActiveModelTag.entity>
+        // @returns EntityTag
+        // @plugin denizen-utilities, BetterModel
+        // @description
+        // Returns the underlying Bukkit entity that this active model is attached to.
+        // -->
+        tagProcessor.registerTag(EntityTag.class, "entity", (_, object) -> {
+            Entity entity = Bukkit.getEntity(object.tracker.registry().entity().uuid());
+            return new EntityTag(entity);
+        });
+
         // --- Mechanisms ---
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name billboard
         // @plugin denizen-utilities, BetterModel
         // @input ElementTag
@@ -235,7 +259,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name view_range
         // @plugin denizen-utilities, BetterModel
         // @input ElementTag(Decimal)
@@ -249,7 +273,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name glow
         // @plugin denizen-utilities, BetterModel
         // @input ElementTag(Boolean)
@@ -263,7 +287,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name glow_color
         // @plugin denizen-utilities, BetterModel
         // @input ColorTag
@@ -276,7 +300,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name tint
         // @plugin denizen-utilities, BetterModel
         // @input ColorTag
@@ -289,7 +313,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name visible
         // @plugin denizen-utilities, BetterModel
         // @input ElementTag(Boolean)
@@ -303,7 +327,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name rotation
         // @plugin denizen-utilities, BetterModel
         // @input QuaternionTag
@@ -317,7 +341,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name item
         // @plugin denizen-utilities, BetterModel
         // @input ItemTag
@@ -329,7 +353,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name scale
         // @plugin denizen-utilities, BetterModel
         // @input LocationTag
@@ -341,7 +365,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMBoneTag
+        // @object BMActiveModelTag
         // @name translation
         // @plugin denizen-utilities, BetterModel
         // @input LocationTag
@@ -353,7 +377,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name hide_from
         // @plugin denizen-utilities, BetterModel
         // @input ListTag(PlayerTag)
@@ -369,7 +393,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name show_to
         // @plugin denizen-utilities, BetterModel
         // @input ListTag(PlayerTag)
@@ -385,7 +409,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         });
 
         // <--[mechanism]
-        // @object BMModelTag
+        // @object BMActiveModelTag
         // @name force_update
         // @plugin denizen-utilities, BetterModel
         // @input None
