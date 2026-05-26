@@ -8,11 +8,11 @@ import com.denizenscript.denizencore.scripts.commands.generator.*;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import kr.toxicity.model.api.animation.AnimationIterator;
 import kr.toxicity.model.api.animation.AnimationModifier;
+import kr.toxicity.model.api.animation.AnimationOverrideState;
 import kr.toxicity.model.api.bone.RenderedBone;
 import kr.toxicity.model.api.data.blueprint.BlueprintAnimation;
 import kr.toxicity.model.api.tracker.EntityTracker;
 import kr.toxicity.model.api.util.function.BonePredicate;
-import kr.toxicity.model.api.util.function.BooleanConstantSupplier;
 import kr.toxicity.model.api.util.function.FloatSupplier;
 import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMActiveModelTag;
 
@@ -25,7 +25,7 @@ public class BMStateCommand extends AbstractCommand {
 
     // <--[command]
     // @Name bmstate
-    // @Syntax bmstate [model:<BMModelTag>] [state:<animation>] (bones:<list>) (loop:<mode>) (speed:<#.#>) (start:<duration>) (end:<duration>) (remove)
+    // @Syntax bmstate [model:<BMModelTag>] [state:<animation>] (bones:<list>) (loop:<mode>) (speed:<#.#>) (override) (remove)
     // @Required 2
     // @Maximum 8
     // @Short Manages animation states for specific bones in a BetterModel.
@@ -53,14 +53,15 @@ public class BMStateCommand extends AbstractCommand {
 
     public BMStateCommand() {
         setName("bmstate");
-        setSyntax("bmstate [model:<BMModelTag>] [state:<animation>] (bones:<list>) (loop:<PLAY_ONCE|LOOP|HOLD>) (speed:<#.#>) (remove)");
-        setRequiredArguments(2, 6);
+        setSyntax("bmstate [model:<BMModelTag>] [state:<animation>] (bones:<list>) (loop:<PLAY_ONCE|LOOP|HOLD>) (speed:<#.#>) (override) (remove)");
+        setRequiredArguments(2, 7);
         autoCompile();
     }
 
     @Override
     public void addCustomTabCompletions(TabCompletionsBuilder tab) {
         tab.addWithPrefix("loop:", List.of("PLAY_ONCE", "LOOP", "HOLD_ON_LAST"));
+        tab.add("override");
     }
 
     public static void autoExecute(ScriptEntry scriptEntry,
@@ -69,6 +70,7 @@ public class BMStateCommand extends AbstractCommand {
                                    @ArgName("bones") @ArgPrefixed @ArgDefaultNull ListTag bones,
                                    @ArgName("loop") @ArgDefaultText("PLAY_ONCE") @ArgPrefixed ElementTag loopMode,
                                    @ArgName("speed") @ArgDefaultText("1.0") @ArgPrefixed ElementTag speed,
+                                   @ArgName("override") boolean override,
                                    @ArgName("remove") boolean remove) {
 
         EntityTracker tracker = modelTag.getTracker();
@@ -82,7 +84,7 @@ public class BMStateCommand extends AbstractCommand {
                 ? (b -> true)
                 : (b -> bones.contains(b.name().name()));
 
-        BonePredicate bonePredicate = BonePredicate.of(BonePredicate.State.TRUE, boneFilter);
+        BonePredicate bonePredicate = BonePredicate.of(BonePredicate.TRUE.applyAtChildren(), boneFilter);
 
         if (remove) {
             handleRemove(tracker, animation, bonePredicate);
@@ -102,21 +104,23 @@ public class BMStateCommand extends AbstractCommand {
 
         AnimationIterator.Type type = parseLoop(loopMode.asString());
         AnimationModifier modifier = AnimationModifier.builder()
-                .predicate(BooleanConstantSupplier.TRUE)
-                .start(0)
-                .end(0)
                 .type(type)
                 .speed(FloatSupplier.of(speed.asFloat()))
+                .override(override ? true : null)
                 .build();
 
-        tracker.animate(blueprint, modifier, () -> {});
-        if (bones != null && !bones.isEmpty()) {
-            tracker.getPipeline().matchTree(BonePredicate.TRUE, (bone, p) -> {
+        if (bones == null || bones.isEmpty()) {
+            tracker.animate(blueprint, modifier);
+        } else {
+            tracker.getPipeline().matchAnimation((bone, _) -> {
                 String name = bone.name().name();
-                if (!bones.contains(name)) {
-                    bone.stopAnimation(b -> true, blueprint.name(), null);
+
+                if (bones.contains(name)) {
+                    bone.addAnimation(AnimationOverrideState.MATCHED, blueprint, modifier, () -> {});
+                    return true;
                 }
-                return true;
+
+                return false;
             });
         }
     }

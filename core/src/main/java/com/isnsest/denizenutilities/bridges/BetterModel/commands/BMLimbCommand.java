@@ -22,7 +22,7 @@ public class BMLimbCommand extends AbstractCommand {
 
     // <--[command]
     // @Name bmlimb
-    // @Syntax bmlimb [target:<entity>] [model:<limb_model>] [animation:<animation>] (loop:<mode>)
+    // @Syntax bmlimb [target:<entity>] [model:<limb_model>] [animation:<animation>] (loop:<mode>) (override)
     // @Required 3
     // @Maximum 4
     // @Short Manages BetterModel limb animations for a player.
@@ -40,7 +40,7 @@ public class BMLimbCommand extends AbstractCommand {
 
     public BMLimbCommand() {
         setName("bmlimb");
-        setSyntax("bmlimb [target:<player>] [model:<BMModelTag>] [animation:<animation>] (loop:<ONCE|LOOP|HOLD>)");
+        setSyntax("bmlimb [target:<player>] [model:<BMModelTag>] [animation:<animation>] (loop:<ONCE|LOOP|HOLD>) (override)");
         setRequiredArguments(3, 4);
         autoCompile();
     }
@@ -55,6 +55,7 @@ public class BMLimbCommand extends AbstractCommand {
                                    @ArgName("target") @ArgPrefixed EntityTag entityTag,
                                    @ArgName("model") @ArgPrefixed ElementTag modelName,
                                    @ArgName("animation") @ArgPrefixed ElementTag animationName,
+                                   @ArgName("override") boolean override,
                                    @ArgName("loop") @ArgDefaultText("PLAY_ONCE") @ArgPrefixed ElementTag loopMode) {
 
         String model = modelName.asString();
@@ -73,11 +74,8 @@ public class BMLimbCommand extends AbstractCommand {
         AnimationIterator.Type type = parseLoop(loopMode.asString());
 
         AnimationModifier modifier = AnimationModifier.builder()
-                .predicate(BooleanConstantSupplier.TRUE)
-                .start(0)
-                .end(0)
                 .type(type)
-                .speed(1.0F)
+                .override(override ? true : null)
                 .build();
 
         BetterModel.platform().modelManager().animate(BukkitAdapter.adapt(player), model, animation, modifier);
