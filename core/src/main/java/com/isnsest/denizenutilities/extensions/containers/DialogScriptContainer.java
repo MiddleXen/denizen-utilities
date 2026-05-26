@@ -666,7 +666,7 @@ public class DialogScriptContainer extends ScriptContainer {
         TextDialogInput.Builder builder = DialogInput.text(key, label);
         Integer width = getInt(config, "width", context);
         Integer maxLength = getInt(config, "max length", context);
-        String initial = config.getString("initial", null);
+        String initial = getString(config, "initial", context);
         Boolean labelVisible = getBool(config, "label visible", context, null);
 
 
@@ -693,7 +693,7 @@ public class DialogScriptContainer extends ScriptContainer {
     }
 
     private DialogInput createBooleanInput(String key, Component label, YamlConfiguration config, TagContext context) {
-        boolean initial = CoreUtilities.equalsIgnoreCase(config.getString("initial", "false"), "true");
+        boolean initial = CoreUtilities.equalsIgnoreCase(getString(config, "initial", context, "false"), "true");
 
         String onTrue = getString(config, "on true", context, "true");
         String onFalse = getString(config, "on false", context, "false");

@@ -3,7 +3,7 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.8"
 }
 
-val pluginVersion = "2.3.0"
+val pluginVersion = "2.3.1"
 
 allprojects {
     group = "com.isnsest"
@@ -30,6 +30,16 @@ subprojects {
     tasks.withType<JavaCompile>().configureEach {
         options.release.set(25)
         options.encoding = "UTF-8"
+    }
+
+    tasks.processResources {
+        val props = mapOf("version" to version)
+        inputs.properties(props)
+        filteringCharset = "UTF-8"
+
+        filesMatching("**/*plugin.yml") {
+            expand(props)
+        }
     }
 }
 
