@@ -41,7 +41,7 @@ public class BMLimbCommand extends AbstractCommand {
     public BMLimbCommand() {
         setName("bmlimb");
         setSyntax("bmlimb [target:<player>] [model:<BMModelTag>] [animation:<animation>] (loop:<ONCE|LOOP|HOLD>) (override)");
-        setRequiredArguments(3, 4);
+        setRequiredArguments(3, 5);
         autoCompile();
     }
 
