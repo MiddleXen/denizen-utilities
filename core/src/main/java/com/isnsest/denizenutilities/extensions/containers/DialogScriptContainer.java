@@ -47,7 +47,7 @@ public class DialogScriptContainer extends ScriptContainer {
     private final Map<String, InputType> keys = new HashMap<>();
 
     private enum InputType {
-        TEXT, SINGLE, BOOLEAN, NUMBER;
+        TEXT, SINGLE, BOOLEAN, NUMBER
     }
 
     // <--[language]
@@ -445,9 +445,25 @@ public class DialogScriptContainer extends ScriptContainer {
 
         baseBuilder.canCloseWithEscape(canCloseWithEscape);
         baseBuilder.externalTitle(externalTitle);
+        baseBuilder.pause(false);
 
         inputs(baseBuilder, context);
         bodies(baseBuilder, context);
+
+        if (contains("base.after action")) {
+            String action = getString(getContents(), "base.after action", context).toUpperCase();
+            DialogBase.DialogAfterAction afterAction = switch (action) {
+                case "NONE" -> DialogBase.DialogAfterAction.NONE;
+                case "WAIT_FOR_RESPONSE" -> DialogBase.DialogAfterAction.WAIT_FOR_RESPONSE;
+                default -> {
+                    if (!action.isEmpty() && !action.equals("CLOSE")) {
+                        Debug.echoError("Dialog script '" + getName() + "' has an invalid 'base.after action' value: '" + action + "'.");
+                    }
+                    yield DialogBase.DialogAfterAction.CLOSE;
+                }
+            };
+            baseBuilder.afterAction(afterAction);
+        }
 
         return baseBuilder.build();
     }

@@ -373,6 +373,10 @@
                     <div class="spec-key"><span class="name-label">can close with escape</span><span class="badge b-opt">Optional</span></div>
                     <div class="spec-val">Boolean. If <code>true</code> (default), ESC closes the window.</div>
                 </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">after action</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">Action behavior after dialog completion. Options: <code>CLOSE</code> (default - closes and returns to previous screen), <code>NONE</code> (keeps current screen open), or <code>WAIT_FOR_RESPONSE</code> (shows a waiting screen).</div>
+                </div>
             </div>
         </div>
 
@@ -888,7 +892,7 @@
                 </div>
                 <div class="spec-row">
                     <div class="spec-key"><span class="name-label">&lt;BMActiveModelTag.type&gt;</span><span class="badge b-tag">ElementTag</span></div>
-                    <div class="spec-val">Returns the type of the model template. Possible values: <code>PLAYER</code> or <code>GENERAL</code>.</div>
+                    <div class="spec-val">Returns the type of the model template. Possible values: <code>PLAYER</code> (for player limb/skin-based models) or <code>GENERAL</code> (for standard models).</div>
                 </div>
                 <div class="spec-row">
                     <div class="spec-key"><span class="name-label">&lt;BMActiveModelTag.bone[&lt;name&gt;]&gt;</span><span class="badge b-tag">BMBoneTag</span></div>
@@ -938,7 +942,7 @@
             <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Objects <i class="fas fa-chevron-right"></i> <span>BMModelTag</span></div>
             <h1>BMModelTag</h1>
             <p class="subtitle">Prefix: <code>bmmodel@</code>. Represents a model blueprint allowing retrieval of its data without creating an object in the world.</p>
-            <div class="signature">Format: <span class="sig-cmd">bmmodel@</span><span class="sig-return">&lt;model_name&gt;</span></div>
+            <div class="signature">Format: <span class="sig-cmd">bmmodel@</span><span class="sig-return">&lt;template_name&gt;</span></div>
 
             <h3>Base Tag</h3>
             <div class="spec-container">
@@ -956,7 +960,7 @@
                 </div>
                 <div class="spec-row">
                     <div class="spec-key"><span class="name-label">&lt;BMModelTag.type&gt;</span><span class="badge b-tag">ElementTag</span></div>
-                    <div class="spec-val">Returns the model template type. Possible values: <code>PLAYER</code> or <code>GENERAL</code>.</div>
+                    <div class="spec-val">Returns the model template type. Possible values: <code>PLAYER</code> (for player limb/skin-based models) or <code>GENERAL</code> (for standard models).</div>
                 </div>
                 <div class="spec-row">
                     <div class="spec-key"><span class="name-label">&lt;BMModelTag.animations&gt;</span><span class="badge b-tag">ListTag(ElementTag)</span></div>
