@@ -1,7 +1,9 @@
 package com.isnsest.denizenutilities;
 
+import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectFetcher;
+import com.isnsest.denizenutilities.extensions.commands.ShowDialogCommand;
 import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
 import com.isnsest.denizenutilities.extensions.events.PlayerConnectionConfigureEvent;
 import com.isnsest.denizenutilities.extensions.objects.ConnectionTag;
@@ -26,6 +28,10 @@ public class DenizenUtilities extends JavaPlugin {
         BiomeExtensions.register();
 
         ScriptRegistry._registerType("dialog", DialogScriptContainer.class);
+
+        // Commands
+        DenizenCore.commandRegistry.registerCommand(ShowDialogCommand.class);
+        //
 
         // Events
         ScriptEvent.registerScriptEvent(PlayerConnectionConfigureEvent.class);

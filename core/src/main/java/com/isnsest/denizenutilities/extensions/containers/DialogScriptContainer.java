@@ -630,6 +630,7 @@ public class DialogScriptContainer extends ScriptContainer {
                         if (!entries.isEmpty()) {
                             InstantQueue queue = new InstantQueue(getName());
                             queue.addEntries(entries);
+                            queue.definitions = context.definitionProvider.getAllDefinitions().duplicate();
                             queue.setContextSource(name -> {
                                 if (name.equals("connection")) {
                                     UUID uuid = audience.get(Identity.UUID).orElse(null);
