@@ -177,6 +177,11 @@
     </div>
 
     <div class="nav-group">
+        <div class="nav-label">Commands</div>
+        <a class="nav-item" data-tab="tab-dialog-cmd-showdialog">ShowDialog</a>
+    </div>
+
+    <div class="nav-group">
         <div class="nav-label">Containers</div>
         <button class="folder-btn" onclick="toggleFolder('folder-dialog', this)">
             <span style="display:flex;align-items:center;gap:8px"><i class="fas fa-layer-group" style="font-size:0.9rem"></i> Dialog</span>
@@ -234,6 +239,7 @@
                 <a class="nav-item" data-tab="tab-bm-evt-end">bm end reload</a>
                 <a class="nav-item" data-tab="tab-bm-evt-signal">bm animation signal</a>
                 <a class="nav-item" data-tab="tab-bm-evt-player-signal">bm player animation signal</a>
+                <a class="nav-item" data-tab="tab-bm-evt-interact">bm player model interact</a>
             </div>
 
             <button class="sub-folder-btn" onclick="toggleSubFolder('sub-bm-obj', this)">
@@ -377,6 +383,31 @@
                     <div class="spec-key"><span class="name-label">after action</span><span class="badge b-opt">Optional</span></div>
                     <div class="spec-val">Action behavior after dialog completion. Options: <code>CLOSE</code> (default - closes and returns to previous screen), <code>NONE</code> (keeps current screen open), or <code>WAIT_FOR_RESPONSE</code> (shows a waiting screen).</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- ===== DIALOG: SHOWDIALOG COMMAND ===== -->
+        <div id="tab-dialog-cmd-showdialog" class="tab-panel">
+            <div class="breadcrumb">Commands <i class="fas fa-chevron-right"></i> <span>showdialog</span></div>
+            <h1>showdialog</h1>
+            <div class="signature">- <span class="sig-cmd">showdialog</span> <span class="sig-arg">[&lt;dialog&gt;]</span> <span class="sig-opt">(def:&lt;ListTag&gt;)</span></div>
+            <p class="subtitle">Opens a custom Paper-native dialog UI screen for the player attached to the script queue.</p>
+
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">dialog</span><span class="badge b-req">Required</span></div>
+                    <div class="spec-val">The exact name of the <code>dialog</code> script container to display.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">def</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">An optional list of values to pass as parameter definitions into the dialog. In the target dialog container, these definitions are assigned to definition names in matching order (e.g. <code>definitions: quest_id|reward</code>).</div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">Usage</span></div>
+                <pre><span class="s-k">-</span> <span class="s-v">showdialog</span> <span class="s-s">MySimpleDialog</span>
+<span class="s-k">-</span> <span class="s-v">showdialog</span> <span class="s-s">QuestConfirmDialog def:quest_01|1000</span></pre>
             </div>
         </div>
 
@@ -871,6 +902,42 @@
 
             <h3>Linked Player Context</h3>
             <p>The standard event player context <code>&lt;player&gt;</code> represents the individual viewing player who receives this visual indicator trigger.</p>
+        </div>
+
+        <div id="tab-bm-evt-interact" class="tab-panel">
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Events <i class="fas fa-chevron-right"></i> <span>bm player model interact</span></div>
+            <h1>bm player model interact</h1>
+            <div class="signature"><span class="sig-return">on</span> bm player model interact:</div>
+            <p class="subtitle">Triggers when a player interacts (left or right clicks) with any hitbox belonging to an active BetterModel model.</p>
+
+            <h3>Switches</h3>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">name:&lt;name&gt;</span></div>
+                    <div class="spec-val">Process only if the model's template blueprint name matches the specified pattern.</div>
+                </div>
+            </div>
+
+            <h3>Contexts</h3>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;context.model&gt;</span><span class="badge b-tag">BMActiveModelTag</span></div>
+                    <div class="spec-val">Returns the active model tracker instance that was interacted with.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;context.hand&gt;</span><span class="badge b-tag">ElementTag</span></div>
+                    <div class="spec-val">Returns the hand used to perform the click action (e.g. <code>MAIN_HAND</code> or <code>OFF_HAND</code>).</div>
+                </div>
+            </div>
+
+            <h3>Player Context</h3>
+            <p>The standard player context <code>&lt;player&gt;</code> represents the online player who performed the interaction.</p>
+
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">Example usage</span></div>
+                <pre><span class="s-k">on</span> <span class="s-s">bm player model interact name:dragon:</span>
+  <span class="s-k">-</span> <span class="s-s">narrate "You interacted with the dragon model using your &lt;context.hand&gt;!"</span></pre>
+            </div>
         </div>
 
         <!-- ===== BETTERMODEL OBJECTS (REORDERED: BMActiveModelTag -> BMModelTag -> BMBoneTag) ===== -->
