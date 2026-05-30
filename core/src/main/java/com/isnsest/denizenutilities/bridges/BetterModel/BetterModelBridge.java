@@ -8,10 +8,7 @@ import com.isnsest.denizenutilities.bridges.BetterModel.commands.BMLimbCommand;
 import com.isnsest.denizenutilities.bridges.BetterModel.commands.BMModelCommand;
 import com.isnsest.denizenutilities.bridges.BetterModel.commands.BMPartCommand;
 import com.isnsest.denizenutilities.bridges.BetterModel.commands.BMStateCommand;
-import com.isnsest.denizenutilities.bridges.BetterModel.events.BMAnimationSignalScriptEvent;
-import com.isnsest.denizenutilities.bridges.BetterModel.events.BMEndReloadScriptEvent;
-import com.isnsest.denizenutilities.bridges.BetterModel.events.BMPlayerAnimationSignalScriptEvent;
-import com.isnsest.denizenutilities.bridges.BetterModel.events.BMStartReloadScriptEvent;
+import com.isnsest.denizenutilities.bridges.BetterModel.events.*;
 import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMBoneTag;
 import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMActiveModelTag;
 import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMModelTag;
@@ -22,6 +19,7 @@ public class BetterModelBridge {
     public static void register() {
 
         // Events
+        ScriptEvent.registerScriptEvent(BMModelInteractScriptEvent.class);
         ScriptEvent.registerScriptEvent(BMPlayerAnimationSignalScriptEvent.class);
         ScriptEvent.registerScriptEvent(BMAnimationSignalScriptEvent.class);
         ScriptEvent.registerScriptEvent(BMStartReloadScriptEvent.class);
