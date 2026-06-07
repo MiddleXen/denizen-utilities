@@ -180,7 +180,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
             DialogScriptContainer container = ScriptRegistry.getScriptContainer(input.toString());
             Dialog dialog = container.getDialogFrom(mechanism.context);
             if (dialog == null) {
-                Debug.log("Dialog is null");
+                Debug.log("Failed to show dialog.");
                 return;
             }
             object.connection.getAudience().showDialog(dialog);
