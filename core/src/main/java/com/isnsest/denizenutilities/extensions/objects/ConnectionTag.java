@@ -176,10 +176,9 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // @description
         // Shows a specific dialog to the connection using the name of a Dialog script container.
         // -->
-        tagProcessor.registerMechanism("show_dialog", false, ElementTag.class, (object, _, input) -> {
-            TagContext context = new BukkitTagContext(null, null, null);
+        tagProcessor.registerMechanism("show_dialog", false, ElementTag.class, (object, mechanism, input) -> {
             DialogScriptContainer container = ScriptRegistry.getScriptContainer(input.toString());
-            Dialog dialog = container.getDialogFrom(context);
+            Dialog dialog = container.getDialogFrom(mechanism.context);
             if (dialog == null) {
                 Debug.log("Dialog is null");
                 return;
