@@ -1,8 +1,10 @@
 package com.isnsest.denizenutilities.extensions.properties;
 
 import com.denizenscript.denizen.objects.PlayerTag;
+import com.denizenscript.denizen.tags.BukkitTagContext;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptRegistry;
+import com.denizenscript.denizencore.tags.TagContext;
 import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
 
 public class PlayerExtensions {
@@ -17,12 +19,14 @@ public class PlayerExtensions {
         // Opens a dialog UI for the player using the specified dialog script.
         // -->
         PlayerTag.registerOnlineOnlyMechanism("show_dialog", ElementTag.class, (object, mechanism, input) -> {
+            BukkitTagContext context = (BukkitTagContext) mechanism.context;
+            context.player = new PlayerTag(object.getPlayerEntity());
             DialogScriptContainer container = ScriptRegistry.getScriptContainer(input.asString());
             if (container == null) {
                 mechanism.echoError("Invalid dialog script: '" + input.asString() + "'");
                 return;
             }
-            container.showTo(object.getPlayerEntity(), mechanism.context);
+            container.showTo(object.getPlayerEntity(), context);
         });
 
         // <--[mechanism]
