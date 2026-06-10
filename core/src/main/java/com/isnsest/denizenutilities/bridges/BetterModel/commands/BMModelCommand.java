@@ -10,6 +10,7 @@ import kr.toxicity.model.api.BetterModel;
 import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
 import kr.toxicity.model.api.data.renderer.ModelRenderer;
 import kr.toxicity.model.api.tracker.Tracker;
+import kr.toxicity.model.api.tracker.TrackerModifier;
 
 import java.util.Optional;
 
@@ -73,6 +74,9 @@ public class BMModelCommand extends AbstractCommand {
             return;
         }
 
-        modelRenderer.create(BukkitAdapter.adapt(entity.getBukkitEntity()));
+        modelRenderer.getOrCreate(
+                BukkitAdapter.adapt(entity.getBukkitEntity()),
+                TrackerModifier.DEFAULT
+        );
     }
 }

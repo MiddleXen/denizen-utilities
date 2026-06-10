@@ -22,9 +22,9 @@ public class BMLimbCommand extends AbstractCommand {
 
     // <--[command]
     // @Name bmlimb
-    // @Syntax bmlimb [target:<entity>] [model:<limb_model>] [animation:<animation>] (loop:<mode>) (override)
+    // @Syntax bmlimb [target:<entity>] [model:<model>] [animation:<animation>] (loop:<mode>) (override)
     // @Required 3
-    // @Maximum 4
+    // @Maximum 5
     // @Short Manages BetterModel limb animations for a player.
     // @Group denizen-utilities
     // @Plugin denizen-utilities, BetterModel
@@ -40,7 +40,7 @@ public class BMLimbCommand extends AbstractCommand {
 
     public BMLimbCommand() {
         setName("bmlimb");
-        setSyntax("bmlimb [target:<player>] [model:<BMModelTag>] [animation:<animation>] (loop:<ONCE|LOOP|HOLD>) (override)");
+        setSyntax("bmlimb [target:<player>] [model:<model>] [animation:<animation>] (loop:<ONCE|LOOP|HOLD>) (override)");
         setRequiredArguments(3, 5);
         autoCompile();
     }
@@ -61,7 +61,7 @@ public class BMLimbCommand extends AbstractCommand {
         String model = modelName.asString();
         String animation = animationName.asString();
 
-        if (BetterModel.limb(model).isEmpty()) {
+        if (!BetterModel.limbKeys().contains(model)) {
             Debug.echoError(scriptEntry, "Limb model '" + model + "' not found.");
             return;
         }
