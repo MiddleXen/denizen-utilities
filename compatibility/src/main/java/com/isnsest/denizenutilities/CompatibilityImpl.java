@@ -12,10 +12,9 @@ public class CompatibilityImpl extends Compatibility {
 
     public static void init() {
         try {
-            Class.forName("com.denizenscript.denizen.paper.events.PlayerChangesUnchekedSignScriptEvent");
+            Class.forName("com.denizenscript.denizen.paper.events.PlayerChangesUncheckedSignScriptEvent");
             type = DenizenType.DENIZENM;
         } catch (ClassNotFoundException ignored) {
-
         }
     }
 
