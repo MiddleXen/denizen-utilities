@@ -15,6 +15,7 @@ import kr.toxicity.model.api.tracker.Tracker;
 import kr.toxicity.model.api.util.TransformedItemStack;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.UUID;
@@ -55,6 +56,10 @@ public class BetterModelUtils {
     //
 
     public static void changeSkin(@NotNull Tracker tracker, @NotNull ObjectTag object) {
+        changeSkin(tracker, object, null);
+    }
+
+    public static void changeSkin(@NotNull Tracker tracker, @NotNull ObjectTag object, @Nullable RenderedBone bone) {
         ModelProfile.Uncompleted uncompleted = null;
 
         if (object instanceof PlayerTag player) {
@@ -71,16 +76,16 @@ public class BetterModelUtils {
         if (uncompleted != null) {
             CompletableFuture<? extends SkinData> future = BetterModel.platform().skinManager().complete(uncompleted);
             if (future.isDone()) {
-                changeSkinWithProfile(tracker, future.join());
+                changeSkinWithProfile(tracker, future.join(), bone);
             } else {
                 future.thenAccept(skin -> {
-                    Bukkit.getScheduler().runTask(DenizenUtilities.instance, () -> changeSkinWithProfile(tracker, skin));
+                    Bukkit.getScheduler().runTask(DenizenUtilities.instance, () -> changeSkinWithProfile(tracker, skin, bone));
                 });
             }
         }
     }
 
-    private static void changeSkinWithProfile(@NotNull Tracker tracker, @NotNull SkinData skinData) {
+    private static void changeSkinWithProfile(@NotNull Tracker tracker, @NotNull SkinData skinData, RenderedBone bone) {
         if (tracker.isClosed()) {
             return;
         }
@@ -88,8 +93,16 @@ public class BetterModelUtils {
         RenderSource<?> source = tracker.getPipeline().getSource();
         BoneRenderContext boneRenderContext = new BoneRenderContext(source, skinData);
 
-        for (RenderedBone bone : tracker.bones()) {
-            bone.updateItem(boneRenderContext);
+        if (bone != null) {
+            for (RenderedBone childBone : bone.flattenBones()) {
+                childBone.updateItem(boneRenderContext);
+            }
+            tracker.forceUpdate(true);
+            return;
+        }
+
+        for (RenderedBone _bone : tracker.bones()) {
+            _bone.updateItem(boneRenderContext);
         }
 
         tracker.forceUpdate(true);

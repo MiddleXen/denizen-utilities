@@ -418,13 +418,9 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         // @input ElementTag
         // @description
         // Changes the skin of the active model to the player skin associated with the specified UUID or PlayerTag.
-        // Only works for limb models.
+        // This is especially useful when working with limb models.
         // -->
-        tagProcessor.registerMechanism("skin", false, ObjectTag.class, (object, mechanism, input) -> {
-            if (object.tracker.getPipeline().getParent().type() != ModelRenderer.Type.PLAYER) {
-                mechanism.echoError("Cannot apply skin mechanism to a non-player model type.");
-                return;
-            }
+        tagProcessor.registerMechanism("skin", false, ObjectTag.class, (object, _, input) -> {
             changeSkin(object.tracker, input);
         });
 
