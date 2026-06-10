@@ -4,6 +4,7 @@ import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectFetcher;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import com.isnsest.denizenutilities.DenizenUtilities;
 import com.isnsest.denizenutilities.bridges.BetterModel.commands.BMLimbCommand;
 import com.isnsest.denizenutilities.bridges.BetterModel.commands.BMModelCommand;
 import com.isnsest.denizenutilities.bridges.BetterModel.commands.BMPartCommand;
@@ -13,6 +14,13 @@ import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMBoneTag;
 import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMActiveModelTag;
 import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMModelTag;
 import com.isnsest.denizenutilities.bridges.BetterModel.properties.BetterModelExtensions;
+import kr.toxicity.model.api.BetterModel;
+import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
+import kr.toxicity.model.api.profile.ModelProfile;
+import net.skinsrestorer.api.SkinsRestorerProvider;
+import net.skinsrestorer.api.event.SkinApplyEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class BetterModelBridge {
 
@@ -41,6 +49,18 @@ public class BetterModelBridge {
 
         BMScriptManager.register();
         BetterModelExtensions.register();
+
+        if (Bukkit.getPluginManager().isPluginEnabled("SkinsRestorer")) {
+            SkinsRestorerProvider.get().getEventBus().subscribe(DenizenUtilities.instance, SkinApplyEvent.class, event -> {
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ignored) {}
+                    Player player = event.getPlayer(Player.class);
+                    BetterModel.platform().skinManager().complete(ModelProfile.of(BukkitAdapter.adapt(player)).asUncompleted());
+                }).start();
+            });
+        }
 
         Debug.log("denizen-utilities", "BetterModel bridge initialized.");
     }
