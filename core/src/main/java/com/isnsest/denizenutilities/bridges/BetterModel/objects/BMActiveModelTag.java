@@ -19,6 +19,7 @@ import kr.toxicity.model.api.animation.RunningAnimation;
 import kr.toxicity.model.api.bone.RenderedBone;
 import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
 import kr.toxicity.model.api.bukkit.platform.BukkitPlayer;
+import kr.toxicity.model.api.data.renderer.ModelRenderer;
 import kr.toxicity.model.api.platform.PlatformBillboard;
 import kr.toxicity.model.api.tracker.EntityTracker;
 import kr.toxicity.model.api.tracker.TrackerUpdateAction;
@@ -32,6 +33,8 @@ import org.joml.Quaternionf;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
+
+import static com.isnsest.denizenutilities.bridges.BetterModel.BetterModelUtils.changeSkin;
 
 // <--[ObjectType]
 // @name BMModelTag
@@ -406,6 +409,22 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
                 Player p = pTag.getPlayerEntity();
                 tracker.show(BukkitAdapter.adapt(p));
             }
+        });
+
+        // <--[mechanism]
+        // @object BMActiveModelTag
+        // @name skin
+        // @plugin denizen-utilities, BetterModel
+        // @input ElementTag
+        // @description
+        // Changes the skin of the active model to the player skin associated with the specified UUID.
+        // -->
+        tagProcessor.registerMechanism("skin", false, ObjectTag.class, (object, mechanism, input) -> {
+            if (object.tracker.getPipeline().getParent().type() != ModelRenderer.Type.PLAYER) {
+                mechanism.echoError("Cannot apply skin mechanism to a non-player model type.");
+                return;
+            }
+            changeSkin(object.tracker, input);
         });
 
         // <--[mechanism]
