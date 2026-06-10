@@ -7,6 +7,8 @@ import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgName;
 import com.denizenscript.denizencore.scripts.commands.generator.ArgPrefixed;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import com.denizenscript.denizencore.utilities.debugging.StrongWarning;
+import com.denizenscript.denizencore.utilities.debugging.Warning;
 import kr.toxicity.model.api.BetterModel;
 import kr.toxicity.model.api.bone.BoneRenderContext;
 import kr.toxicity.model.api.bone.RenderedBone;
@@ -33,6 +35,7 @@ public class BMPartCommand extends AbstractCommand {
     // @Plugin denizen-utilities, BetterModel
     //
     // @Description
+    // DEPRECATED: This command is deprecated. Use <@link mechanism BMBoneTag.skin> or <@link mechanism BMActiveModelTag.skin> instead.
     // Applies a specific limb texture from a player's skin to a bone in your BetterModel.
     // The 'bone' is the destination bone in your model (e.g., head, chest, waist, right_arm).
     // The 'part' is the source limb taken from the player's skin. You can find the list of valid limb names
@@ -47,6 +50,9 @@ public class BMPartCommand extends AbstractCommand {
     // Use to apply a specific online player's torso skin to the model's chest bone.
     // - bmpart model:<[my_model]> bone:chest part:TORSO from:<player[PlayerName]>
     // -->
+
+    public static Warning bmpartDeprecated = new StrongWarning("bmPartCommand",
+            "The 'bmpart' command is deprecated. Use 'BMBoneTag.skin' or 'BMActiveModelTag.skin' mechanisms instead.");
 
     public BMPartCommand() {
         setName("bmpart");
@@ -66,6 +72,7 @@ public class BMPartCommand extends AbstractCommand {
                                    @ArgName("bone") @ArgPrefixed ElementTag boneName,
                                    @ArgName("part") @ArgPrefixed ElementTag partName,
                                    @ArgName("from") @ArgPrefixed PlayerTag skinSource) {
+        bmpartDeprecated.warn(scriptEntry);
 
         Player player = skinSource.getPlayerEntity();
         if (player == null) return;

@@ -162,6 +162,22 @@
     .sig-return { color: #a7f3d0; }
     .sig-opt { color: #64748b; font-style: italic; }
 
+    .alert-deprecated {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid #ef4444;
+        color: #fca5a5;
+        padding: 1.25rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-weight: 600;
+    }
+    .alert-deprecated i { font-size: 2rem; color: #ef4444; }
+    .alert-deprecated span { display: block; font-size: 1.1rem; color: #fff; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; }
+    .alert-deprecated p { margin: 0; color: #fca5a5; font-size: 0.9rem; line-height: 1.5; }
+
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
@@ -799,6 +815,15 @@
         <div id="tab-bm-cmd-bmpart" class="tab-panel">
             <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands <i class="fas fa-chevron-right"></i> <span>bmpart</span></div>
             <h1>bmpart</h1>
+
+            <div class="alert-deprecated">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <span>DEPRECATED</span>
+                    <p>The <code>bmpart</code> command is now deprecated. Use <code>BMBoneTag.skin</code> / <code>BMActiveModelTag.skin</code> instead.</p>
+                </div>
+            </div>
+
             <div class="signature">- <span class="sig-cmd">bmpart</span> <span class="sig-arg">entity:&lt;entity&gt;</span> <span class="sig-arg">model:&lt;model_name&gt;</span> <span class="sig-arg">bone:&lt;bone&gt;</span> <span class="sig-arg">part:&lt;limb_name&gt;</span> <span class="sig-arg">from:&lt;player&gt;</span></div>
             <p>Applies a limb texture from an online player's skin to a specific bone. Useful for player-skin-based models.</p>
 
