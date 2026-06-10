@@ -57,7 +57,11 @@ public class BMModelCommand extends AbstractCommand {
 
         String modelName = model.asString();
 
-        if (BetterModel.model(modelName).isEmpty()) {
+        var modelRenderer = BetterModel.model(modelName)
+                .or(() -> BetterModel.limb(modelName))
+                .orElse(null);
+
+        if (modelRenderer == null) {
             Debug.echoError(scriptEntry, "Model '" + modelName + "' is not found.");
             return;
         }
@@ -69,8 +73,6 @@ public class BMModelCommand extends AbstractCommand {
             return;
         }
 
-        BetterModel.model(modelName).ifPresent(renderer -> {
-            renderer.getOrCreate(BukkitAdapter.adapt(entity.getBukkitEntity()));
-        });
+        modelRenderer.create(BukkitAdapter.adapt(entity.getBukkitEntity()));
     }
 }
