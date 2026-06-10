@@ -4,7 +4,6 @@ import com.denizenscript.denizen.objects.PlayerTag;
 import com.denizenscript.denizen.tags.BukkitTagContext;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptRegistry;
-import com.denizenscript.denizencore.tags.TagContext;
 import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
 
 public class PlayerExtensions {
