@@ -417,7 +417,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         // @plugin denizen-utilities, BetterModel
         // @input ElementTag
         // @description
-        // Changes the skin of the active model to the player skin associated with the specified UUID.
+        // Changes the skin of the active model to the player skin associated with the specified UUID or PlayerTag.
         // Only works for limb models.
         // -->
         tagProcessor.registerMechanism("skin", false, ObjectTag.class, (object, mechanism, input) -> {
