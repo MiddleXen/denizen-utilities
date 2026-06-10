@@ -755,14 +755,14 @@
         <div id="tab-bm-cmd-bmlimb" class="tab-panel">
             <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> BetterModel <i class="fas fa-chevron-right"></i> Commands <i class="fas fa-chevron-right"></i> <span>bmlimb</span></div>
             <h1>bmlimb</h1>
-            <div class="signature">- <span class="sig-cmd">bmlimb</span> <span class="sig-arg">target:&lt;entity&gt;</span> <span class="sig-arg">model:&lt;limb_model&gt;</span> <span class="sig-arg">animation:&lt;animation&gt;</span> <span class="sig-opt">(loop:&lt;mode&gt;)</span> <span class="sig-opt">(override)</span></div>
-            <p>Plays a specific limb animation for a player or NPC. Target must be a player-type entity.</p>
+            <div class="signature">- <span class="sig-cmd">bmlimb</span> <span class="sig-arg">target:&lt;entity&gt;</span> <span class="sig-arg">model:&lt;model&gt;</span> <span class="sig-arg">animation:&lt;animation&gt;</span> <span class="sig-opt">(loop:&lt;mode&gt;)</span> <span class="sig-opt">(override)</span></div>
+            <p>Manages BetterModel limb animations for a player.<br>Plays a specific limb animation for a player or NPC.</p>
 
             <div class="spec-container">
                 <div class="spec-row"><div class="spec-key"><span class="name-label">target:</span><span class="badge b-req">Required</span></div><div class="spec-val">The player or NPC target.</div></div>
-                <div class="spec-row"><div class="spec-key"><span class="name-label">model:</span><span class="badge b-req">Required</span></div><div class="spec-val">The limb model name (e.g. <code>player_arm</code>).</div></div>
-                <div class="spec-row"><div class="spec-key"><span class="name-label">animation:</span><span class="badge b-req">Required</span></div><div class="spec-val">The animation name to play on the limb.</div></div>
-                <div class="spec-row"><div class="spec-key"><span class="name-label">loop:</span><span class="badge b-opt">Optional</span></div><div class="spec-val">Playback mode. Valid options: <code>PLAY_ONCE</code> (default), <code>LOOP</code>, or <code>HOLD_ON_LAST</code>.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">model:</span><span class="badge b-req">Required</span></div><div class="spec-val">The limb model name.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">animation:</span><span class="badge b-req">Required</span></div><div class="spec-val">The animation name to play.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">loop:</span><span class="badge b-opt">Optional</span></div><div class="spec-val">Available loop modes: <code>PLAY_ONCE</code>, <code>LOOP</code>, <code>HOLD_ON_LAST</code>.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">override</span><span class="badge b-opt">Switch</span></div><div class="spec-val">If present, overrides currently playing animations on this limb.</div></div>
             </div>
 
@@ -995,6 +995,7 @@
                 <div class="spec-row"><div class="spec-key"><span class="name-label">glow_color</span><span class="badge b-mech">ColorTag</span></div><div class="spec-val">Globally sets glow color for all bones.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">tint</span><span class="badge b-mech">ColorTag</span></div><div class="spec-val">Globally sets tint color for all bones.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">visible</span><span class="badge b-mech">Boolean</span></div><div class="spec-val">Globally toggles visibility of the entire model.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">skin</span><span class="badge b-mech">ElementTag</span></div><div class="spec-val">Changes the skin of the active model to the player skin associated with the specified UUID or PlayerTag. Only works for <strong>limb models.</strong></div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">item</span><span class="badge b-mech">ItemTag</span></div><div class="spec-val">Globally overrides the item displayed on all bones.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">scale</span><span class="badge b-mech">LocationTag</span></div><div class="spec-val">Globally overrides the scale for all bones (XYZ vector format).</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">translation</span><span class="badge b-mech">LocationTag</span></div><div class="spec-val">Globally overrides translation vectors for all model bones.</div></div>
