@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.isnsest.denizenutilities.bridges.BetterModel.BetterModelUtils.changeSkin;
+
 // <--[ObjectType]
 // @name BMBoneTag
 // @prefix bmbone
@@ -405,6 +407,19 @@ public class BMBoneTag implements ObjectTag, Adjustable {
             TransformedItemStack transformed = BetterModelUtils.getTransform(object.bone);
             TransformedItemStack result = TransformedItemStack.of(input.toVector().toVector3f(), transformed.offset(), transformed.scale(), transformed.itemStack());
             object.bone.itemStack(_ -> true, result);
+        });
+
+        // <--[mechanism]
+        // @object BMBoneTag
+        // @name skin
+        // @plugin denizen-utilities, BetterModel
+        // @input ElementTag
+        // @description
+        // Changes the skin of the active model to the player skin associated with the specified UUID or PlayerTag.
+        // This is especially useful when working with limb models.
+        // -->
+        tagProcessor.registerMechanism("skin", false, ObjectTag.class, (object, _, input) -> {
+            changeSkin(object.tracker, input, object.bone);
         });
     }
 
