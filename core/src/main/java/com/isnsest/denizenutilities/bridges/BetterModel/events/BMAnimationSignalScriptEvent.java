@@ -1,12 +1,12 @@
 package com.isnsest.denizenutilities.bridges.BetterModel.events;
 
-import com.denizenscript.denizencore.events.ScriptEvent;
+import com.denizenscript.denizen.events.BukkitScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.isnsest.denizenutilities.bridges.BetterModel.objects.BMActiveModelTag;
 import kr.toxicity.model.api.script.ScriptBuilder;
 
-public class BMAnimationSignalScriptEvent extends ScriptEvent {
+public class BMAnimationSignalScriptEvent extends BukkitScriptEvent {
 
     // <--[event]
     // @Events

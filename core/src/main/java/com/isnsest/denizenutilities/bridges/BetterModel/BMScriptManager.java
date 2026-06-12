@@ -47,7 +47,7 @@ public class BMScriptManager {
             return AnimationScript.of(true, tracker -> {
                 if (!(tracker instanceof EntityTracker entityTracker)) return;
 
-                BMAnimationSignalScriptEvent event = BMAnimationSignalScriptEvent.instance;
+                BMAnimationSignalScriptEvent event = (BMAnimationSignalScriptEvent) BMAnimationSignalScriptEvent.instance.clone();
                 event.model = new BMActiveModelTag(entityTracker);
                 event.signal = signal;
                 event.metadata = meta;

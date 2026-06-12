@@ -1,9 +1,8 @@
 package com.isnsest.denizenutilities.bridges.BetterModel.events;
 
-import com.denizenscript.denizen.Denizen;
+import com.denizenscript.denizen.events.BukkitScriptEvent;
 import com.denizenscript.denizen.objects.PlayerTag;
 import com.denizenscript.denizen.utilities.implementation.BukkitScriptEntryData;
-import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptEntryData;
@@ -12,10 +11,9 @@ import kr.toxicity.model.api.bukkit.BetterModelBukkit;
 import kr.toxicity.model.api.bukkit.platform.BukkitPlayer;
 import kr.toxicity.model.api.event.AnimationSignalEvent;
 import kr.toxicity.model.api.event.ModelEventListener;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class BMPlayerAnimationSignalScriptEvent extends ScriptEvent {
+public class BMPlayerAnimationSignalScriptEvent extends BukkitScriptEvent {
 
     // <--[event]
     // @Events
@@ -60,18 +58,8 @@ public class BMPlayerAnimationSignalScriptEvent extends ScriptEvent {
     public ObjectTag getContext(String name) {
         if (name.equals("name")) {
             return new ElementTag(signal);
-        };
-        return super.getContext(name);
-    }
-
-    @Override
-    public ScriptEvent fire() {
-        if (!Bukkit.isPrimaryThread()) {
-            ScriptEvent altEvent = clone();
-            Bukkit.getScheduler().runTask(Denizen.getInstance(), altEvent::fire);
-            return altEvent;
         }
-        return super.fire();
+        return super.getContext(name);
     }
 
     @Override
@@ -80,9 +68,11 @@ public class BMPlayerAnimationSignalScriptEvent extends ScriptEvent {
             subscription = BetterModel.eventBus().subscribe(BetterModelBukkit.platform(), AnimationSignalEvent.class, event -> {
                 if (!(event.player() instanceof BukkitPlayer eventPlayer)) return;
 
-                player = eventPlayer.source();
-                signal = event.signal();
-                fire();
+                BMPlayerAnimationSignalScriptEvent scriptEvent = (BMPlayerAnimationSignalScriptEvent) clone();
+
+                scriptEvent.player = eventPlayer.source();
+                scriptEvent.signal = event.signal();
+                scriptEvent.fire();
             });
         }
     }
