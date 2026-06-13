@@ -19,7 +19,6 @@ import kr.toxicity.model.api.animation.RunningAnimation;
 import kr.toxicity.model.api.bone.RenderedBone;
 import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
 import kr.toxicity.model.api.bukkit.platform.BukkitPlayer;
-import kr.toxicity.model.api.data.renderer.ModelRenderer;
 import kr.toxicity.model.api.platform.PlatformBillboard;
 import kr.toxicity.model.api.tracker.EntityTracker;
 import kr.toxicity.model.api.tracker.TrackerUpdateAction;
@@ -37,17 +36,17 @@ import java.util.function.UnaryOperator;
 import static com.isnsest.denizenutilities.bridges.BetterModel.BetterModelUtils.changeSkin;
 
 // <--[ObjectType]
-// @name BMModelTag
-// @prefix bmmodel
+// @name BMActiveModelTag
+// @prefix bmactivemodel
 // @base ElementTag
 // @ExampleTagBase player.model[steve]
 // @format
-// The identity format for a BMModelTag is the UUID of the entity and the model name, separated by a slash.
+// The identity format for a BMActiveModelTag is the UUID of the entity and the model name, separated by a slash.
 //
 // @plugin denizen-utilities, BetterModel
 // @description
-// A BMModelTag represents an active BetterModel tracker instance.
-// To modify specific parts, use <@link tag BMModelTag.bone>.
+// A BMActiveModelTag represents an active BetterModel tracker instance.
+// To modify specific parts, use <@link tag BMActiveModelTag.bone>.
 //
 // -->
 public class BMActiveModelTag implements ObjectTag, Adjustable {
