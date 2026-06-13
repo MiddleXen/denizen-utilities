@@ -380,6 +380,29 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
 
         // <--[mechanism]
         // @object BMActiveModelTag
+        // @name brightness
+        // @plugin denizen-utilities, BetterModel
+        // @input MapTag
+        // @description
+        // A map of the display entity's brightness override, containing "block" and "sky" keys, each with a brightness level between 0 and 15.
+        // Globally overrides the brightness for ALL bones in the model.
+        // -->
+        tagProcessor.registerMechanism("brightness", false, MapTag.class, (object, mechanism, input) -> {
+            int block = input.getElement("block", "-1").asInt();
+            int sky = input.getElement("sky", "-1").asInt();
+            if (block < 0 || block > 15) {
+                mechanism.echoError("Invalid 'block' brightness, must be a number between 0 and 15.");
+                return;
+            }
+            if (sky < 0 || sky > 15) {
+                mechanism.echoError("Invalid 'sky' brightness, must be a number between 0 and 15.");
+                return;
+            }
+            object.tracker.update(TrackerUpdateAction.brightness(block, sky));
+        });
+
+        // <--[mechanism]
+        // @object BMActiveModelTag
         // @name hide_from
         // @plugin denizen-utilities, BetterModel
         // @input ListTag(PlayerTag)

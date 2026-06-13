@@ -7,10 +7,7 @@ import com.denizenscript.denizencore.objects.Adjustable;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.ObjectTag;
-import com.denizenscript.denizencore.objects.core.ColorTag;
-import com.denizenscript.denizencore.objects.core.ElementTag;
-import com.denizenscript.denizencore.objects.core.ListTag;
-import com.denizenscript.denizencore.objects.core.QuaternionTag;
+import com.denizenscript.denizencore.objects.core.*;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
@@ -407,6 +404,29 @@ public class BMBoneTag implements ObjectTag, Adjustable {
             TransformedItemStack transformed = BetterModelUtils.getTransform(object.bone);
             TransformedItemStack result = TransformedItemStack.of(input.toVector().toVector3f(), transformed.offset(), transformed.scale(), transformed.itemStack());
             object.bone.itemStack(_ -> true, result);
+        });
+
+        // <--[mechanism]
+        // @object BMBoneTag
+        // @name brightness
+        // @plugin denizen-utilities, BetterModel
+        // @input MapTag
+        // @description
+        // A map of the bone's display entity's brightness override, containing "block" and "sky" keys, each with a brightness level between 0 and 15.
+        // -->
+        tagProcessor.registerMechanism("brightness", false, MapTag.class, (object, mechanism, input) -> {
+            int block = input.getElement("block", "-1").asInt();
+            int sky = input.getElement("sky", "-1").asInt();
+            if (block < 0 || block > 15) {
+                mechanism.echoError("Invalid 'block' brightness, must be a number between 0 and 15.");
+                return;
+            }
+            if (sky < 0 || sky > 15) {
+                mechanism.echoError("Invalid 'sky' brightness, must be a number between 0 and 15.");
+                return;
+            }
+            TrackerUpdateAction.Brightness action = TrackerUpdateAction.brightness(block, sky);
+            object.tracker.update(action, object.bonePredicate);
         });
 
         // <--[mechanism]
