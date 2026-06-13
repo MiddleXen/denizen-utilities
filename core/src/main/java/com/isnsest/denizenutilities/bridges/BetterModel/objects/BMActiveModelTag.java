@@ -21,6 +21,7 @@ import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
 import kr.toxicity.model.api.bukkit.platform.BukkitPlayer;
 import kr.toxicity.model.api.platform.PlatformBillboard;
 import kr.toxicity.model.api.tracker.EntityTracker;
+import kr.toxicity.model.api.tracker.ModelScaler;
 import kr.toxicity.model.api.tracker.TrackerUpdateAction;
 import kr.toxicity.model.api.util.TransformedItemStack;
 import kr.toxicity.model.api.util.function.BonePredicate;
@@ -364,6 +365,22 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         // -->
         tagProcessor.registerMechanism("scale", false, LocationTag.class, (object, _, input) -> {
             updateBones(object, t -> TransformedItemStack.of(t.position(), t.offset(), input.toVector().toVector3f(), t.itemStack()));
+        });
+
+        // <--[mechanism]
+        // @object BMActiveModelTag
+        // @name model_scale
+        // @plugin denizen-utilities, BetterModel
+        // @input ElementTag(Decimal)
+        // @description
+        // Uniformly overrides the scale for the entire model.
+        // Unlike the 'scale' mechanism which applies a flat scale override to ALL individual bones (often warping or breaking bone pivots),
+        // 'model_scale' scales the entire model tracker uniformly, preserving relative bone positions, geometry, and pivot points.
+        // -->
+        tagProcessor.registerMechanism("model_scale", false, ElementTag.class, (object, mechanism, input) -> {
+            if (mechanism.requireFloat()) {
+                object.tracker.scaler(ModelScaler.value(input.asFloat()));
+            }
         });
 
         // <--[mechanism]
