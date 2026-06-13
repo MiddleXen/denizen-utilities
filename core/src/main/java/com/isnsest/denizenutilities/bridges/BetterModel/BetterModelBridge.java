@@ -51,6 +51,14 @@ public class BetterModelBridge {
         BetterModelExtensions.register();
 
         if (Bukkit.getPluginManager().isPluginEnabled("SkinsRestorer")) {
+            SkinsRestorerHook.init();
+        }
+
+        Debug.log("denizen-utilities", "BetterModel bridge initialized.");
+    }
+
+    public static class SkinsRestorerHook {
+        public static void init() {
             SkinsRestorerProvider.get().getEventBus().subscribe(DenizenUtilities.instance, SkinApplyEvent.class, event -> {
                 new Thread(() -> {
                     try {
@@ -61,7 +69,6 @@ public class BetterModelBridge {
                 }).start();
             });
         }
-
-        Debug.log("denizen-utilities", "BetterModel bridge initialized.");
     }
+
 }
