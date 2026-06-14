@@ -239,7 +239,7 @@ public class BMBoneTag implements ObjectTag, Adjustable {
         // -->
         tagProcessor.registerMechanism("view_range", false, ElementTag.class, (object, mechanism, input) -> {
             if (mechanism.requireFloat()) {
-                TrackerUpdateAction.ViewRange action = TrackerUpdateAction.viewRange(input.asFloat() * 64);
+                TrackerUpdateAction.ViewRange action = TrackerUpdateAction.viewRange(input.asFloat());
                 object.tracker.update(action, object.bonePredicate);
             }
         });

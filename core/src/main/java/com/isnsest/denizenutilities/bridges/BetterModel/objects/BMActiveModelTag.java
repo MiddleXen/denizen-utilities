@@ -271,7 +271,7 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         // -->
         tagProcessor.registerMechanism("view_range", false, ElementTag.class, (object, mechanism, input) -> {
             if (mechanism.requireFloat()) {
-                object.tracker.update(TrackerUpdateAction.viewRange(input.asFloat() * 64));
+                object.tracker.update(TrackerUpdateAction.viewRange(input.asFloat()));
             }
         });
 
