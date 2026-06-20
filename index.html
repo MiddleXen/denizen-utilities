@@ -400,6 +400,17 @@
                     <div class="spec-val">Action behavior after dialog completion. Options: <code>CLOSE</code> (default - closes and returns to previous screen), <code>NONE</code> (keeps current screen open), or <code>WAIT_FOR_RESPONSE</code> (shows a waiting screen).</div>
                 </div>
             </div>
+
+            <h2>Conditional Rendering</h2>
+            <p>Inputs, body elements, and buttons can be dynamically shown or hidden using the <code>condition</code> key. It evaluates a Denizen tag and requires it to return <code>true</code> to show the element.</p>
+            <div class="code-block">
+                <div class="code-header"><span class="code-title">Example</span></div>
+                <pre><span class="s-k">bodies:</span>
+  <span class="s-k">1:</span>
+    <span class="s-k">type:</span> <span class="s-v">message</span>
+    <span class="s-k">condition:</span> <span class="s-s">&lt;player.inventory.contains_item[diamond]&gt;</span>
+    <span class="s-k">message:</span> <span class="s-s">&lt;gray&gt;You have a diamond in your inventory, so cool!</span></pre>
+            </div>
         </div>
 
         <!-- ===== DIALOG: SHOWDIALOG COMMAND ===== -->
@@ -525,6 +536,14 @@
             <h1>Components: Inputs</h1>
             <p class="subtitle">Inputs defined under <code>inputs:</code>. Values available via <code>&lt;context.key_name&gt;</code>.</p>
 
+            <h2>Universal Input Properties</h2>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">condition</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">A boolean tag. If it evaluates to <code>false</code>, the input field will not be shown.</div>
+                </div>
+            </div>
+
             <h3>Text Input (type: text)</h3>
             <div class="spec-container">
                 <div class="spec-row"><div class="spec-key"><span class="name-label">width</span></div><div class="spec-val">Field width.</div></div>
@@ -562,6 +581,15 @@
             <h1>Components: Bodies</h1>
             <p class="subtitle">Defined under <code>bodies:</code> root key.</p>
 
+            <h2>Universal Body Properties</h2>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">condition</span><span class="badge b-opt">Optional</span></div>
+                    <div class="spec-val">A boolean tag. If it evaluates to <code>false</code>, the body element will not be shown.</div>
+                </div>
+            </div>
+
+            <h2>Body Types</h2>
             <div class="spec-container">
                 <div class="spec-row"><div class="spec-key"><span class="name-label">type: message</span></div><div class="spec-val">• <code>message</code>: The text.<br>• <code>width</code>: Fixed width.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">type: item</span></div><div class="spec-val">• <code>item</code>: ItemTag.<br>• <code>width / height</code>: Visual size.<br>• <code>show tooltip / decorations</code>: Booleans.<br>• <code>description</code>: Nested message-type body.</div></div>
@@ -578,6 +606,7 @@
                 <div class="spec-row"><div class="spec-key"><span class="name-label">label</span><span class="badge b-req">Req</span></div><div class="spec-val">Button text.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">tooltip</span></div><div class="spec-val">Hover text.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">width</span></div><div class="spec-val">Button width.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">condition</span><span class="badge b-opt">Optional</span></div><div class="spec-val">A boolean tag. If it evaluates to <code>false</code>, the button will not be shown.</div></div>
             </div>
 
             <h2>Action Types (type:)</h2>
@@ -715,7 +744,7 @@
                 </div>
                 <div class="spec-row">
                     <div class="spec-key"><span class="name-label">disconnect</span><span class="badge b-req">Input: ElementTag</span></div>
-                    <div class="spec-val">Disconnects the connection with a specified reason. Supports Paper-formatted text (MiniMessage/Legacy).</div>
+                    <div class="spec-val">Disconnects the connection с указанной причиной. Поддерживает форматированный текст (MiniMessage/Legacy).</div>
                 </div>
                 <div class="spec-row">
                     <div class="spec-key"><span class="name-label">show_dialog</span><span class="badge b-req">Input: ElementTag</span></div>
