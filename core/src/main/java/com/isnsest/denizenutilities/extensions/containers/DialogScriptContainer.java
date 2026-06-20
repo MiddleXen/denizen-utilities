@@ -475,7 +475,7 @@ public class DialogScriptContainer extends ScriptContainer {
         List<DialogBody> bodies = new ArrayList<>();
         for (StringHolder sh : bodiesSection.getKeys(false)) {
             YamlConfiguration objectSection = bodiesSection.getConfigurationSection(sh.str);
-            if (objectSection == null) continue;
+            if (objectSection == null || !checkCondition(objectSection, context)) continue;
 
             if (!objectSection.contains("type")) {
                 Debug.echoError("Dialog script '" + getName() + "' has an object without a specified type!");
@@ -541,7 +541,7 @@ public class DialogScriptContainer extends ScriptContainer {
         List<DialogInput> inputs = new ArrayList<>();
         for (StringHolder sh : inputsSection.getKeys(false)) {
             YamlConfiguration objectSection = inputsSection.getConfigurationSection(sh.str);
-            if (objectSection == null) continue;
+            if (objectSection == null || !checkCondition(objectSection, context)) continue;
             if (!objectSection.contains("type")) {
                 Debug.echoError("Dialog script '" + getName() + "' has an object without a specified type!");
                 continue;
@@ -596,7 +596,7 @@ public class DialogScriptContainer extends ScriptContainer {
 
     private ActionButton createActionButton(String path, TagContext context) {
         YamlConfiguration section = getConfigurationSection(path);
-        if (section == null) {
+        if (section == null || !checkCondition(section, context)) {
             return null;
         }
 
@@ -784,6 +784,14 @@ public class DialogScriptContainer extends ScriptContainer {
         }
 
         return builder.build();
+    }
+
+    private Boolean checkCondition(YamlConfiguration config, TagContext context) {
+        if (!config.contains("condition")) {
+            return true;
+        }
+        String condition = TagManager.tag(config.getString("condition"), context);
+        return condition.equalsIgnoreCase("true");
     }
 
     private Component getComponent(YamlConfiguration config, String path, TagContext context) {
