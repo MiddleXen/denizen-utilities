@@ -2,7 +2,8 @@ package com.isnsest.denizenutilities.extensions.events;
 
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
-import com.denizenscript.denizencore.utilities.CoreUtilities;
+import com.denizenscript.denizencore.objects.core.JavaReflectedObjectTag;
+import com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent;
 import com.isnsest.denizenutilities.DenizenUtilities;
 import com.isnsest.denizenutilities.extensions.objects.ConnectionTag;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
@@ -40,18 +41,15 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
     //
     // -->
 
-    public static PlayerConnectionConfigureEvent instance;
+    public static final Map<UUID, CompletableFuture<Boolean>> awaitingResponse = new ConcurrentHashMap<>();
 
-    public final Map<UUID, CompletableFuture<Boolean>> awaitingResponse = new ConcurrentHashMap<>();
-
+    public AsyncPlayerConnectionConfigureEvent event;
     public String determination = null;
-    public ConnectionTag connection;
 
     public PlayerConnectionConfigureEvent() {
-        instance = this;
         registerCouldMatcher("player connection configure");
-        this.<PlayerConnectionConfigureEvent, ObjectTag>registerDetermination(null, ObjectTag.class, (evt, context, output) -> {
-            determination = output.toString();
+        this.<PlayerConnectionConfigureEvent, ObjectTag>registerDetermination(null, ObjectTag.class, (evt, _, output) -> {
+            evt.determination = output.toString();
         });
     }
 
@@ -66,23 +64,31 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
     }
 
     @Override
-    public ObjectTag getContext(String n) {
-        if (n.equals("connection")) {
-            return connection;
-        }
-        return super.getContext(n);
+    public ObjectTag getContext(String name) {
+        return switch (name) {
+            case "connection" -> new ConnectionTag(event.getConnection());
+            case "reflect_event" -> new JavaReflectedObjectTag(event);
+            default -> super.getContext(name);
+        };
     }
 
     @EventHandler
     public void onPlayerConfigure(AsyncPlayerConnectionConfigureEvent event) {
         PlayerConfigurationConnection connection = event.getConnection();
         UUID uniqueId = connection.getProfile().getId();
+        if (uniqueId == null) {
+            return;
+        }
 
-        ConnectionTag.activeConnections.put(event.getConnection().getProfile().getId(), event.getConnection());
-        instance.connection = new ConnectionTag(event.getConnection());
-        instance.fire();
+        ConnectionTag.activeConnections.put(uniqueId, event.getConnection());
 
-        if (instance.determination != null && CoreUtilities.toLowerCase(instance.determination).equals("wait")) {
+        PlayerConnectionConfigureEvent altEvent = (PlayerConnectionConfigureEvent) this.clone();
+
+        altEvent.event = event;
+        altEvent.determination = null;
+        String determination = ((PlayerConnectionConfigureEvent) altEvent.fire()).determination;
+
+        if ("WAIT".equalsIgnoreCase(determination)) {
             CompletableFuture<Boolean> response = new CompletableFuture<>();
             response.completeOnTimeout(false, 1, TimeUnit.MINUTES);
 
@@ -97,5 +103,10 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
 
             awaitingResponse.remove(uniqueId);
         }
+    }
+
+    @EventHandler
+    void onConnectionClose(PlayerConnectionCloseEvent event) {
+        awaitingResponse.remove(event.getPlayerUniqueId());
     }
 }

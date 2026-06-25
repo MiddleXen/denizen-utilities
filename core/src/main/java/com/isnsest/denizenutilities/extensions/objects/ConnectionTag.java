@@ -1,6 +1,5 @@
 package com.isnsest.denizenutilities.extensions.objects;
 
-import com.denizenscript.denizen.tags.BukkitTagContext;
 import com.denizenscript.denizencore.objects.Adjustable;
 import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.Mechanism;
@@ -150,7 +149,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // -->
         tagProcessor.registerMechanism("connect", false, (object, _) -> {
             UUID uuid = object.connection.getProfile().getId();
-            Map<UUID, CompletableFuture<Boolean>> list = PlayerConnectionConfigureEvent.instance.awaitingResponse;
+            Map<UUID, CompletableFuture<Boolean>> list = PlayerConnectionConfigureEvent.awaitingResponse;
             if (list.containsKey(uuid)) {
                 list.get(uuid).complete(true);
             }
