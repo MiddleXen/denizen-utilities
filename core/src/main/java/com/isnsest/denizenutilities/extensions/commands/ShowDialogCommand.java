@@ -69,6 +69,6 @@ public class ShowDialogCommand extends AbstractCommand {
                 x++;
             }
         }
-        container.showTo(Utilities.getEntryPlayer(scriptEntry).getPlayerEntity(), scriptEntry.context);
+        container.showTo(Utilities.getEntryPlayer(scriptEntry).getPlayerEntity().getConnection(), scriptEntry.context);
     }
 }

@@ -25,7 +25,7 @@ public class PlayerExtensions {
                 mechanism.echoError("Invalid dialog script: '" + input.asString() + "'");
                 return;
             }
-            container.showTo(object.getPlayerEntity(), context);
+            container.showTo(object.getPlayerEntity().getConnection(), context);
         });
 
         // <--[mechanism]

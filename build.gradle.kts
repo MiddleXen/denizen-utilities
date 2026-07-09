@@ -3,7 +3,7 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.8"
 }
 
-val pluginVersion = "2.8.2"
+val pluginVersion = "2.9.0"
 
 allprojects {
     group = "com.isnsest"

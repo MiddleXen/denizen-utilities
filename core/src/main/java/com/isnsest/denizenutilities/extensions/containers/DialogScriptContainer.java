@@ -2,12 +2,10 @@ package com.isnsest.denizenutilities.extensions.containers;
 
 import com.denizenscript.denizen.objects.ItemTag;
 import com.denizenscript.denizen.tags.BukkitTagContext;
-import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.objects.ArgumentHelper;
-import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.denizenscript.denizencore.objects.core.MapTag;
 import com.denizenscript.denizencore.objects.core.ScriptTag;
-import com.denizenscript.denizencore.scripts.ScriptEntry;
-import com.denizenscript.denizencore.scripts.ScriptRegistry;
+import com.denizenscript.denizencore.scripts.*;
 import com.denizenscript.denizencore.scripts.containers.ScriptContainer;
 import com.denizenscript.denizencore.scripts.queues.core.InstantQueue;
 import com.denizenscript.denizencore.tags.TagContext;
@@ -17,7 +15,11 @@ import com.denizenscript.denizencore.utilities.YamlConfiguration;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.denizenscript.denizencore.utilities.text.StringHolder;
 import com.isnsest.denizenutilities.Compatibility;
-import com.isnsest.denizenutilities.extensions.objects.ConnectionTag;
+import com.isnsest.denizenutilities.extensions.containers.DialogScriptHelper.DialogData;
+import com.isnsest.denizenutilities.extensions.containers.DialogScriptHelper.InputType;
+import io.papermc.paper.connection.PlayerCommonConnection;
+import io.papermc.paper.connection.PlayerConfigurationConnection;
+import io.papermc.paper.connection.PlayerGameConnection;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.data.dialog.ActionButton;
@@ -29,26 +31,19 @@ import io.papermc.paper.registry.data.dialog.body.PlainMessageDialogBody;
 import io.papermc.paper.registry.data.dialog.input.*;
 import io.papermc.paper.registry.data.dialog.type.*;
 import io.papermc.paper.registry.set.RegistrySet;
-import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.event.ClickEvent;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+import static com.isnsest.denizenutilities.extensions.containers.DialogScriptHelper.dialogDataMap;
+import static com.isnsest.denizenutilities.extensions.containers.DialogScriptHelper.mapToConfig;
+
 @SuppressWarnings("UnstableApiUsage")
 public class DialogScriptContainer extends ScriptContainer {
-
-    private static final ClickCallback.Options options = ClickCallback.Options.builder().uses(1).lifetime(ClickCallback.DEFAULT_LIFETIME).build();
-
-    private final Map<String, InputType> keys = new HashMap<>();
-
-    private enum InputType {
-        TEXT, SINGLE, BOOLEAN, NUMBER
-    }
 
     // <--[language]
     // @name Dialog Script Containers
@@ -63,6 +58,15 @@ public class DialogScriptContainer extends ScriptContainer {
     // - notice  : Simple dialog with a single button
     // - list    : Shows a list of other dialog scripts
     // - multi   : Grid layout with multiple action buttons
+    //
+    // DYNAMIC GENERATION (Procedural):
+    // You can define a 'procedural' script section at the root of the container.
+    // This executes a Denizen queue in parallel when opening the dialog, allowing you
+    // to dynamically construct and determine maps for 'inputs', 'bodies', or 'buttons'.
+    // Any statically defined elements in the dialog container will be cleanly merged
+    // with your procedurally generated maps.
+    // Note: You can naturally use click-time tags like '<context.connection>' or '<context.button_id>'
+    // inside your dynamic scripts; they are automatically escaped at load-time to prevent premature execution.
     //
     // <code>
     // Dialog_Script_Name:
@@ -85,6 +89,18 @@ public class DialogScriptContainer extends ScriptContainer {
     //         # Exit button (list or multi)
     //         exit button:
     //             label: Exit
+    //
+    //     # Procedural queue to generate elements dynamically
+    //     procedural:
+    //     - repeat 15 as:x:
+    //         - definemap button:
+    //             label: <[x]>
+    //             width: 15
+    //             script:
+    //             - announce "Clicked button <context.button_id>"
+    //             - adjust <context.connection> connect
+    //         - define buttons.<[x]>:<[button]>
+    //     - determine buttons:<[buttons]>
     //
     //     # only for 'list'
     //     dialogs:
@@ -116,9 +132,6 @@ public class DialogScriptContainer extends ScriptContainer {
     //             script:
     //             - narrate "Context is <context.custom_context_name>, <context.my_input>"
     // </code>
-    //
-    // Script actions also have:
-    // <context.connection>
     // -->
 
     // <--[language]
@@ -127,8 +140,10 @@ public class DialogScriptContainer extends ScriptContainer {
     // @description
     // Dialog inputs collect player data that becomes available in the script context.
     //
-    // Input values can be accessed via:
-    // <context.[key]>
+    // Input values can be accessed directly using:
+    // <context.[key]> (e.g., <context.applicant_name>)
+    // Or as a full map using:
+    // <context.inputs>
     //
     // TYPES:
     //
@@ -227,21 +242,19 @@ public class DialogScriptContainer extends ScriptContainer {
     // - narrate "Hello"
     //
     // Available context values:
-    // <context.connection>
-    // <context.[input_keys]>
-    //
+    // <context.connection> returns the ConnectionTag of the player.
+    // <context.button_id> returns the ID of the button clicked.
+    // <context.namespace> returns the namespace of the dialog (e.g., 'denizen').
+    // <context.inputs> returns a MapTag of all active input fields (only for Denizen dialogs).
+    // <context.[input_id]> returns the typed value of the specific input field directly.
     //
     // RUN_COMMAND
     // Runs a command when clicked.
-    //
     // command: spawn
-    //
     //
     // OPEN_URL
     // Opens a web URL.
-    //
     // url: https://example.com
-    //
     //
     // COPY_TO_CLIPBOARD
     // Copies text to the player's clipboard.
@@ -279,60 +292,73 @@ public class DialogScriptContainer extends ScriptContainer {
     //     message: <text>
     // -->
 
+    @SuppressWarnings("unchecked")
     public DialogScriptContainer(YamlConfiguration configurationSection, String scriptContainerName) {
+        if (configurationSection.contains("procedural")) {
+            List<Object> procedural = (List<Object>) DialogScriptHelper.deeplyEscapeTags(
+                    configurationSection.getList("procedural"),
+                    "<context.connection",
+                    "<context.inputs"
+            );
+
+            configurationSection.set("procedural", procedural);
+        }
         super(configurationSection, scriptContainerName);
-        parseInputs(configurationSection.getConfigurationSection("inputs"));
     }
 
-    @Override
-    public void postCheck() {
-        super.postCheck();
-        // Trigger load + cache
-        if (shouldEnable() && contains("script")) {
-            getBaseEntries(DenizenCore.implementation.getEmptyScriptEntryData());
-        }
-    }
-
-    private void parseInputs(YamlConfiguration inputs) {
-        if (inputs == null) return;
-        for (StringHolder sh : inputs.getKeys(false)) {
-            parseInput(inputs.getConfigurationSection(sh.str), sh.str);
-        }
-    }
-
-    private void parseInput(YamlConfiguration section, String keyName) {
-        if (section == null) return;
-        String key = section.getString("key", keyName);
-        String typeStr = section.getString("type", null);
-        if (typeStr == null) return;
-
-        InputType inputType = switch (CoreUtilities.toLowerCase(typeStr)) {
+    private InputType parseInput(String type) {
+        return switch (CoreUtilities.toLowerCase(type)) {
             case "text" -> InputType.TEXT;
             case "single" -> InputType.SINGLE;
             case "boolean", "bool" -> InputType.BOOLEAN;
             case "number" -> InputType.NUMBER;
             default -> {
-                Debug.echoError("Dialog script '" + getName() + "' has unknown input type: " + typeStr);
+                Debug.echoError("Dialog script '" + getName() + "' has unknown input type: " + type);
                 yield null;
             }
         };
-
-        if (inputType != null) {
-            keys.put(key, inputType);
-        }
     }
 
-    public Dialog getDialogFrom(TagContext context) {
+    public Dialog getDialogFrom(TagContext context, PlayerCommonConnection connection) {
         if (context == null) {
             context = new BukkitTagContext(null, null, new ScriptTag(this));
         }
 
-        DialogBase dialogBase = getDialogBase(context);
+        final Map<String, YamlConfiguration> proceduralData = new HashMap<>();
+        final DialogData dialogData = new DialogData();
+        dialogData.connection = connection;
+
+        proceduralData.put("inputs", getConfigurationSection("inputs"));
+        proceduralData.put("bodies", getConfigurationSection("bodies"));
+        proceduralData.put("buttons", getConfigurationSection("buttons"));
+
+        if (containsScriptSection("procedural")) {
+            TagContext finalContext = context;
+            InstantQueue queue = new InstantQueue(getName());
+            List<ScriptEntry> entries = getEntries(context.getScriptEntryData(), "procedural");
+            queue.addEntries(entries);
+            queue.determinationTarget = (s, object) -> {
+                if (!object.canBeType(MapTag.class)) {
+                    return;
+                }
+                if (s.equalsIgnoreCase("inputs"))
+                    proceduralData.put("inputs", mapToConfig(object.asType(MapTag.class, finalContext)));
+                if (s.equalsIgnoreCase("bodies"))
+                    proceduralData.put("bodies", mapToConfig(object.asType(MapTag.class, finalContext)));
+                if (s.equalsIgnoreCase("buttons"))
+                    proceduralData.put("buttons", mapToConfig(object.asType(MapTag.class, finalContext)));
+            };
+            queue.start();
+        }
+
+        dialogData.configurationMap = proceduralData;
+
+        DialogBase dialogBase = getDialogBase(context, dialogData);
         if (dialogBase == null) {
             return null;
         }
 
-        DialogType dialogType = getDialogType(context);
+        DialogType dialogType = getDialogType(context, dialogData, connection);
         if (dialogType == null) {
             return null;
         }
@@ -342,7 +368,7 @@ public class DialogScriptContainer extends ScriptContainer {
                 .type(dialogType));
     }
 
-    public DialogType getDialogType(TagContext context) {
+    public DialogType getDialogType(TagContext context, DialogData dialogData, PlayerCommonConnection connection) {
         String type = getString("base.type");
         if (type == null) {
             Debug.echoError("Dialog script '" + getName() + "' is missing a required 'base.type'!");
@@ -351,8 +377,8 @@ public class DialogScriptContainer extends ScriptContainer {
 
         return switch (type) {
             case "confirm" -> {
-                ActionButton yes = createActionButton("yes", context);
-                ActionButton no = createActionButton("no", context);
+                ActionButton yes = createActionButton("yes", getConfigurationSection("yes"), context);
+                ActionButton no = createActionButton("no", getConfigurationSection("no"), context);
                 if (yes == null || no == null) {
                     yield null;
                 }
@@ -374,7 +400,7 @@ public class DialogScriptContainer extends ScriptContainer {
                         Debug.echoError("Invalid dialog script: '" + id + "'");
                         continue;
                     }
-                    Dialog dialog = container.getDialogFrom(context);
+                    Dialog dialog = container.getDialogFrom(context, connection);
                     if (dialog == null) {
                         Debug.echoError("Failed to construct dialog script '" + id + "' inside list dialog '" + getName() + "'");
                         continue;
@@ -383,7 +409,7 @@ public class DialogScriptContainer extends ScriptContainer {
                 }
                 RegistrySet<@NotNull Dialog> registrySet = RegistrySet.valueSet(RegistryKey.DIALOG, dialogs);
                 DialogListType.Builder dialogList = DialogType.dialogList(registrySet);
-                ActionButton exitButton = createActionButton("base.exit button", context);
+                ActionButton exitButton = createActionButton("exit button", getConfigurationSection("exit button"), context);
                 if (columns != null) {
                     dialogList.columns(columns);
                 }
@@ -396,17 +422,17 @@ public class DialogScriptContainer extends ScriptContainer {
                 yield dialogList.build();
             }
             case "notice" -> {
-                ActionButton actionButton = createActionButton("button", context);
+                ActionButton actionButton = createActionButton("button", getConfigurationSection("button"), context);
                 yield (actionButton == null) ? DialogType.notice() : DialogType.notice(actionButton);
             }
             case "multi" -> {
-                if (!contains("buttons")) {
+                Integer columns = getInt(getContents(), "base.columns", context);
+                ActionButton exitButton = createActionButton("exit button", getConfigurationSection("exit button"), context);
+                List<ActionButton> actionButtons = createActionButtons(context, dialogData.configurationMap.get("buttons"));
+                if (actionButtons == null) {
                     Debug.echoError("Dialog script '" + getName() + "' is missing a required 'buttons'");
                     yield null;
                 }
-                Integer columns = getInt(getContents(), "base.columns", context);
-                ActionButton exitButton = createActionButton("base.exit button", context);
-                List<ActionButton> actionButtons = createActionButtons(context);
                 MultiActionType.Builder multiActionType = DialogType.multiAction(actionButtons);
                 if (columns != null) {
                     multiActionType.columns(columns);
@@ -423,32 +449,36 @@ public class DialogScriptContainer extends ScriptContainer {
         };
     }
 
-    public void showTo(Player player, TagContext context) {
-        Dialog dialog = getDialogFrom(context);
+    public void showTo(PlayerCommonConnection connection, TagContext context) {
+        Dialog dialog = getDialogFrom(context, connection);
         if (dialog == null) {
             Debug.echoError("Failed to show dialog.");
             return;
         }
-        player.showDialog(dialog);
+        if (connection instanceof PlayerConfigurationConnection configurationConnection) {
+            configurationConnection.getAudience().showDialog(dialog);
+        } else if (connection instanceof PlayerGameConnection gameConnection) {
+            gameConnection.getPlayer().showDialog(dialog);
+        }
     }
 
-    public DialogBase getDialogBase(TagContext context) {
+    public DialogBase getDialogBase(TagContext context, DialogData dialogData) {
         Component title = getComponent(getContents(), "base.title", context);
         if (title == null) {
             Debug.echoError("Dialog script '" + getName() + "' is missing a required 'base.title'!");
             return null;
         }
-        DialogBase.Builder baseBuilder = DialogBase.builder(title);
 
         Component externalTitle = getComponent(getContents(), "base.external title", context);
         Boolean canCloseWithEscape = getBool(getContents(), "base.can close with escape", context, true);
 
-        baseBuilder.canCloseWithEscape(canCloseWithEscape);
-        baseBuilder.externalTitle(externalTitle);
-        baseBuilder.pause(false);
+        DialogBase.Builder baseBuilder = DialogBase.builder(title)
+                .canCloseWithEscape(canCloseWithEscape)
+                .externalTitle(externalTitle)
+                .pause(false);
 
-        inputs(baseBuilder, context);
-        bodies(baseBuilder, context);
+        inputs(baseBuilder, dialogData, context);
+        bodies(baseBuilder, dialogData.configurationMap.get("bodies"), context);
 
         if (contains("base.after action")) {
             String action = getString(getContents(), "base.after action", context).toUpperCase();
@@ -465,11 +495,12 @@ public class DialogScriptContainer extends ScriptContainer {
             baseBuilder.afterAction(afterAction);
         }
 
+        dialogDataMap.put(dialogData.connection, dialogData);
+
         return baseBuilder.build();
     }
 
-    private void bodies(DialogBase.Builder baseBuilder, TagContext context) {
-        YamlConfiguration bodiesSection = getConfigurationSection("bodies");
+    private void bodies(DialogBase.Builder baseBuilder, YamlConfiguration bodiesSection, TagContext context) {
         if (bodiesSection == null) return;
 
         List<DialogBody> bodies = new ArrayList<>();
@@ -534,10 +565,11 @@ public class DialogScriptContainer extends ScriptContainer {
         baseBuilder.body(bodies);
     }
 
-    private void inputs(DialogBase.Builder baseBuilder, TagContext context) {
-        YamlConfiguration inputsSection = getConfigurationSection("inputs");
+    private void inputs(DialogBase.Builder baseBuilder, DialogData dialogData, TagContext context) {
+        YamlConfiguration inputsSection = dialogData.configurationMap.get("inputs");
         if (inputsSection == null) return;
 
+        Map<String, InputType> inputTypeMap = new HashMap<>();
         List<DialogInput> inputs = new ArrayList<>();
         for (StringHolder sh : inputsSection.getKeys(false)) {
             YamlConfiguration objectSection = inputsSection.getConfigurationSection(sh.str);
@@ -552,8 +584,12 @@ public class DialogScriptContainer extends ScriptContainer {
             }
 
             String key = objectSection.getString("key", sh.str);
-            InputType type = keys.get(key);
             Component label = getComponent(objectSection, "label", context);
+
+            InputType type = parseInput(objectSection.getString("type"));
+            if (type == null) {
+                continue;
+            }
 
             DialogInput input = switch (type) {
                 case TEXT -> createTextInput(key, label, objectSection, context);
@@ -563,9 +599,12 @@ public class DialogScriptContainer extends ScriptContainer {
             };
 
             if (input != null) {
+                inputTypeMap.put(key, type);
                 inputs.add(input);
             }
         }
+
+        dialogData.inputs = inputTypeMap;
         baseBuilder.inputs(inputs);
     }
 
@@ -582,11 +621,19 @@ public class DialogScriptContainer extends ScriptContainer {
         return DialogBody.plainMessage(message);
     }
 
-    private List<ActionButton> createActionButtons(TagContext context) {
-        YamlConfiguration section = getConfigurationSection("buttons");
+    @SuppressWarnings("PatternValidation")
+    public Key buttonKey(String buttonId) {
+        return Key.key("denizen", getName().toLowerCase() + "/" + buttonId.toLowerCase());
+    }
+
+    private List<ActionButton> createActionButtons(TagContext context, YamlConfiguration buttonsSection) {
+        if (buttonsSection == null) {
+            return null;
+        }
+
         List<ActionButton> actionButtons = new ArrayList<>();
-        for (StringHolder objectKey : section.getKeys(false)) {
-            ActionButton actionButton = createActionButton("buttons" + "." + objectKey.str, context);
+        for (StringHolder objectKey : buttonsSection.getKeys(false)) {
+            ActionButton actionButton = createActionButton("buttons." + objectKey.str, buttonsSection.getConfigurationSection(objectKey.str), context);
             if (actionButton != null) {
                 actionButtons.add(actionButton);
             }
@@ -594,8 +641,7 @@ public class DialogScriptContainer extends ScriptContainer {
         return actionButtons;
     }
 
-    private ActionButton createActionButton(String path, TagContext context) {
-        YamlConfiguration section = getConfigurationSection(path);
+    private ActionButton createActionButton(String path, YamlConfiguration section, TagContext context) {
         if (section == null || !checkCondition(section, context)) {
             return null;
         }
@@ -618,43 +664,9 @@ public class DialogScriptContainer extends ScriptContainer {
         }
 
         DialogAction action = null;
-        String type = getString(section, "type", context);
-        if (type == null) {
-            type = "SCRIPT";
-        }
+        String type = getString(section, "type", context, "SCRIPT");
         switch (type) {
-            case "SCRIPT" -> {
-                List<ScriptEntry> entries = getEntries(context.getScriptEntryData(), path + ".script");
-                if (entries != null) {
-                    action = DialogAction.customClick((responseView, audience) -> {
-                        if (!entries.isEmpty()) {
-                            InstantQueue queue = new InstantQueue(getName());
-                            queue.addEntries(entries);
-                            queue.definitions = context.definitionProvider.getAllDefinitions().duplicate();
-                            queue.setContextSource(name -> {
-                                if (name.equals("connection")) {
-                                    UUID uuid = audience.get(Identity.UUID).orElse(null);
-                                    if (uuid != null) {
-                                        return new ConnectionTag(ConnectionTag.activeConnections.get(uuid));
-                                    }
-                                }
-                                InputType inputType = keys.get(name);
-                                if (inputType == null) return null;
-                                return switch (inputType) {
-                                    case TEXT, SINGLE -> new ElementTag(responseView.getText(name));
-                                    case BOOLEAN -> new ElementTag(Boolean.TRUE.equals(responseView.getBoolean(name)));
-                                    case NUMBER -> {
-                                        Float value = responseView.getFloat(name);
-                                        yield value != null ? new ElementTag(value) : null;
-                                    }
-                                };
-                            });
-
-                            queue.start(true);
-                        }
-                    }, options);
-                }
-            }
+            case "SCRIPT" -> action = DialogAction.customClick(buttonKey(path), null);
             case "RUN_COMMAND" -> {
                 String command = getString(section, "command", context);
                 if (command != null) {
@@ -845,4 +857,37 @@ public class DialogScriptContainer extends ScriptContainer {
     private String getString(YamlConfiguration config, String path, TagContext context) {
         return getString(config, path, context, null);
     }
+
+    public static List<ScriptEntry> cleanDup(ScriptEntryData data, ScriptEntrySet set) {
+        if (set == null) {
+            return null;
+        }
+        set = set.duplicate();
+        for (ScriptEntry entry : set.entries) {
+            entry.entryData = data.clone();
+            entry.updateContext();
+            entry.entryData.scriptEntry = entry;
+        }
+        return set.entries;
+    }
+
+    public List<ScriptEntry> getEntries(YamlConfiguration section, ScriptEntryData data, String path) {
+        if (path == null) {
+            path = "script";
+        }
+        return cleanDup(data, getSetFor(section, path));
+    }
+
+    public ScriptEntrySet getSetFor(YamlConfiguration section, String path) {
+        List<Object> stringEntries = section.getList(path);
+        if (stringEntries == null || stringEntries.isEmpty()) {
+            return null;
+        }
+        List<ScriptEntry> entries = ScriptBuilder.buildScriptEntries(stringEntries, this, null);
+        if (entries == null) {
+            return null;
+        }
+        return new ScriptEntrySet(entries);
+    }
+
 }

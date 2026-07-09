@@ -14,7 +14,7 @@ public abstract class NMSHandler {
     public static Object entityHelper;
     public static BiomeHelper biomeHelper;
 
-    private static final List<String> SUPPORTED_VERSIONS = List.of("1.21", "26.1");
+    private static final List<String> SUPPORTED_VERSIONS = List.of("1.21", "26.1", "26.2");
 
     private static Optional<String> getNMSPackageVersion(String bukkitVersion) {
         return SUPPORTED_VERSIONS.stream()
@@ -40,7 +40,7 @@ public abstract class NMSHandler {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.echoError(e);
         }
 
         return false;

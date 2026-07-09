@@ -5,7 +5,6 @@ plugins {
 
 dependencies {
     compileOnly("com.denizenscript:denizen:1.3.2-SNAPSHOT")
-    compileOnly("io.papermc.paper:paper-api:26.1.2.build.9-alpha")
 
     compileOnly("net.skinsrestorer:skinsrestorer-api:15.11.0")
     compileOnly("io.github.toxicity188:bettermodel-bukkit-api:3.0.1")

@@ -6,6 +6,7 @@ import com.denizenscript.denizencore.objects.ObjectFetcher;
 import com.isnsest.denizenutilities.extensions.commands.ShowDialogCommand;
 import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
 import com.isnsest.denizenutilities.extensions.events.PlayerConnectionConfigureEvent;
+import com.isnsest.denizenutilities.extensions.events.PlayerCustomClickScriptEvent;
 import com.isnsest.denizenutilities.extensions.objects.ConnectionTag;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,10 +36,11 @@ public class DenizenUtilities extends JavaPlugin {
 
         // Events
         ScriptEvent.registerScriptEvent(PlayerConnectionConfigureEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerCustomClickScriptEvent.class);
         //
 
         // Objects
-        ObjectFetcher.registerWithObjectFetcher(ConnectionTag.class, ConnectionTag.tagProcessor);
+        ObjectFetcher.registerWithObjectFetcher(ConnectionTag.class, ConnectionTag.tagProcessor).setAsNOtherCode();
         //
     }
 

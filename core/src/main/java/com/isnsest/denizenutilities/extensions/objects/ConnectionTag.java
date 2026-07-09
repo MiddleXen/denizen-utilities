@@ -5,30 +5,40 @@ import com.denizenscript.denizencore.objects.Fetchable;
 import com.denizenscript.denizencore.objects.Mechanism;
 import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
-import com.denizenscript.denizencore.scripts.ScriptRegistry;
+import com.denizenscript.denizencore.objects.core.ScriptTag;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
-import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.isnsest.denizenutilities.Compatibility;
 import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
 import com.isnsest.denizenutilities.extensions.events.PlayerConnectionConfigureEvent;
+import io.papermc.paper.connection.PlayerCommonConnection;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
-import io.papermc.paper.dialog.Dialog;
+import io.papermc.paper.connection.PlayerGameConnection;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("UnstableApiUsage")
 public class ConnectionTag implements ObjectTag, Adjustable {
 
-    private final PlayerConfigurationConnection connection;
+    private final PlayerCommonConnection connection;
+    private UUID uuid;
 
-    public static Map<UUID, PlayerConfigurationConnection> activeConnections = new ConcurrentHashMap<>();
+    public static Map<UUID, PlayerCommonConnection> activeConnections = new ConcurrentHashMap<>();
 
-    public ConnectionTag(PlayerConfigurationConnection connection) {
+    public ConnectionTag(PlayerCommonConnection connection) {
         this.connection = connection;
+
+        if (connection instanceof io.papermc.paper.connection.PlayerGameConnection gameConn) {
+            this.uuid = gameConn.getPlayer().getUniqueId();
+        } else if (connection instanceof io.papermc.paper.connection.PlayerConfigurationConnection configConn) {
+            this.uuid = configConn.getProfile().getId();
+        }
     }
 
     @Fetchable("connection")
@@ -43,9 +53,12 @@ public class ConnectionTag implements ObjectTag, Adjustable {
 
         try {
             UUID uuid = UUID.fromString(string);
-            PlayerConfigurationConnection conn = activeConnections.get(uuid);
+            var conn = activeConnections.get(uuid);
             if (conn != null) {
                 return new ConnectionTag(conn);
+            } else {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player != null) return new ConnectionTag(player.getConnection());
             }
         }
         catch (IllegalArgumentException ignored) {
@@ -60,7 +73,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
 
     @Override
     public String identify() {
-        return "connection@" + connection.getProfile().getId();
+        return "connection@" + uuid;
     }
 
     @Override
@@ -82,7 +95,7 @@ public class ConnectionTag implements ObjectTag, Adjustable {
 
     @Override
     public boolean isUnique() {
-        return false;
+        return true;
     }
 
     @Override
@@ -93,43 +106,47 @@ public class ConnectionTag implements ObjectTag, Adjustable {
 
     public static ObjectTagProcessor<ConnectionTag> tagProcessor = new ObjectTagProcessor<>();
 
-    @Override
-    public ObjectTag getObjectAttribute(Attribute attribute) {
-        return tagProcessor.getObjectAttribute(this, attribute);
-    }
-
     public static void register() {
+
+        // <--[tag]
+        // @attribute <ConnectionTag.is_connected>
+        // @returns ElementTag(Boolean)
+        // @plugin denizen-utilities
+        // @description
+        // Returns whether this connection is currently open and active.
+        // -->
+        tagProcessor.registerTag(ElementTag.class, "is_connected", (_, object) -> new ElementTag(object.connection.isConnected()));
 
         // <--[tag]
         // @attribute <ConnectionTag.uuid>
         // @returns ElementTag
-        // @plugin denizen-utilities, Paper
+        // @plugin denizen-utilities
         // @description
         // Returns the UUID of the player profile associated with this connection.
         // -->
-        tagProcessor.registerStaticTag(ElementTag.class, "uuid", (_, object) -> {
-            UUID uuid = object.connection.getProfile().getId();
-            if (uuid != null) {
-                return new ElementTag(uuid.toString());
-            }
-            return null;
-        });
+        tagProcessor.registerStaticTag(ElementTag.class, "uuid", (_, object) ->
+                new ElementTag(object.uuid.toString()));
 
         // <--[tag]
         // @attribute <ConnectionTag.name>
         // @returns ElementTag
-        // @plugin denizen-utilities, Paper
+        // @plugin denizen-utilities
         // @description
         // Returns the name of the player profile associated with this connection.
         // -->
         tagProcessor.registerStaticTag(ElementTag.class, "name", (_, object) -> {
-            return new ElementTag(object.connection.getProfile().getName());
+            if (object.connection instanceof PlayerConfigurationConnection connection) {
+                return new ElementTag(connection.getProfile().getName());
+            } else if (object.connection instanceof PlayerGameConnection connection) {
+                return new ElementTag(connection.getPlayer().getName());
+            }
+            return null;
         });
 
         // <--[mechanism]
         // @object ConnectionTag
         // @name disconnect
-        // @plugin denizen-utilities, Paper
+        // @plugin denizen-utilities
         // @input ElementTag
         // @description
         // Disconnects the connection with a specified reason. Supports Paper-formatted text (MiniMessage/Legacy).
@@ -141,58 +158,82 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // <--[mechanism]
         // @object ConnectionTag
         // @name connect
-        // @plugin denizen-utilities, Paper
+        // @plugin denizen-utilities
         // @input None
         // @description
         // Confirms the connection and allows the player to continue the login process.
         // Use this to finish the configuration stage once your requirements are met.
         // -->
         tagProcessor.registerMechanism("connect", false, (object, _) -> {
-            UUID uuid = object.connection.getProfile().getId();
             Map<UUID, CompletableFuture<Boolean>> list = PlayerConnectionConfigureEvent.awaitingResponse;
-            if (list.containsKey(uuid)) {
-                list.get(uuid).complete(true);
+            if (list.containsKey(object.uuid)) {
+                list.get(object.uuid).complete(true);
+            }
+        });
+
+        // <--[mechanism]
+        // @object ConnectionTag
+        // @name reconfigure
+        // @plugin denizen-utilities
+        // @input None
+        // @description
+        // Completes the configuration for this player, which will cause this player to reenter the game.
+        // Note: this should only be called if you are reconfiguring the player.
+        // -->
+        tagProcessor.registerMechanism("reconfigure", false, (object, _) -> {
+            if (object.connection instanceof PlayerConfigurationConnection connection) {
+                connection.completeReconfiguration();
+            } else if (object.connection instanceof PlayerGameConnection connection) {
+                connection.reenterConfiguration();
             }
         });
 
         // <--[mechanism]
         // @object ConnectionTag
         // @name close_dialog
-        // @plugin denizen-utilities, Paper
+        // @plugin denizen-utilities
         // @input None
         // @description
         // Closes any currently open dialog for this connection.
         // -->
         tagProcessor.registerMechanism("close_dialog", false, (object, _) -> {
-            object.connection.getAudience().closeDialog();
+            if (object.connection instanceof PlayerConfigurationConnection connection) {
+                connection.getAudience().closeDialog();
+            } else if (object.connection instanceof PlayerGameConnection connection) {
+                connection.getPlayer().closeDialog();
+            }
         });
 
         // <--[mechanism]
         // @object ConnectionTag
         // @name show_dialog
-        // @plugin denizen-utilities, Paper
+        // @plugin denizen-utilities
         // @input ElementTag
         // @description
         // Shows a specific dialog to the connection using the name of a Dialog script container.
         // -->
-        tagProcessor.registerMechanism("show_dialog", false, ElementTag.class, (object, mechanism, input) -> {
-            DialogScriptContainer container = ScriptRegistry.getScriptContainer(input.toString());
-            Dialog dialog = container.getDialogFrom(mechanism.context);
-            if (dialog == null) {
-                Debug.log("Failed to show dialog.");
+        tagProcessor.registerMechanism("show_dialog", false, ScriptTag.class, (object, mechanism, input) -> {
+            if (input.getContainer() instanceof DialogScriptContainer container) {
+                container.showTo(object.connection, mechanism.context);
                 return;
             }
-            object.connection.getAudience().showDialog(dialog);
+            mechanism.echoError("Invalid script '" + input.getName()
+                    + "' for mechanism 'show_dialog': must be a dialog script container.");
         });
     }
 
     @Override
-    public void adjust(Mechanism mechanism) {
-        tagProcessor.processMechanism(this, mechanism);
+    public ObjectTag getObjectAttribute(Attribute attribute) {
+        return tagProcessor.getObjectAttribute(this, attribute);
     }
 
     @Override
     public void applyProperty(Mechanism mechanism) {
+        mechanism.echoError("Cannot apply properties to a connection!");
+    }
+
+    @Override
+    public void adjust(Mechanism mechanism) {
         tagProcessor.processMechanism(this, mechanism);
     }
 

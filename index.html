@@ -219,6 +219,7 @@
     <div class="nav-group">
         <div class="nav-label">Events</div>
         <a class="nav-item" data-tab="tab-event-connection">Player Connect Configure</a>
+        <a class="nav-item" data-tab="tab-event-click">Player Custom Click</a>
     </div>
 
     <div class="nav-group">
@@ -376,6 +377,11 @@
   <span class="s-k">inputs:</span> <span class="s-v">...</span>
   <span class="s-k">buttons:</span> <span class="s-v">...</span></pre>
             </div>
+
+            <h2>Dynamic Generation (Procedural)</h2>
+            <p>You can define a <code>procedural:</code> script section at the root of the container. This executes a Denizen queue in parallel when opening the dialog, allowing you to dynamically construct and determine maps for <code>inputs</code>, <code>bodies</code>, or <code>buttons</code>.</p>
+            <p>Any statically defined elements in the dialog container (such as a static submit button) will be cleanly merged with your procedurally generated maps.</p>
+            <p><em>Note: You can naturally use click-time tags like <code>&lt;context.connection&gt;</code> or <code>&lt;context.button_id&gt;</code> inside your dynamic scripts; they are automatically escaped at load-time to prevent premature execution.</em></p>
 
             <h2>Universal Base Properties</h2>
             <div class="spec-container">
@@ -611,7 +617,17 @@
 
             <h2>Action Types (type:)</h2>
             <div class="spec-container">
-                <div class="spec-row"><div class="spec-key"><span class="name-label">SCRIPT</span></div><div class="spec-val"><strong>Key:</strong> <code>script:</code>. Runs Denizen commands.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">SCRIPT</span></div>
+                    <div class="spec-val">
+                        <strong>Key:</strong> <code>script:</code>. Runs Denizen commands.<br><br>
+                        <strong>Available Contexts:</strong><br>
+                        <code>&lt;context.connection&gt;</code> - The ConnectionTag of the player.<br>
+                        <code>&lt;context.button_id&gt;</code> - The ID of the clicked button.<br>
+                        <code>&lt;context.namespace&gt;</code> - The namespace (e.g. 'denizen').<br>
+                        <code>&lt;context.inputs&gt;</code> - MapTag of all active inputs.<br>
+                        <code>&lt;context.[input_id]&gt;</code> - Directly access typed value of an input field.<br>
+                    </div>
+                </div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">RUN_COMMAND</span></div><div class="spec-val"><strong>Key:</strong> <code>command:</code>. Runs a player command. <b>Must include slash (/)</b>.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">OPEN_URL</span></div><div class="spec-val"><strong>Key:</strong> <code>url:</code>. Opens a link.</div></div>
                 <div class="spec-row"><div class="spec-key"><span class="name-label">COPY_TO_CLIPBOARD</span></div><div class="spec-val"><strong>Key:</strong> <code>text:</code>. Copies text.</div></div>
@@ -669,13 +685,18 @@
         <div id="tab-event-connection" class="tab-panel">
             <div class="breadcrumb">Events <i class="fas fa-chevron-right"></i> <span>Player Connection Configure</span></div>
             <h1>player connection configure</h1>
+            <div class="signature"><span class="sig-return">on</span> player connection configure:</div>
             <p class="subtitle">Triggers when a player's connection is being configured (Paper specific).</p>
 
             <h2>Contexts</h2>
             <div class="spec-container">
                 <div class="spec-row">
-                    <div class="spec-key"><span class="name-label">&lt;context.connection&gt;</span></div>
+                    <div class="spec-key"><span class="name-label">&lt;context.connection&gt;</span><span class="badge b-tag">ConnectionTag</span></div>
                     <div class="spec-val">Returns the <code>ConnectionTag</code> associated with the joining player.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;context.reflect_event&gt;</span><span class="badge b-tag">JavaReflectedObjectTag</span></div>
+                    <div class="spec-val">Returns a JavaReflectedObjectTag of the raw internal event.</div>
                 </div>
             </div>
 
@@ -683,8 +704,37 @@
             <div class="spec-container">
                 <div class="spec-row">
                     <div class="spec-key"><span class="name-label">WAIT</span><span class="badge b-det">Determine</span></div>
-                    <div class="spec-val">Delays the configuration process for up to 1 minute. During this time, you can show Dialogs or process backend tasks. If not finished manually via <code>connect</code> mechanism within 1 minute, the connection will be dropped.</div>
+                    <div class="spec-val">Delays the configuration process for up to 1 minute. During this time, you can show Dialogs or process backend tasks. If not finished manually via the <code>connect</code> mechanism within 1 minute, the connection will be dropped.</div>
                 </div>
+            </div>
+        </div>
+
+        <div id="tab-event-click" class="tab-panel">
+            <div class="breadcrumb">Events <i class="fas fa-chevron-right"></i> <span>Player Custom Click</span></div>
+            <h1>player custom click</h1>
+            <div class="signature"><span class="sig-return">on</span> player custom click:</div>
+            <p class="subtitle">Triggers when a player clicks a button in a PaperMC Dialog UI.</p>
+
+            <h3>Switches</h3>
+            <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">button_id:&lt;id&gt;</span></div>
+                    <div class="spec-val">Only process the event if the clicked button's ID matches the given text.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">namespace:&lt;name&gt;</span></div>
+                    <div class="spec-val">Only process the event if the dialog's namespace matches the given text (e.g. 'denizen').</div>
+                </div>
+            </div>
+
+            <h3>Contexts</h3>
+            <div class="spec-container">
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;context.connection&gt;</span><span class="badge b-tag">ConnectionTag</span></div><div class="spec-val">Returns the ConnectionTag of the player who clicked.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;context.button_id&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the ID of the button that was clicked.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;context.namespace&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the namespace of the dialog (e.g. 'denizen').</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;context.inputs&gt;</span><span class="badge b-tag">MapTag</span></div><div class="spec-val">Returns a MapTag of all inputs and their current values.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;context.[input_key]&gt;</span><span class="badge b-tag">ElementTag</span></div><div class="spec-val">Returns the specific value of a dialog input directly by its key.</div></div>
+                <div class="spec-row"><div class="spec-key"><span class="name-label">&lt;context.reflect_event&gt;</span><span class="badge b-tag">JavaReflectedObjectTag</span></div><div class="spec-val">Returns the underlying <code>PlayerCustomClickEvent</code>.</div></div>
             </div>
         </div>
 
@@ -697,24 +747,26 @@
             <h2>Tags</h2>
             <div class="spec-container">
                 <div class="spec-row">
-                    <div class="spec-key"><span class="name-label">&lt;BiomeTag.sky_color&gt;</span></div>
-                    <div class="spec-val">Returns the <code>ColorTag</code> of the biome's sky color.</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-key"><span class="name-label">&lt;BiomeTag.sky_light_color&gt;</span></div>
-                    <div class="spec-val">Returns the <code>ColorTag</code> of the biome's skylight color.</div>
+                    <div class="spec-key"><span class="name-label">&lt;BiomeTag.attribute[&lt;name&gt;]&gt;</span></div>
+                    <div class="spec-val">
+                        Returns the value of the specified environment attribute for this biome.<br>
+                        Valid attribute names correspond to the Minecraft EnvironmentAttributes API.<br>
+                        See: <a href="https://minecraft.wiki/w/Environment_attribute" style="color:var(--accent)">Environment_attribute</a>.<br>
+                        Example: <code>&lt;player.location.biome.attribute[sky_color]&gt;</code>
+                    </div>
                 </div>
             </div>
 
             <h2>Mechanisms</h2>
             <div class="spec-container">
                 <div class="spec-row">
-                    <div class="spec-key"><span class="name-label">sky_color</span><span class="badge b-req">Input: ColorTag</span></div>
-                    <div class="spec-val">Sets the biome's sky color permanently.</div>
-                </div>
-                <div class="spec-row">
-                    <div class="spec-key"><span class="name-label">sky_light_color</span><span class="badge b-req">Input: ColorTag</span></div>
-                    <div class="spec-val">Sets the biome's skylight color permanently.</div>
+                    <div class="spec-key"><span class="name-label">attribute</span><span class="badge b-req">Input: MapTag</span></div>
+                    <div class="spec-val">
+                        Sets one or more environment attributes for this biome.<br>
+                        Valid attribute names correspond to the Minecraft EnvironmentAttributes API.<br>
+                        See: <a href="https://minecraft.wiki/w/Environment_attribute" style="color:var(--accent)">Environment_attribute</a>.<br>
+                        Example: <code>- adjust &lt;biome[plains]&gt; attribute:[sky_color=red;fog_color=&lt;color[green]&gt;]</code>
+                    </div>
                 </div>
             </div>
         </div>
@@ -726,6 +778,10 @@
 
             <h2>Tags</h2>
             <div class="spec-container">
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">&lt;ConnectionTag.is_connected&gt;</span></div>
+                    <div class="spec-val">Returns whether this connection is currently open and active.</div>
+                </div>
                 <div class="spec-row">
                     <div class="spec-key"><span class="name-label">&lt;ConnectionTag.uuid&gt;</span></div>
                     <div class="spec-val">Returns the <code>ElementTag</code> containing the player profile's UUID associated with this connection.</div>
@@ -740,14 +796,18 @@
             <div class="spec-container">
                 <div class="spec-row">
                     <div class="spec-key"><span class="name-label">connect</span><span class="badge b-opt">Input: None</span></div>
-                    <div class="spec-val">Confirms the connection and allows the player to continue the login process.</div>
+                    <div class="spec-val">Confirms the connection and allows the player to continue the login process. Use this to finish the configuration stage once your requirements are met.</div>
                 </div>
                 <div class="spec-row">
                     <div class="spec-key"><span class="name-label">disconnect</span><span class="badge b-req">Input: ElementTag</span></div>
                     <div class="spec-val">Disconnects the connection with a specified reason. Supports Paper-formatted text.</div>
                 </div>
                 <div class="spec-row">
-                    <div class="spec-key"><span class="name-label">show_dialog</span><span class="badge b-req">Input: ElementTag</span></div>
+                    <div class="spec-key"><span class="name-label">reconfigure</span><span class="badge b-opt">Input: None</span></div>
+                    <div class="spec-val">Completes the configuration for this player, which will cause this player to reenter the game. Note: this should only be called if you are reconfiguring the player.</div>
+                </div>
+                <div class="spec-row">
+                    <div class="spec-key"><span class="name-label">show_dialog</span><span class="badge b-req">Input: ScriptTag</span></div>
                     <div class="spec-val">Shows a specific dialog to the connection using the exact name of a Dialog script container.</div>
                 </div>
                 <div class="spec-row">

@@ -1,7 +1,12 @@
 package com.isnsest.denizenutilities.extensions.properties;
 
+import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.denizenscript.denizencore.objects.core.MapTag;
+import com.denizenscript.denizencore.utilities.text.StringHolder;
 import com.isnsest.denizenutilities.nms.NMSHandler;
-import com.denizenscript.denizencore.objects.core.ColorTag;
+
+import java.util.Map;
 
 import static com.denizenscript.denizen.objects.BiomeTag.tagProcessor;
 
@@ -9,69 +14,38 @@ public class BiomeExtensions {
 
     public static void register() {
         // <--[tag]
-        // @attribute <BiomeTag.sky_color>
-        // @returns ColorTag
+        // @attribute <BiomeTag.attribute[<name>]>
+        // @returns ObjectTag
         // @plugin denizen-utilities
-        // @mechanism BiomeTag.sky_color
         // @description
-        // Returns the biome's sky color.
-        // @example
-        // # Sends the player a message in their current biome's sky color.
-        // - narrate "You are currently seeing sky that looks like <&color[<player.location.biome.sky_color>]>this!"
+        // Returns the value of the specified environment attribute for this biome.
+        //
+        // See: <@link url https://minecraft.wiki/w/Environment_attribute>
+        //
+        // Example: <player.location.biome.attribute[sky_color]>
         // -->
-        tagProcessor.registerTag(ColorTag.class, "sky_color", (_, object) -> {
-            return ColorTag.fromRGB(NMSHandler.biomeHelper.getSkyColor(object.getBiome()));
-        });
-
-        // <--[tag]
-        // @attribute <BiomeTag.sky_light_color>
-        // @returns ColorTag
-        // @plugin denizen-utilities
-        // @mechanism BiomeTag.sky_light_color
-        // @description
-        // Returns the biome's skylight color.
-        // @example
-        // # Sends the player a message in their current biome's skylight color.
-        // - narrate "You are currently seeing skylight that looks like <&color[<player.location.biome.sky_light_color>]>this!"
-        // -->
-        tagProcessor.registerTag(ColorTag.class, "sky_light_color", (_, object) -> {
-            return ColorTag.fromRGB(NMSHandler.biomeHelper.getSkyLightColor(object.getBiome()));
-        });
+        tagProcessor.registerTag(ObjectTag.class, ElementTag.class, "attribute", (_, object, input) ->
+                NMSHandler.biomeHelper.getAttribute(object.getBiome(), input.asString()));
 
         // <--[mechanism]
         // @object BiomeTag
-        // @name sky_color
+        // @name attribute
+        // @input MapTag
         // @plugin denizen-utilities
-        // @input ColorTag
         // @description
-        // Sets the biome's sky color.
-        // @tags
-        // <BiomeTag.sky_color>
-        // @example
-        // # Makes the plains biome's sky color red permanently, using a server start event to keep it applied.
-        // on server start:
-        // - adjust <biome[plains]> sky_color:red
+        // Sets one or more environment attributes for this biome.
+        // The input must be a MapTag where the keys are the attribute names and the values are the new data.
+        //
+        // See: <@link url https://minecraft.wiki/w/Environment_attribute>
+        //
+        // Example:
+        // # Changes the plains biome to have a red sky and green fog.
+        // - adjust <biome[plains]> attribute:[sky_color=red;fog_color=<color[green]>]
         // -->
-        tagProcessor.registerMechanism("sky_color", false, ColorTag.class, (object, _, input) -> {
-            NMSHandler.biomeHelper.setSkyColor(object.getBiome(), input.asRGB());
-        });
-
-        // <--[mechanism]
-        // @object BiomeTag
-        // @name sky_light_color
-        // @plugin denizen-utilities
-        // @input ColorTag
-        // @description
-        // Sets the biome's skylight color.
-        // @tags
-        // <BiomeTag.sky_light_color>
-        // @example
-        // # Makes the plains biome's skylight color red permanently, using a server start event to keep it applied.
-        // on server start:
-        // - adjust <biome[plains]> sky_light_color:red
-        // -->
-        tagProcessor.registerMechanism("sky_light_color", false, ColorTag.class, (object, _, input) -> {
-            NMSHandler.biomeHelper.setSkyLightColor(object.getBiome(), input.asRGB());
+        tagProcessor.registerMechanism("attribute", false, MapTag.class, (object, _, input) -> {
+            for (Map.Entry<StringHolder, ObjectTag> entry : input.entrySet()) {
+                NMSHandler.biomeHelper.setAttribute(object.getBiome(), entry.getKey().str, entry.getValue());
+            }
         });
     }
 }
