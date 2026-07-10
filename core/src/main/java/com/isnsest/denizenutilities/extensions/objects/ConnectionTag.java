@@ -151,9 +151,8 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         // @description
         // Disconnects the connection with a specified reason. Supports Paper-formatted text (MiniMessage/Legacy).
         // -->
-        tagProcessor.registerMechanism("disconnect", false, ElementTag.class, (object, mechanism, input) -> {
-            object.connection.disconnect(Compatibility.get().parse(input.toString()));
-        });
+        tagProcessor.registerMechanism("disconnect", false, ElementTag.class, (object, _, input) ->
+                object.connection.disconnect(Compatibility.get().parse(input.toString())));
 
         // <--[mechanism]
         // @object ConnectionTag
