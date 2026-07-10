@@ -2,6 +2,7 @@ package com.isnsest.denizenutilities.extensions.events;
 
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectTag;
+import com.denizenscript.denizencore.objects.core.DurationTag;
 import com.denizenscript.denizencore.objects.core.JavaReflectedObjectTag;
 import com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent;
 import com.isnsest.denizenutilities.DenizenUtilities;
@@ -36,7 +37,7 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
     // <context.connection> returns the ConnectionTag.
     //
     // @Determine
-    // "WAIT" to delay the configuration process for up to 1 minute.
+    // "WAIT:" + DurationTag to delay the configuration process (e.g., "WAIT:1m").
     //
     // @Plugin denizen-utilities
     //
@@ -45,13 +46,12 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
     public static final Map<UUID, CompletableFuture<Boolean>> awaitingResponse = new ConcurrentHashMap<>();
 
     public AsyncPlayerConnectionConfigureEvent event;
-    public String determination = null;
+    public Long timeout;
 
     public PlayerConnectionConfigureEvent() {
         registerCouldMatcher("player connection configure");
-        this.<PlayerConnectionConfigureEvent, ObjectTag>registerDetermination(null, ObjectTag.class, (evt, _, output) -> {
-            evt.determination = output.toString();
-        });
+        this.<PlayerConnectionConfigureEvent, DurationTag>registerDetermination("WAIT", DurationTag.class, (evt, _, output) ->
+                evt.timeout = output.getMillis());
     }
 
     @Override
@@ -86,12 +86,12 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
         PlayerConnectionConfigureEvent altEvent = (PlayerConnectionConfigureEvent) this.clone();
 
         altEvent.event = event;
-        altEvent.determination = null;
-        String determination = ((PlayerConnectionConfigureEvent) altEvent.fire()).determination;
+        altEvent.timeout = null;
+        Long timeout = ((PlayerConnectionConfigureEvent) altEvent.fire()).timeout;
 
-        if ("WAIT".equalsIgnoreCase(determination)) {
+        if (timeout != null) {
             CompletableFuture<Boolean> response = new CompletableFuture<>();
-            response.completeOnTimeout(false, 1, TimeUnit.MINUTES);
+            response.completeOnTimeout(false, timeout, TimeUnit.MILLISECONDS);
 
             awaitingResponse.put(uniqueId, response);
 
