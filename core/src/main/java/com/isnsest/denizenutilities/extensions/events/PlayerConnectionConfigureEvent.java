@@ -86,24 +86,22 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
         PlayerConnectionConfigureEvent altEvent = (PlayerConnectionConfigureEvent) this.clone();
 
         altEvent.event = event;
-        altEvent.timeout = null;
+        altEvent.timeout = 1000L;
         Long timeout = ((PlayerConnectionConfigureEvent) altEvent.fire()).timeout;
 
-        if (timeout != null) {
-            CompletableFuture<Boolean> response = new CompletableFuture<>();
-            response.completeOnTimeout(false, timeout, TimeUnit.MILLISECONDS);
+        CompletableFuture<Boolean> response = new CompletableFuture<>();
+        response.completeOnTimeout(false, timeout, TimeUnit.MILLISECONDS);
 
-            awaitingResponse.put(uniqueId, response);
+        awaitingResponse.put(uniqueId, response);
 
-            Audience audience = connection.getAudience();
+        Audience audience = connection.getAudience();
 
-            if (!response.join()) {
-                audience.closeDialog();
-                connection.disconnect(Component.empty());
-            }
-
-            awaitingResponse.remove(uniqueId);
+        if (!response.join()) {
+            audience.closeDialog();
+            connection.disconnect(Component.empty());
         }
+
+        awaitingResponse.remove(uniqueId);
     }
 
     @EventHandler

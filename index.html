@@ -703,8 +703,8 @@
             <h2>Determinations</h2>
             <div class="spec-container">
                 <div class="spec-row">
-                    <div class="spec-key"><span class="name-label">WAIT</span><span class="badge b-det">Determine</span></div>
-                    <div class="spec-val">Delays the configuration process for up to 1 minute. During this time, you can show Dialogs or process backend tasks. If not finished manually via the <code>connect</code> mechanism within 1 minute, the connection will be dropped.</div>
+                    <div class="spec-key"><span class="name-label">WAIT:&lt;DurationTag&gt;</span><span class="badge b-det">Determine</span></div>
+                    <div class="spec-val">Delays the configuration process by the specified duration (e.g. <code>WAIT:1m</code>). During this time, you can show Dialogs or process backend tasks. If the process is not finished manually via the <code>connect</code> mechanism within this timeframe, the connection will be dropped.</div>
                 </div>
             </div>
         </div>
