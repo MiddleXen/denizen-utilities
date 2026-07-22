@@ -337,13 +337,13 @@
                 Events <i class="fas fa-chevron-right chevron" id="icon-sub-lb-evt"></i>
             </button>
             <div class="sub-folder-content" id="sub-lb-evt">
-                <a class="nav-item" data-tab="tab-lb-evt-bans">litebans bans player</a>
-                <a class="nav-item" data-tab="tab-lb-evt-unbans">litebans unbans player</a>
-                <a class="nav-item" data-tab="tab-lb-evt-mutes">itebans mutes player</a>
-                <a class="nav-item" data-tab="tab-lb-evt-unmutes">litebans unmutes player</a>
-                <a class="nav-item" data-tab="tab-lb-evt-kicks">litebans kicks player</a>
-                <a class="nav-item" data-tab="tab-lb-evt-warns">litebans warns player</a>
-                <a class="nav-item" data-tab="tab-lb-evt-broadcast">litebans broadcast sent</a>
+                <a class="nav-item" data-tab="tab-lb-evt-bans">on litebans bans player</a>
+                <a class="nav-item" data-tab="tab-lb-evt-unbans">on litebans unbans player</a>
+                <a class="nav-item" data-tab="tab-lb-evt-mutes">on litebans mutes player</a>
+                <a class="nav-item" data-tab="tab-lb-evt-unmutes">on litebans unmutes player</a>
+                <a class="nav-item" data-tab="tab-lb-evt-kicks">on litebans kicks player</a>
+                <a class="nav-item" data-tab="tab-lb-evt-warns">on litebans warns player</a>
+                <a class="nav-item" data-tab="tab-lb-evt-broadcast"> on litebans sent broadcast </a>
             </div>
         </div>
     </div>
@@ -1492,9 +1492,9 @@
         </div>
 
         <div id="tab-lb-evt-broadcast" class="tab-panel">
-            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> LiteBans <i class="fas fa-chevron-right"></i> Events <i class="fas fa-chevron-right"></i> <span>litebans broadcast sent</span></div>
-            <h1>litebans broadcast sent</h1>
-            <div class="signature"><span class="sig-return">on</span> litebans broadcast sent:</div>
+            <div class="breadcrumb">Bridges <i class="fas fa-chevron-right"></i> LiteBans <i class="fas fa-chevron-right"></i> Events <i class="fas fa-chevron-right"></i> <span>litebans sent broadcast</span></div>
+            <h1>litebans sent broadcast</h1>
+            <div class="signature"><span class="sig-return">on</span> litebans sent broadcast:</div>
             <p class="subtitle">Triggers whenever LiteBans sends a broadcast message to permitted players, for any punishment type (ban, mute, kick, warn, and their removals).</p>
 
             <h3>Contexts</h3>
@@ -1505,12 +1505,6 @@
 
             <h3>Player Context</h3>
             <p>This event is not tied to a specific online player &mdash; there is no <code>&lt;player&gt;</code> context. Use this event to intercept and forward LiteBans' own broadcast text (e.g. to a Discord webhook), separately from the more granular <code>litebans bans player</code> / <code>litebans mutes player</code> / etc. events above.</p>
-
-            <div class="code-block">
-                <div class="code-header"><span class="code-title">Example usage</span></div>
-                <pre><span class="s-k">on</span> <span class="s-s">litebans broadcast sent:</span>
-  <span class="s-k">-</span> <span class="s-s">debug log "Broadcast (&lt;context.type&gt;): &lt;context.message&gt;"</span></pre>
-            </div>
         </div>
 
     </div>
