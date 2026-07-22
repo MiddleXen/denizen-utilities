@@ -45,7 +45,7 @@ public class DenizenUtilities extends JavaPlugin {
     }
 
     private void registerBridges() {
-        List<String> bridges = List.of("SkinsRestorer", "BetterModel", "DiscordSRV");
+        List<String> bridges = List.of("SkinsRestorer", "BetterModel", "DiscordSRV", "LiteBans");
         for (String name : bridges) {
             if (Bukkit.getPluginManager().isPluginEnabled(name)) {
                 try {
