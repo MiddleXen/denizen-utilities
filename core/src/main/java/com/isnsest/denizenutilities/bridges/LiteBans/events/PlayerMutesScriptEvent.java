@@ -8,45 +8,45 @@ import com.isnsest.denizenutilities.bridges.LiteBans.LiteBansUtils;
 import litebans.api.Entry;
 import org.bukkit.event.Listener;
 
-public class PlayerBannedScriptEvent extends ScriptEvent implements Listener {
+public class PlayerMutesScriptEvent extends ScriptEvent implements Listener {
 
     // <--[event]
     // @Events
-    // player banned
+    // litebans mutes player
     //
     // @Group denizen-utilities
     //
-    // @Triggers when a player is banned via LiteBans.
+    // @Triggers when a player is muted via LiteBans.
     //
     // @Context
-    // <context.reason> returns the ban reason.
-    // <context.executor> returns the name of the staff member who issued the ban.
-    // <context.executor_uuid> returns the UUID of the staff member who issued the ban, if available.
-    // <context.duration> returns the ban duration in milliseconds, or -1 if permanent.
+    // <context.reason> returns the mute reason.
+    // <context.executor> returns the name of the staff member who issued the mute.
+    // <context.executor_uuid> returns the UUID of the staff member who issued the mute, if available.
+    // <context.duration> returns the mute duration in milliseconds, or -1 if permanent.
     // <context.duration_string> returns a human-readable duration string.
-    // <context.permanent> returns whether the ban is permanent.
-    // <context.ip> returns the IP address if this is an IP ban.
-    // <context.ip_ban> returns whether this is an IP ban.
-    // <context.server_scope> returns the server scope of the ban.
-    // <context.id> returns the database ID of the ban entry.
-    // <context.uuid> returns the UUID of the banned player, if available.
+    // <context.permanent> returns whether the mute is permanent.
+    // <context.ip> returns the IP address if this is an IP mute.
+    // <context.ip_ban> returns whether this is an IP mute.
+    // <context.server_scope> returns the server scope of the mute.
+    // <context.id> returns the database ID of the mute entry.
+    // <context.uuid> returns the UUID of the muted player, if available.
     // <context.random_id> returns the random ID of the entry.
     // <context.template_name> returns the template name used, if any.
     // <context.has_template> returns whether a template was used.
     //
-    // @Player When the ban targets a UUID.
+    // @Player When the mute targets a UUID.
     //
     // @Plugin denizen-utilities, LiteBans
     //
     // -->
 
-    public static PlayerBannedScriptEvent instance;
+    public static PlayerMutesScriptEvent instance;
 
     public Entry entry;
 
-    public PlayerBannedScriptEvent() {
+    public PlayerMutesScriptEvent() {
         instance = this;
-        registerCouldMatcher("player banned");
+        registerCouldMatcher("litebans mutes player");
     }
 
     @Override

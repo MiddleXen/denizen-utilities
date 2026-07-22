@@ -21,10 +21,10 @@ public class LiteBansListener extends Events.Listener {
     public void entryAdded(Entry entry) {
         runSync(() -> {
             switch (entry.getType()) {
-                case "ban" -> PlayerBannedScriptEvent.instance.fire(entry);
-                case "mute" -> PlayerMutedScriptEvent.instance.fire(entry);
-                case "kick" -> PlayerKickedScriptEvent.instance.fire(entry);
-                case "warn" -> PlayerWarnedScriptEvent.instance.fire(entry);
+                case "ban" -> PlayerBansScriptEvent.instance.fire(entry);
+                case "mute" -> PlayerMutesScriptEvent.instance.fire(entry);
+                case "kick" -> PlayerKicksScriptEvent.instance.fire(entry);
+                case "warn" -> PlayerWarnsScriptEvent.instance.fire(entry);
             }
         });
     }
@@ -33,8 +33,8 @@ public class LiteBansListener extends Events.Listener {
     public void entryRemoved(Entry entry) {
         runSync(() -> {
             switch (entry.getType()) {
-                case "ban" -> PlayerUnbannedScriptEvent.instance.fire(entry);
-                case "mute" -> PlayerUnmutedScriptEvent.instance.fire(entry);
+                case "ban" -> PlayerUnbansScriptEvent.instance.fire(entry);
+                case "mute" -> PlayerUnmutesScriptEvent.instance.fire(entry);
             }
         });
     }

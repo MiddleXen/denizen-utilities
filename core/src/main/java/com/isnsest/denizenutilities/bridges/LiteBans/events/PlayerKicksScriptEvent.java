@@ -8,40 +8,39 @@ import com.isnsest.denizenutilities.bridges.LiteBans.LiteBansUtils;
 import litebans.api.Entry;
 import org.bukkit.event.Listener;
 
-public class PlayerWarnedScriptEvent extends ScriptEvent implements Listener {
+public class PlayerKicksScriptEvent extends ScriptEvent implements Listener {
 
     // <--[event]
     // @Events
-    // player warned
+    // litebans kicks player
     //
     // @Group denizen-utilities
     //
-    // @Triggers when a player receives a warning via LiteBans.
+    // @Triggers when a player is kicked via LiteBans.
     //
     // @Context
-    // <context.reason> returns the warning reason.
-    // <context.executor> returns the name of the staff member who issued the warning.
-    // <context.executor_uuid> returns the UUID of the staff member who issued the warning, if available.
-    // <context.server_scope> returns the server scope of the warning.
-    // <context.id> returns the database ID of the warning entry.
-    // <context.uuid> returns the UUID of the warned player, if available.
+    // <context.reason> returns the kick reason.
+    // <context.executor> returns the name of the staff member who issued the kick.
+    // <context.executor_uuid> returns the UUID of the staff member who issued the kick, if available.
+    // <context.ip> returns the IP address of the player, if available.
+    // <context.server_scope> returns the server scope of the kick.
+    // <context.id> returns the database ID of the kick entry.
+    // <context.uuid> returns the UUID of the kicked player, if available.
     // <context.random_id> returns the random ID of the entry.
-    // <context.template_name> returns the template name used, if any.
-    // <context.has_template> returns whether a template was used.
     //
-    // @Player When the warning targets a UUID.
+    // @Player When the kick targets a UUID.
     //
     // @Plugin denizen-utilities, LiteBans
     //
     // -->
 
-    public static PlayerWarnedScriptEvent instance;
+    public static PlayerKicksScriptEvent instance;
 
     public Entry entry;
 
-    public PlayerWarnedScriptEvent() {
+    public PlayerKicksScriptEvent() {
         instance = this;
-        registerCouldMatcher("player warned");
+        registerCouldMatcher("litebans kicks player");
     }
 
     @Override

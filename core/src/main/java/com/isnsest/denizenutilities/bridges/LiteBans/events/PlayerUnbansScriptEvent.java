@@ -8,42 +8,42 @@ import com.isnsest.denizenutilities.bridges.LiteBans.LiteBansUtils;
 import litebans.api.Entry;
 import org.bukkit.event.Listener;
 
-public class PlayerUnmutedScriptEvent extends ScriptEvent implements Listener {
+public class PlayerUnbansScriptEvent extends ScriptEvent implements Listener {
 
     // <--[event]
     // @Events
-    // player unmuted
+    // litebans unbans player
     //
     // @Group denizen-utilities
     //
-    // @Triggers when a player is unmuted via LiteBans.
+    // @Triggers when a player is unbanned via LiteBans.
     //
     // @Context
-    // <context.reason> returns the original mute reason.
-    // <context.executor> returns the name of the staff member who originally issued the mute.
-    // <context.executor_uuid> returns the UUID of the staff member who originally issued the mute, if available.
-    // <context.removed_by> returns the name of the staff member who removed the mute.
-    // <context.removal_reason> returns the reason for removing the mute, if provided.
-    // <context.ip> returns the IP address if this was an IP mute.
-    // <context.ip_ban> returns whether this was an IP mute.
-    // <context.server_scope> returns the server scope of the mute.
-    // <context.id> returns the database ID of the mute entry.
-    // <context.uuid> returns the UUID of the unmuted player, if available.
+    // <context.reason> returns the original ban reason.
+    // <context.executor> returns the name of the staff member who originally issued the ban.
+    // <context.executor_uuid> returns the UUID of the staff member who originally issued the ban, if available.
+    // <context.removed_by> returns the name of the staff member who removed the ban.
+    // <context.removal_reason> returns the reason for removing the ban, if provided.
+    // <context.ip> returns the IP address if this was an IP ban.
+    // <context.ip_ban> returns whether this was an IP ban.
+    // <context.server_scope> returns the server scope of the ban.
+    // <context.id> returns the database ID of the ban entry.
+    // <context.uuid> returns the UUID of the unbanned player, if available.
     // <context.random_id> returns the random ID of the entry.
     //
-    // @Player When the mute targeted a UUID.
+    // @Player When the ban targeted a UUID.
     //
     // @Plugin denizen-utilities, LiteBans
     //
     // -->
 
-    public static PlayerUnmutedScriptEvent instance;
+    public static PlayerUnbansScriptEvent instance;
 
     public Entry entry;
 
-    public PlayerUnmutedScriptEvent() {
+    public PlayerUnbansScriptEvent() {
         instance = this;
-        registerCouldMatcher("player unmuted");
+        registerCouldMatcher("litebans unbans player");
     }
 
     @Override

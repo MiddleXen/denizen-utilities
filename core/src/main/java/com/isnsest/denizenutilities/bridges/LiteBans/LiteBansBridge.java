@@ -13,12 +13,12 @@ public class LiteBansBridge {
         Events.get().register(listener);
 
         // Events
-        ScriptEvent.registerScriptEvent(PlayerBannedScriptEvent.class);
-        ScriptEvent.registerScriptEvent(PlayerUnbannedScriptEvent.class);
-        ScriptEvent.registerScriptEvent(PlayerMutedScriptEvent.class);
-        ScriptEvent.registerScriptEvent(PlayerUnmutedScriptEvent.class);
-        ScriptEvent.registerScriptEvent(PlayerKickedScriptEvent.class);
-        ScriptEvent.registerScriptEvent(PlayerWarnedScriptEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerBansScriptEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerUnbansScriptEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerMutesScriptEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerUnmutesScriptEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerKicksScriptEvent.class);
+        ScriptEvent.registerScriptEvent(PlayerWarnsScriptEvent.class);
         ScriptEvent.registerScriptEvent(LiteBansBroadcastScriptEvent.class);
         //
 
