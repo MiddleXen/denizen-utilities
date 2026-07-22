@@ -11,7 +11,7 @@ public class LiteBansBroadcastScriptEvent extends ScriptEvent implements Listene
 
     // <--[event]
     // @Events
-    // litebans broadcast sent
+    // litebans sent broadcast
     //
     // @Group denizen-utilities
     //
@@ -32,7 +32,7 @@ public class LiteBansBroadcastScriptEvent extends ScriptEvent implements Listene
 
     public LiteBansBroadcastScriptEvent() {
         instance = this;
-        registerCouldMatcher("litebans broadcast sent");
+        registerCouldMatcher("litebans sent broadcast");
     }
 
     @Override
