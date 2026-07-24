@@ -1,0 +1,3 @@
+fixes:
+  # Fix for Denizen 'fakeinternaldata' command on MC 1.21+
+  fakeinternaldata: false
