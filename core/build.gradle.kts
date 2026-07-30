@@ -9,6 +9,7 @@ dependencies {
     compileOnly("net.skinsrestorer:skinsrestorer-api:15.11.0")
     compileOnly("io.github.toxicity188:bettermodel-bukkit-api:3.0.1")
     compileOnly("com.discordsrv:discordsrv:1.28.0")
+    compileOnly("com.gitlab.ruany:LiteBansAPI:0.6.1")
 
     compileOnly(fileTree(projectDir.resolve("libs")) { include("*.jar") })
     paperweight.paperDevBundle("26.1.2.build.+")

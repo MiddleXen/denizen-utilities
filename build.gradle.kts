@@ -16,6 +16,7 @@ allprojects {
         maven("https://maven.citizensnpcs.co/repo")
         maven("https://repo.codemc.org/repository/maven-public/")
         maven("https://nexus.scarsz.me/content/groups/public/")
+        maven("https://jitpack.io")
     }
 }
 
