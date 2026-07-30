@@ -8,6 +8,8 @@ import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptEntryData;
 import litebans.api.Entry;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -21,8 +23,13 @@ public class LiteBansUtils {
             return null;
         }
         try {
-            var player = Bukkit.getPlayer(UUID.fromString(uuid));
-            return player != null ? new PlayerTag(player) : null;
+            UUID id = UUID.fromString(uuid);
+            Player online = Bukkit.getPlayer(id);
+            if (online != null) {
+                return new PlayerTag(online);
+            }
+            OfflinePlayer offline = Bukkit.getOfflinePlayer(id);
+            return new PlayerTag(offline);
         }
         catch (IllegalArgumentException ex) {
             return null;
@@ -31,7 +38,7 @@ public class LiteBansUtils {
 
     public static ScriptEntryData getScriptEntryData(Entry entry) {
         PlayerTag player = getPlayerTag(entry.getUuid());
-        return player != null ? new BukkitScriptEntryData(player, null) : null;
+        return new BukkitScriptEntryData(player, null);
     }
 
     public static ObjectTag getEntryContext(String name, Entry entry) {
