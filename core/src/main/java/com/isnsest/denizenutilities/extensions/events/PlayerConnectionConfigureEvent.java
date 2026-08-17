@@ -77,17 +77,16 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
     public void onPlayerConfigure(AsyncPlayerConnectionConfigureEvent event) {
         PlayerConfigurationConnection connection = event.getConnection();
         UUID uniqueId = connection.getProfile().getId();
-        if (uniqueId == null) {
-            return;
-        }
+        if (uniqueId == null) return;
 
         ConnectionTag.activeConnections.put(uniqueId, event.getConnection());
 
         PlayerConnectionConfigureEvent altEvent = (PlayerConnectionConfigureEvent) this.clone();
 
         altEvent.event = event;
-        altEvent.timeout = 1000L;
         Long timeout = ((PlayerConnectionConfigureEvent) altEvent.fire()).timeout;
+
+        if (timeout == null) return;
 
         CompletableFuture<Boolean> response = new CompletableFuture<>();
         response.completeOnTimeout(false, timeout, TimeUnit.MILLISECONDS);
@@ -106,6 +105,8 @@ public class PlayerConnectionConfigureEvent extends ScriptEvent implements Liste
 
     @EventHandler
     void onConnectionClose(PlayerConnectionCloseEvent event) {
-        awaitingResponse.remove(event.getPlayerUniqueId());
+        var uuid = event.getPlayerUniqueId();
+        awaitingResponse.remove(uuid);
+        ConnectionTag.activeConnections.remove(uuid);
     }
 }
