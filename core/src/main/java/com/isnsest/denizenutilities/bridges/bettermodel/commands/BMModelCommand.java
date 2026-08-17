@@ -1,11 +1,16 @@
 package com.isnsest.denizenutilities.bridges.bettermodel.commands;
 
 import com.denizenscript.denizen.objects.EntityTag;
+import com.denizenscript.denizencore.objects.Mechanism;
+import com.denizenscript.denizencore.objects.ObjectTag;
 import com.denizenscript.denizencore.objects.core.ElementTag;
+import com.denizenscript.denizencore.objects.core.MapTag;
 import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.commands.generator.*;
 import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
+import com.denizenscript.denizencore.utilities.CoreUtilities;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import com.denizenscript.denizencore.utilities.text.StringHolder;
 import com.isnsest.denizenutilities.bridges.bettermodel.objects.BMActiveModelTag;
 import kr.toxicity.model.api.BetterModel;
 import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
@@ -13,6 +18,7 @@ import kr.toxicity.model.api.data.renderer.ModelRenderer;
 import kr.toxicity.model.api.tracker.Tracker;
 import kr.toxicity.model.api.tracker.TrackerModifier;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class BMModelCommand extends AbstractCommand {
@@ -75,9 +81,24 @@ public class BMModelCommand extends AbstractCommand {
             return;
         }
 
+        MapTag preConfigure = new MapTag();
+        if (scriptEntry.internal.yamlSubcontent instanceof Map) {
+            MapTag map = (MapTag) CoreUtilities.objectToTagForm(scriptEntry.internal.yamlSubcontent, scriptEntry.getContext(), true, true);
+            preConfigure.putAll(map);
+        }
+
         modelRenderer.getOrCreate(
                 BukkitAdapter.adapt(entity.getBukkitEntity()),
-                TrackerModifier.DEFAULT
+                TrackerModifier.DEFAULT,
+                (e) -> {
+                    if (preConfigure.isEmpty()) return;
+
+                    BMActiveModelTag activeModel = new BMActiveModelTag(e);
+                    for (Map.Entry<StringHolder, ObjectTag> entry : preConfigure.entrySet()) {
+                        Mechanism mechanism = new Mechanism(entry.getKey().str, entry.getValue(), scriptEntry.getContext());
+                        activeModel.adjust(mechanism);
+                    }
+                }
         );
     }
 }
