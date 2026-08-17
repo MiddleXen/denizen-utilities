@@ -5,10 +5,25 @@ import com.denizenscript.denizen.tags.BukkitTagContext;
 import com.denizenscript.denizencore.objects.core.ElementTag;
 import com.denizenscript.denizencore.scripts.ScriptRegistry;
 import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
+import com.isnsest.denizenutilities.extensions.objects.ConnectionTag;
 
 public class PlayerExtensions {
 
     public static void register() {
+
+        // <--[tag]
+        // @attribute <PlayerTag.connection>
+        // @returns ConnectionTag
+        // @plugin denizen-utilities
+        // @description
+        // Returns the active ConnectionTag associated with this online player.
+        // @example
+        // # Natively transfers the player to another server
+        // - adjust <player.connection> transfer:play.example.com:25565
+        // -->
+        PlayerTag.registerOnlineOnlyTag(ConnectionTag.class, "connection", (_, object) ->
+                new ConnectionTag(object.getPlayerEntity().getConnection()));
+
         // <--[mechanism]
         // @object PlayerTag
         // @name show_dialog
