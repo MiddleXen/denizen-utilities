@@ -18,8 +18,6 @@ import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.isnsest.denizenutilities.extensions.properties.BiomeExtensions;
 import com.isnsest.denizenutilities.extensions.properties.PlayerExtensions;
 
-import java.util.List;
-
 public class DenizenUtilities extends JavaPlugin {
 
     public static DenizenUtilities instance;
@@ -47,21 +45,6 @@ public class DenizenUtilities extends JavaPlugin {
         //
 
         Bukkit.getPluginManager().registerEvents(new PlayerCustomClickScriptEvent.DialogEvents(), this);
-    }
-
-    private void registerBridges() {
-        List<String> bridges = List.of("SkinsRestorer", "BetterModel", "DiscordSRV");
-        for (String name : bridges) {
-            if (Bukkit.getPluginManager().isPluginEnabled(name)) {
-                try {
-                    String className = "com.isnsest.denizenutilities.bridges." + name + "." + name + "Bridge";
-                    Class<?> clazz = Class.forName(className);
-
-                    clazz.getDeclaredMethod("register").invoke(null);
-                } catch (Exception ignored) {
-                }
-            }
-        }
     }
 
     private void registerMetrics() {
@@ -92,9 +75,11 @@ public class DenizenUtilities extends JavaPlugin {
         }
 
         register();
-        registerBridges();
         registerMetrics();
 
-        Debug.log("denizen-utilities", "Loaded successfully!");
+        int loadedBridges = BridgeLoader.loadAll();
+
+        Debug.log("denizen-utilities", "Loaded successfully! <A>" + loadedBridges
+                + "<W> plugin bridge(s) loaded (of <A>" + BridgeLoader.getTotalAvailable() + "<W> available)");
     }
 }
