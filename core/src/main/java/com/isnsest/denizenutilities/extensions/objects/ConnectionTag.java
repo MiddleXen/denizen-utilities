@@ -71,6 +71,10 @@ public class ConnectionTag implements ObjectTag, Adjustable {
         return input != null && input.startsWith("connection@");
     }
 
+    public UUID getUUID() {
+        return uuid;
+    }
+
     @Override
     public String identify() {
         return "connection@" + uuid;
