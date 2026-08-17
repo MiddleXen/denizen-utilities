@@ -16,6 +16,7 @@ import kr.toxicity.model.api.util.TransformedItemStack;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.lang.reflect.Field;
 import java.util.UUID;
@@ -25,6 +26,7 @@ import static com.isnsest.denizenutilities.bridges.bettermodel.objects.BMActiveM
 
 public class BetterModelUtils {
 
+    // Statically cached with setAccessible(true) for near-zero overhead, equivalent to direct field access
     private static final Field ITEM_STACK_FIELD;
 
     static {
@@ -95,19 +97,25 @@ public class BetterModelUtils {
         RenderSource<?> source = tracker.getPipeline().getSource();
         BoneRenderContext boneRenderContext = new BoneRenderContext(source, skinData);
 
-        if (bone != null) {
-            for (RenderedBone childBone : bone.flattenBones()) {
-                childBone.updateItem(boneRenderContext);
-            }
-            tracker.forceUpdate(true);
-            return;
-        }
+        Iterable<RenderedBone> bonesToUpdate = (bone != null) ? bone.flattenBones() : tracker.bones();
 
-        for (RenderedBone _bone : tracker.bones()) {
-            _bone.updateItem(boneRenderContext);
+        for (RenderedBone targetBone : bonesToUpdate) {
+            updateBoneSkinData(targetBone, boneRenderContext);
         }
 
         tracker.forceUpdate(true);
+    }
+
+    private static void updateBoneSkinData(RenderedBone bone, BoneRenderContext context) {
+        TransformedItemStack current = BetterModelUtils.getTransform(bone);
+        Vector3f position = current.position();
+        Vector3f offset = current.offset();
+        Vector3f scale = current.scale();
+
+        bone.updateItem(context);
+
+        TransformedItemStack updated = BetterModelUtils.getTransform(bone);
+        updateBone(bone, _ -> new TransformedItemStack(position, offset, scale, updated.itemStack()));
     }
 
 }
