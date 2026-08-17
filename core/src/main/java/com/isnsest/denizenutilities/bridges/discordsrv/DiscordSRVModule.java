@@ -9,25 +9,27 @@ import com.isnsest.denizenutilities.bridges.discordsrv.events.PlayerLinksDiscord
 import com.isnsest.denizenutilities.bridges.discordsrv.events.PlayerUnlinksDiscordAccountScriptEvent;
 import github.scarsz.discordsrv.DiscordSRV;
 
-public class DiscordSRVBridge {
+public class DiscordSRVModule implements BridgeModule {
 
-    private static final DiscordSRVListener discordSRVListener = new DiscordSRVListener();
+    @Override
+    public String getPluginName() {
+        return "DiscordSRV";
+    }
 
-    public static void register() {
-
-        DiscordSRV.api.subscribe(discordSRVListener);
+    @Override
+    public void register() {
+        DiscordSRV.api.subscribe(new DiscordSRVListener());
 
         registerTags();
 
         // Events
         ScriptEvent.registerScriptEvent(PlayerLinksDiscordAccountScriptEvent.class);
         ScriptEvent.registerScriptEvent(PlayerUnlinksDiscordAccountScriptEvent.class);
-        //
 
         Debug.log("denizen-utilities", "DiscordSRV bridge initialized.");
     }
 
-    public static void registerTags() {
+    private static void registerTags() {
         // <--[tag]
         // @attribute <PlayerTag.discord_id>
         // @returns ElementTag

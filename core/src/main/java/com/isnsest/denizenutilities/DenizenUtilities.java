@@ -3,6 +3,7 @@ package com.isnsest.denizenutilities;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectFetcher;
+import com.isnsest.denizenutilities.bridges.BridgeLoader;
 import com.isnsest.denizenutilities.extensions.commands.ShowDialogCommand;
 import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
 import com.isnsest.denizenutilities.extensions.events.PlayerConnectionConfigureEvent;

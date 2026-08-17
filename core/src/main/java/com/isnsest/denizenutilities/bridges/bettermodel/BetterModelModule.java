@@ -23,9 +23,15 @@ import net.skinsrestorer.api.event.SkinApplyEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class BetterModelBridge {
+public class BetterModelModule implements BridgeModule {
 
-    public static void register() {
+    @Override
+    public String getPluginName() {
+        return "BetterModel";
+    }
+
+    @Override
+    public void register() {
 
         // Events
         ScriptEvent.registerScriptEvent(BMModelInteractScriptEvent.class);

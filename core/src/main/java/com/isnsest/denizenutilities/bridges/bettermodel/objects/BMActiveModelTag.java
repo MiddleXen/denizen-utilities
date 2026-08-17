@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 
-import static com.isnsest.denizenutilities.bridges.BetterModel.BetterModelUtils.changeSkin;
+import static com.isnsest.denizenutilities.bridges.bettermodel.BetterModelUtils.changeSkin;
 
 // <--[ObjectType]
 // @name BMActiveModelTag

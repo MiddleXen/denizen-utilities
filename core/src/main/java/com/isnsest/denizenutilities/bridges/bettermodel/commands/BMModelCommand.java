@@ -6,6 +6,7 @@ import com.denizenscript.denizencore.scripts.ScriptEntry;
 import com.denizenscript.denizencore.scripts.commands.generator.*;
 import com.denizenscript.denizencore.scripts.commands.AbstractCommand;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
+import com.isnsest.denizenutilities.bridges.bettermodel.objects.BMActiveModelTag;
 import kr.toxicity.model.api.BetterModel;
 import kr.toxicity.model.api.bukkit.platform.BukkitAdapter;
 import kr.toxicity.model.api.data.renderer.ModelRenderer;

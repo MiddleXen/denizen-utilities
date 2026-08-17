@@ -9,16 +9,15 @@ import com.isnsest.denizenutilities.bridges.skinsrestorer.events.PlayerSkinApply
 import net.skinsrestorer.api.SkinsRestorer;
 import net.skinsrestorer.api.SkinsRestorerProvider;
 
-public class SkinsRestorerBridge {
+public class SkinsRestorerModule implements BridgeModule {
 
-    private static SkinsRestorer skinsRestorerAPI;
-
-    public static SkinsRestorer getAPI() {
-        return skinsRestorerAPI;
+    @Override
+    public String getPluginName() {
+        return "SkinsRestorer";
     }
 
-    public static void register() {
-        skinsRestorerAPI = SkinsRestorerProvider.get();
+    @Override
+    public void register() {
 
         // Events
         ScriptEvent.registerScriptEvent(PlayerSkinApplyEvent.class);
@@ -29,5 +28,9 @@ public class SkinsRestorerBridge {
         //
 
         Debug.log("denizen-utilities", "SkinsRestorer bridge initialized.");
+    }
+
+    public static SkinsRestorer getAPI() {
+        return SkinsRestorerProvider.get();
     }
 }

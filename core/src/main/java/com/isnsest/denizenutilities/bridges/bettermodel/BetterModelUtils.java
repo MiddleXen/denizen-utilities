@@ -21,6 +21,8 @@ import java.lang.reflect.Field;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import static com.isnsest.denizenutilities.bridges.bettermodel.objects.BMActiveModelTag.updateBone;
+
 public class BetterModelUtils {
 
     private static final Field ITEM_STACK_FIELD;
