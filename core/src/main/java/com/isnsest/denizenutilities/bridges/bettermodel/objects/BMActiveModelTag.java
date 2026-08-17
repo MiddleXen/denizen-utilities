@@ -337,11 +337,10 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         // @description
         // Sets a custom rotation modifier for all bones.
         // -->
-        tagProcessor.registerMechanism("rotation", false, QuaternionTag.class, (object, _, input) -> {
-            object.tracker.getPipeline().addLocalRotModifier(BonePredicate.TRUE, _ ->
-                    new Quaternionf(input.x, input.y, input.z, input.w).conjugate()
-            );
-        });
+        tagProcessor.registerMechanism("rotation", false, QuaternionTag.class, (object, _, input) ->
+                object.tracker.getPipeline().addLocalRotModifier(BonePredicate.TRUE, _ ->
+                new Quaternionf(input.x, input.y, input.z, input.w).conjugate()
+        ));
 
         // <--[mechanism]
         // @object BMActiveModelTag
@@ -352,7 +351,9 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         // Globally overrides the item displayed on ALL bones in the model.
         // -->
         tagProcessor.registerMechanism("item", false, ItemTag.class, (object, _, input) -> {
-            updateBones(object, t -> TransformedItemStack.of(t.position(), t.offset(), t.scale(), BukkitAdapter.adapt(input.getItemStack())));
+            for (RenderedBone bone : object.tracker.bones()) {
+                updateBone(bone, t -> TransformedItemStack.of(t.position(), t.offset(), t.scale(), BukkitAdapter.adapt(input.getItemStack())));
+            }
         });
 
         // <--[mechanism]
@@ -364,7 +365,9 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         // Globally overrides the scale for ALL bones in the model.
         // -->
         tagProcessor.registerMechanism("scale", false, LocationTag.class, (object, _, input) -> {
-            updateBones(object, t -> TransformedItemStack.of(t.position(), t.offset(), input.toVector().toVector3f(), t.itemStack()));
+            for (RenderedBone bone : object.tracker.bones()) {
+                updateBone(bone, t -> TransformedItemStack.of(t.position(), t.offset(), input.toVector().toVector3f(), t.itemStack()));
+            }
         });
 
         // <--[mechanism]
@@ -385,6 +388,20 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
 
         // <--[mechanism]
         // @object BMActiveModelTag
+        // @name model_rotation
+        // @plugin denizen-utilities, BetterModel
+        // @input QuaternionTag
+        // @description
+        // Rotates the entire model as a single object.
+        // Unlike 'rotation' (which spins each bone separately around its own center),
+        // this turns the whole model while keeping all its parts attached and aligned together.
+        // -->
+        tagProcessor.registerMechanism("model_rotation", false, QuaternionTag.class, (object, _, input) ->
+                object.tracker.getPipeline().addGlobalRotModifier(BonePredicate.TRUE, _ ->
+                new Quaternionf(input.x, input.y, input.z, input.w).conjugate()));
+
+        // <--[mechanism]
+        // @object BMActiveModelTag
         // @name translation
         // @plugin denizen-utilities, BetterModel
         // @input LocationTag
@@ -392,13 +409,9 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         // Globally overrides the translation for ALL bones in the model.
         // -->
         tagProcessor.registerMechanism("translation", false, LocationTag.class, (object, _, input) -> {
-            updateBones(object, t -> TransformedItemStack.of(input.toVector().toVector3f(), t.offset(), t.scale(), t.itemStack()));
-        });
-
-        tagProcessor.registerMechanism("model_rotation", false, QuaternionTag.class, (object, _, input) -> {
-            object.tracker.getPipeline().addGlobalRotModifier(BonePredicate.TRUE, _ ->
-                    new Quaternionf(input.x, input.y, input.z, input.w).conjugate()
-            );
+            for (RenderedBone bone : object.tracker.bones()) {
+                updateBone(bone, t -> TransformedItemStack.of(input.toVector().toVector3f(), t.offset(), t.scale(), t.itemStack()));
+            }
         });
 
         // <--[mechanism]
@@ -465,9 +478,8 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         // Changes the skin of the active model to the player skin associated with the specified UUID or PlayerTag.
         // This is especially useful when working with limb models.
         // -->
-        tagProcessor.registerMechanism("skin", false, ObjectTag.class, (object, _, input) -> {
-            changeSkin(object.tracker, input);
-        });
+        tagProcessor.registerMechanism("skin", false, ObjectTag.class, (object, _, input) ->
+                changeSkin(object.tracker, input));
 
         // <--[mechanism]
         // @object BMActiveModelTag
@@ -477,16 +489,17 @@ public class BMActiveModelTag implements ObjectTag, Adjustable {
         // @description
         // Manually forces a full synchronization update (bones, metadata, and hitboxes) for the model.
         // -->
-        tagProcessor.registerMechanism("force_update", false, (object, _) -> {
-            object.getTracker().forceUpdate(true);
-        });
+        tagProcessor.registerMechanism("force_update", false, (object, _) ->
+                object.getTracker().forceUpdate(true));
     }
 
-    private static void updateBones(BMActiveModelTag object, UnaryOperator<TransformedItemStack> mapper) {
-        object.tracker.bones().forEach(bone -> {
-            TransformedItemStack current = BetterModelUtils.getTransform(bone);
-            bone.itemStack(b -> true, mapper.apply(current));
-        });
+    public static void updateBone(RenderedBone bone, TransformedItemStack itemStack) {
+        bone.itemStack(_ -> true, itemStack);
+    }
+
+    public static void updateBone(RenderedBone bone, UnaryOperator<TransformedItemStack> mapper) {
+        TransformedItemStack current = BetterModelUtils.getTransform(bone);
+        bone.itemStack(_ -> true, mapper.apply(current));
     }
 
     @Override
