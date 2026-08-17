@@ -58,16 +58,13 @@ public class BetterModelBridge {
         Debug.log("denizen-utilities", "BetterModel bridge initialized.");
     }
 
-    public static class SkinsRestorerHook {
+    private static class SkinsRestorerHook {
         public static void init() {
             SkinsRestorerProvider.get().getEventBus().subscribe(DenizenUtilities.instance, SkinApplyEvent.class, event -> {
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ignored) {}
-                    Player player = event.getPlayer(Player.class);
+                Bukkit.getScheduler().runTaskLater(DenizenUtilities.instance, () -> {
+                    var player = event.getPlayer(Player.class);
                     BetterModel.platform().skinManager().complete(ModelProfile.of(BukkitAdapter.adapt(player)).asUncompleted());
-                }).start();
+                }, 2L);
             });
         }
     }
