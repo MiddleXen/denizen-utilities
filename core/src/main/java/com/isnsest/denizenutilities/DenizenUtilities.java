@@ -3,6 +3,7 @@ package com.isnsest.denizenutilities;
 import com.denizenscript.denizencore.DenizenCore;
 import com.denizenscript.denizencore.events.ScriptEvent;
 import com.denizenscript.denizencore.objects.ObjectFetcher;
+import com.isnsest.denizenutilities.bridges.BridgeLoader;
 import com.isnsest.denizenutilities.extensions.commands.ShowDialogCommand;
 import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
 import com.isnsest.denizenutilities.extensions.events.PlayerConnectionConfigureEvent;
@@ -16,8 +17,6 @@ import com.denizenscript.denizencore.scripts.ScriptRegistry;
 import com.denizenscript.denizencore.utilities.debugging.Debug;
 import com.isnsest.denizenutilities.extensions.properties.BiomeExtensions;
 import com.isnsest.denizenutilities.extensions.properties.PlayerExtensions;
-
-import java.util.List;
 
 public class DenizenUtilities extends JavaPlugin {
 
@@ -48,21 +47,6 @@ public class DenizenUtilities extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerCustomClickScriptEvent.DialogEvents(), this);
     }
 
-    private void registerBridges() {
-        List<String> bridges = List.of("SkinsRestorer", "BetterModel", "DiscordSRV", "LiteBans");
-        for (String name : bridges) {
-            if (Bukkit.getPluginManager().isPluginEnabled(name)) {
-                try {
-                    String className = "com.isnsest.denizenutilities.bridges." + name + "." + name + "Bridge";
-                    Class<?> clazz = Class.forName(className);
-
-                    clazz.getDeclaredMethod("register").invoke(null);
-                } catch (Exception ignored) {
-                }
-            }
-        }
-    }
-
     private void registerMetrics() {
         metrics.addCustomChart(new Metrics.SimplePie("Denizen", () -> {
             var plugin = Bukkit.getPluginManager().getPlugin("Denizen");
@@ -91,9 +75,11 @@ public class DenizenUtilities extends JavaPlugin {
         }
 
         register();
-        registerBridges();
         registerMetrics();
 
-        Debug.log("denizen-utilities", "Loaded successfully!");
+        int loadedBridges = BridgeLoader.loadAll();
+
+        Debug.log("denizen-utilities", "Loaded successfully! <A>" + loadedBridges
+                + "<W> plugin bridge(s) loaded (of <A>" + BridgeLoader.getTotalAvailable() + "<W> available)");
     }
 }

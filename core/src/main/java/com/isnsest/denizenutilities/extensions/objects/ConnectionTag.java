@@ -9,6 +9,7 @@ import com.denizenscript.denizencore.objects.core.ScriptTag;
 import com.denizenscript.denizencore.tags.Attribute;
 import com.denizenscript.denizencore.tags.ObjectTagProcessor;
 import com.denizenscript.denizencore.tags.TagContext;
+import com.google.common.net.HostAndPort;
 import com.isnsest.denizenutilities.Compatibility;
 import com.isnsest.denizenutilities.extensions.containers.DialogScriptContainer;
 import com.isnsest.denizenutilities.extensions.events.PlayerConnectionConfigureEvent;
@@ -69,6 +70,10 @@ public class ConnectionTag implements ObjectTag, Adjustable {
 
     public static boolean matches(String input) {
         return input != null && input.startsWith("connection@");
+    }
+
+    public UUID getUUID() {
+        return uuid;
     }
 
     @Override
@@ -218,6 +223,24 @@ public class ConnectionTag implements ObjectTag, Adjustable {
             }
             mechanism.echoError("Invalid script '" + input.getName()
                     + "' for mechanism 'show_dialog': must be a dialog script container.");
+        });
+
+        // <--[mechanism]
+        // @object ConnectionTag
+        // @name transfer
+        // @plugin denizen-utilities
+        // @input ElementTag
+        // @description
+        // Natively transfers the client to another Minecraft server (host or host:port).
+        // Examples:
+        // - adjust <connection> transfer:play.example.com
+        // - adjust <connection> transfer:play.example.com:25570
+        // -->
+        tagProcessor.registerMechanism("transfer", false, ElementTag.class, (object, mechanism, input) -> {
+            HostAndPort target = HostAndPort
+                    .fromString(input.asString().trim())
+                    .withDefaultPort(25565);
+            object.connection.transfer(target.getHost(), target.getPort());
         });
     }
 

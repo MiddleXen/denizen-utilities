@@ -3,7 +3,7 @@ plugins {
     id("io.github.goooler.shadow") version "8.1.8"
 }
 
-val pluginVersion = "2.9.0-beta.3"
+val pluginVersion = "2.9.0-beta.4"
 
 allprojects {
     group = "com.isnsest"
@@ -16,6 +16,7 @@ allprojects {
         maven("https://maven.citizensnpcs.co/repo")
         maven("https://repo.codemc.org/repository/maven-public/")
         maven("https://nexus.scarsz.me/content/groups/public/")
+        maven("https://repo.viaversion.com")
         maven("https://jitpack.io")
     }
 }
